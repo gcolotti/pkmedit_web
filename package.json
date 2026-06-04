@@ -10,6 +10,9 @@
     "audit:item-assets": "node scripts/audit-item-assets.mjs",
     "lint": "eslint . --max-warnings 0",
     "type-check": "tsc -b",
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "test:coverage": "vitest run --coverage",
     "format": "prettier . --write"
   },
   "dependencies": {
@@ -25,13 +28,20 @@
   "devDependencies": {
     "@gcolotti/frontend-config": "^0.3.3",
     "@tanstack/react-query-devtools": "^5.100.14",
+    "@testing-library/jest-dom": "^6.9.1",
+    "@testing-library/react": "^16.3.2",
+    "@testing-library/user-event": "^14.6.1",
     "@types/node": "^25.9.1",
     "@types/react": "^19.2.7",
     "@types/react-dom": "^19.2.3",
+    "@vitest/coverage-v8": "^4.1.8",
     "autoprefixer": "^10.4.22",
     "eslint": "^9.39.1",
+    "jsdom": "^29.1.1",
+    "msw": "^2.14.6",
     "prettier": "^3.7.3",
     "tailwindcss": "^3.4.18",
-    "typescript": "^5.9.3"
+    "typescript": "^5.9.3",
+    "vitest": "^4.1.8"
   }
 }
