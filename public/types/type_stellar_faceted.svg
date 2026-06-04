@@ -1,0 +1,30 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100">
+  <defs>
+    <clipPath id="hex">
+      <polygon points="50,6 88.1,28 88.1,72 50,94 11.9,72 11.9,28"/>
+    </clipPath>
+  </defs>
+  <!-- 18 triangles from center (50,50), clipped to hexagon, one per type -->
+  <g clip-path="url(#hex)">
+    <polygon points="50,50 50,-2 67.78,1.12"   fill="#9fa19f" stroke="white" stroke-width="1"/>
+    <polygon points="50,50 67.78,1.12 83.44,10.17"  fill="#ff8000" stroke="white" stroke-width="1"/>
+    <polygon points="50,50 83.44,10.17 95.03,24"    fill="#81b9ef" stroke="white" stroke-width="1"/>
+    <polygon points="50,50 95.03,24 101.22,40.95"   fill="#8f41cb" stroke="white" stroke-width="1"/>
+    <polygon points="50,50 101.22,40.95 101.22,59.05" fill="#915121" stroke="white" stroke-width="1"/>
+    <polygon points="50,50 101.22,59.05 95.03,76"   fill="#afa981" stroke="white" stroke-width="1"/>
+    <polygon points="50,50 95.03,76 83.44,89.83"    fill="#91a119" stroke="white" stroke-width="1"/>
+    <polygon points="50,50 83.44,89.83 67.78,98.88" fill="#704170" stroke="white" stroke-width="1"/>
+    <polygon points="50,50 67.78,98.88 50,102"      fill="#60a1b8" stroke="white" stroke-width="1"/>
+    <polygon points="50,50 50,102 32.22,98.88"      fill="#e62829" stroke="white" stroke-width="1"/>
+    <polygon points="50,50 32.22,98.88 16.56,89.83" fill="#2980ef" stroke="white" stroke-width="1"/>
+    <polygon points="50,50 16.56,89.83 4.97,76"     fill="#3fa129" stroke="white" stroke-width="1"/>
+    <polygon points="50,50 4.97,76 -1.22,59.05"     fill="#fac000" stroke="white" stroke-width="1"/>
+    <polygon points="50,50 -1.22,59.05 -1.22,40.95" fill="#ef4179" stroke="white" stroke-width="1"/>
+    <polygon points="50,50 -1.22,40.95 4.97,24"     fill="#3fd8ff" stroke="white" stroke-width="1"/>
+    <polygon points="50,50 4.97,24 16.56,10.17"     fill="#5061e1" stroke="white" stroke-width="1"/>
+    <polygon points="50,50 16.56,10.17 32.22,1.12"  fill="#50413f" stroke="white" stroke-width="1"/>
+    <polygon points="50,50 32.22,1.12 50,-2"        fill="#ef71ef" stroke="white" stroke-width="1"/>
+  </g>
+  <!-- Hexagon border -->
+  <polygon points="50,6 88.1,28 88.1,72 50,94 11.9,72 11.9,28" fill="none" stroke="white" stroke-width="3"/>
+</svg>

@@ -1,0 +1,39 @@
+{
+  "name": "pkmedit-web",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "vite --host 0.0.0.0",
+    "build": "tsc -b && vite build",
+    "preview": "vite preview --host 0.0.0.0",
+    "audit:item-assets": "node scripts/audit-item-assets.mjs",
+    "lint": "docker-compose -f ../docker-compose.yml exec web npm run lint:inner",
+    "type-check": "docker-compose -f ../docker-compose.yml exec web npm run type-check:inner",
+    "lint:inner": "eslint .",
+    "type-check:inner": "tsc --noEmit",
+    "format": "docker-compose -f ../docker-compose.yml exec web npm run format:inner",
+    "format:inner": "prettier . --write"
+  },
+  "dependencies": {
+    "@headlessui/react": "^2.2.10",
+    "@tanstack/react-query": "^5.100.14",
+    "@vitejs/plugin-react": "^5.1.1",
+    "lucide-react": "^0.468.0",
+    "react": "^19.2.1",
+    "react-dom": "^19.2.1",
+    "vite": "^7.2.7",
+    "zustand": "^5.0.13"
+  },
+  "devDependencies": {
+    "@gcolotti/frontend-config": "^0.3.3",
+    "@tanstack/react-query-devtools": "^5.100.14",
+    "@types/react": "^19.2.7",
+    "@types/react-dom": "^19.2.3",
+    "autoprefixer": "^10.4.22",
+    "eslint": "^9.39.1",
+    "prettier": "^3.7.3",
+    "tailwindcss": "^3.4.18",
+    "typescript": "^5.9.3"
+  }
+}

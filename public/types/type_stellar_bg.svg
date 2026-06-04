@@ -1,0 +1,38 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" preserveAspectRatio="none">
+  <defs>
+    <radialGradient id="glow" gradientUnits="userSpaceOnUse" cx="50" cy="50" r="65">
+      <stop offset="0%"   stop-color="white" stop-opacity="0.70"/>
+      <stop offset="40%"  stop-color="white" stop-opacity="0.25"/>
+      <stop offset="100%" stop-color="white" stop-opacity="0"/>
+    </radialGradient>
+  </defs>
+
+  <!-- 18 triangles from center (50,50), rainbow hue order, clockwise from top -->
+  <!-- Boundary points: Pk = (50 + 80·cos(-90° + k·20°), 50 + 80·sin(-90° + k·20°)) -->
+  <!-- P0=(50,-30) P1=(77.36,-25.18) P2=(101.44,-11.28) P3=(119.28,10) P4=(128.8,36.08) -->
+  <!-- P5=(128.8,63.92) P6=(119.28,90) P7=(101.44,111.28) P8=(77.36,125.18) P9=(50,130) -->
+  <!-- P10=(22.64,125.18) P11=(-1.44,111.28) P12=(-19.28,90) P13=(-28.8,63.92) -->
+  <!-- P14=(-28.8,36.08) P15=(-19.28,10) P16=(-1.44,-11.28) P17=(22.64,-25.18) -->
+
+  <polygon points="50,50 50,-30 77.36,-25.18"         fill="#fac000"/> <!-- Electric  -->
+  <polygon points="50,50 77.36,-25.18 101.44,-11.28"  fill="#91a119"/> <!-- Bug       -->
+  <polygon points="50,50 101.44,-11.28 119.28,10"     fill="#3fa129"/> <!-- Grass     -->
+  <polygon points="50,50 119.28,10 128.8,36.08"       fill="#3fd8ff"/> <!-- Ice       -->
+  <polygon points="50,50 128.8,36.08 128.8,63.92"     fill="#60a1b8"/> <!-- Steel     -->
+  <polygon points="50,50 128.8,63.92 119.28,90"       fill="#81b9ef"/> <!-- Flying    -->
+  <polygon points="50,50 119.28,90 101.44,111.28"     fill="#2980ef"/> <!-- Water     -->
+  <polygon points="50,50 101.44,111.28 77.36,125.18"  fill="#5061e1"/> <!-- Dragon    -->
+  <polygon points="50,50 77.36,125.18 50,130"         fill="#8f41cb"/> <!-- Poison    -->
+  <polygon points="50,50 50,130 22.64,125.18"         fill="#704170"/> <!-- Ghost     -->
+  <polygon points="50,50 22.64,125.18 -1.44,111.28"   fill="#ef71ef"/> <!-- Fairy     -->
+  <polygon points="50,50 -1.44,111.28 -19.28,90"      fill="#ef4179"/> <!-- Psychic   -->
+  <polygon points="50,50 -19.28,90 -28.8,63.92"       fill="#e62829"/> <!-- Fire      -->
+  <polygon points="50,50 -28.8,63.92 -28.8,36.08"     fill="#ff8000"/> <!-- Fighting  -->
+  <polygon points="50,50 -28.8,36.08 -19.28,10"       fill="#915121"/> <!-- Ground    -->
+  <polygon points="50,50 -19.28,10 -1.44,-11.28"      fill="#50413f"/> <!-- Dark      -->
+  <polygon points="50,50 -1.44,-11.28 22.64,-25.18"   fill="#afa981"/> <!-- Rock      -->
+  <polygon points="50,50 22.64,-25.18 50,-30"         fill="#9fa19f"/> <!-- Normal    -->
+
+  <!-- Radial white glow to soften dark colors and create pastel/gem feel -->
+  <rect x="-30" y="-30" width="160" height="160" fill="url(#glow)"/>
+</svg>

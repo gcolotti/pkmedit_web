@@ -1,0 +1,123 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    color-scheme: light;
+  }
+
+  .dark {
+    color-scheme: dark;
+  }
+
+  body {
+    margin: 0;
+    min-width: 320px;
+    overflow-x: hidden;
+    background: #f5f3ee;
+    color: #10151f;
+    font-family:
+      Inter,
+      ui-sans-serif,
+      system-ui,
+      -apple-system,
+      BlinkMacSystemFont,
+      'Segoe UI',
+      sans-serif;
+    letter-spacing: 0;
+  }
+
+  html {
+    scrollbar-width: none;
+  }
+
+  html::-webkit-scrollbar,
+  body::-webkit-scrollbar {
+    display: none;
+    height: 0;
+    width: 0;
+  }
+
+  .dark body {
+    background: #0d1118;
+    color: #f4efe7;
+  }
+}
+
+@layer components {
+  .glass-panel {
+    @apply border border-black/10 bg-white/80 shadow-glow backdrop-blur-xl dark:border-white/10 dark:bg-white/10;
+  }
+
+  .surface-muted {
+    @apply border border-black/10 bg-white/75 dark:border-white/10 dark:bg-white/10;
+  }
+
+  .app-shell {
+    background:
+      radial-gradient(circle at top left, #f2c48f 0, transparent 26rem),
+      linear-gradient(135deg, #f7f4ed 0%, #e8f3f1 48%, #f6ece6 100%);
+  }
+
+  .dark .app-shell {
+    background:
+      radial-gradient(circle at top left, #5b2f2f 0, transparent 25rem),
+      linear-gradient(135deg, #0d1118 0%, #101d24 48%, #1c151d 100%);
+  }
+
+  .field {
+    @apply min-h-9 w-full min-w-0 rounded-md border border-black/10 bg-white/80 px-2 py-1.5 text-sm text-ink outline-none transition focus:border-lagoon focus:ring-2 focus:ring-lagoon/20 dark:border-white/10 dark:bg-white/10 dark:text-stone-100;
+  }
+
+  .field:disabled {
+    @apply cursor-not-allowed bg-stone-200/80 text-stone-500 dark:bg-white/[0.06] dark:text-stone-400;
+  }
+
+  .field-readonly {
+    @apply min-h-9 w-full min-w-0 rounded-md border border-black/10 bg-stone-300/80 px-2 py-1.5 text-sm font-bold text-stone-700 shadow-inner shadow-black/5 dark:border-white/10 dark:bg-black/25 dark:text-stone-300;
+  }
+
+  .field option {
+    @apply bg-white text-ink;
+  }
+
+  .dark .field option {
+    @apply bg-stone-800 text-stone-100;
+  }
+
+  .field option:checked {
+    @apply bg-cyan-100 text-ink;
+  }
+
+  .dark .field option:checked {
+    @apply bg-lagoon text-white;
+  }
+
+  .btn {
+    @apply inline-flex min-h-10 items-center justify-center gap-2 rounded-md border border-black/10 bg-white/80 px-3 text-sm font-semibold text-ink transition hover:border-lagoon hover:text-lagoon disabled:cursor-not-allowed disabled:opacity-50 dark:border-white/10 dark:bg-white/10 dark:text-stone-100;
+  }
+
+  .btn-primary {
+    @apply border-transparent bg-ink text-white hover:bg-lagoon hover:text-white dark:bg-stone-100 dark:text-ink dark:hover:bg-lagoon dark:hover:text-white;
+  }
+
+  .label {
+    @apply text-xs font-semibold uppercase tracking-wider text-stone-500 dark:text-stone-400;
+  }
+
+  .stat-corrected-glow {
+    animation: stat-correction 1.2s ease-out;
+  }
+
+  @keyframes stat-correction {
+    0% {
+      box-shadow: 0 0 0 0 rgb(33 160 160 / 70%);
+      background-color: rgb(33 160 160 / 20%);
+    }
+    100% {
+      box-shadow: 0 0 0 6px rgb(33 160 160 / 0%);
+      background-color: transparent;
+    }
+  }
+}

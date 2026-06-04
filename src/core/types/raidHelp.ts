@@ -1,0 +1,17 @@
+export type RaidFilter = 'all' | 'active' | 'event' | 'lp' | 'unknown' | 'wish'
+
+export type RaidHelpTopic =
+  | 'hash'
+  | 'seed'
+  | 'stars'
+  | 'randRoll'
+  | 'denType'
+  | 'flags'
+  | 'areaId'
+  | 'lotteryGroup'
+  | 'spawnPointId'
+  | 'content'
+  | 'identifier'
+  | 'captured'
+  | 'defeated'
+  | 'lp'
