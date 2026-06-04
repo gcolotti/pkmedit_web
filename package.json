@@ -8,12 +8,9 @@
     "build": "tsc -b && vite build",
     "preview": "vite preview --host 0.0.0.0",
     "audit:item-assets": "node scripts/audit-item-assets.mjs",
-    "lint": "docker-compose -f ../docker-compose.yml exec web npm run lint:inner",
-    "type-check": "docker-compose -f ../docker-compose.yml exec web npm run type-check:inner",
-    "lint:inner": "eslint .",
-    "type-check:inner": "tsc --noEmit",
-    "format": "docker-compose -f ../docker-compose.yml exec web npm run format:inner",
-    "format:inner": "prettier . --write"
+    "lint": "eslint .",
+    "type-check": "tsc --noEmit",
+    "format": "prettier . --write"
   },
   "dependencies": {
     "@headlessui/react": "^2.2.10",
