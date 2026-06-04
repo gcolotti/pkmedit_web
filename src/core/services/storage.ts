@@ -4,7 +4,8 @@ const languageCookie = 'pkmedit_language'
 const themeKey = 'pkmedit_theme'
 const allowIllegalChangesKey = 'pkmedit_allow_illegal_changes'
 const apiBaseKey = 'pkmedit_api_base'
-const defaultApiBase = 'http://localhost:8080'
+const defaultApiBase =
+  import.meta.env.VITE_API_BASE?.trim() || 'http://localhost:8080'
 
 export function readLanguage(): Language {
   const match = document.cookie.match(

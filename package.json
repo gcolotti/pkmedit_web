@@ -8,8 +8,8 @@
     "build": "tsc -b && vite build",
     "preview": "vite preview --host 0.0.0.0",
     "audit:item-assets": "node scripts/audit-item-assets.mjs",
-    "lint": "eslint .",
-    "type-check": "tsc --noEmit",
+    "lint": "eslint . --max-warnings 0",
+    "type-check": "tsc -b",
     "format": "prettier . --write"
   },
   "dependencies": {
@@ -25,6 +25,7 @@
   "devDependencies": {
     "@gcolotti/frontend-config": "^0.3.3",
     "@tanstack/react-query-devtools": "^5.100.14",
+    "@types/node": "^25.9.1",
     "@types/react": "^19.2.7",
     "@types/react-dom": "^19.2.3",
     "autoprefixer": "^10.4.22",
