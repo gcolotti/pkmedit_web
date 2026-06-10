@@ -15,42 +15,44 @@ import { hasPokemonChanged } from '../draftChanges/draftChanges'
 import { revertDraftPath } from '../draftPathUtils/draftPathUtils'
 import { parsePokedexActionSlotId } from '../pokedexActionUtils/pokedexActionUtils'
 
+export type RevertWorkspaceChangeCallbacks = {
+  revertTrainerEdit: () => void
+  revertItemsEdit: () => void
+  revertMysteryGiftEdit: (id: string) => void
+  revertPokedexAction: (key: PokedexActionKey) => void
+  revertDonutDraft: (id: string) => void
+  revertMetDateFixerDraft: () => void
+  revertUndergroundDraft: () => void
+  revertRaidsDraft: () => void
+  revertArceusResearchAction: (key: ArceusResearchActionKey) => void
+  revertArceusResearchBulk: (action: ArceusResearchBulkAction) => void
+}
+
 export function revertWorkspaceChange(
   change: DraftChange,
   baseDetails: Record<string, PokemonDetail>,
   drafts: Record<string, PokemonDetail>,
   setDrafts: Dispatch<SetStateAction<Record<string, PokemonDetail>>>,
-  revertTrainerEdit: () => void,
-  revertItemsEdit: () => void,
-  revertMysteryGiftEdit: (id: string) => void,
-  revertPokedexAction: (key: PokedexActionKey) => void,
-  revertDonutDraft: (id: string) => void = () => undefined,
-  revertMetDateFixerDraft: () => void = () => undefined,
-  revertUndergroundDraft: () => void = () => undefined,
-  revertRaidsDraft: () => void = () => undefined,
-  revertArceusResearchAction: (key: ArceusResearchActionKey) => void = () =>
-    undefined,
-  revertArceusResearchBulk: (action: ArceusResearchBulkAction) => void = () =>
-    undefined,
+  callbacks: RevertWorkspaceChangeCallbacks,
 ) {
-  if (change.slotId === '__trainer__') return revertTrainerEdit()
-  if (change.slotId === '__items__') return revertItemsEdit()
-  if (change.slotId === '__underground__') return revertUndergroundDraft?.()
-  if (change.slotId === '__raids__') return revertRaidsDraft?.()
+  if (change.slotId === '__trainer__') return callbacks.revertTrainerEdit()
+  if (change.slotId === '__items__') return callbacks.revertItemsEdit()
+  if (change.slotId === '__underground__') return callbacks.revertUndergroundDraft()
+  if (change.slotId === '__raids__') return callbacks.revertRaidsDraft()
   if (change.slotId.startsWith('__mystery_gift__:'))
-    return revertMysteryGiftEdit(
+    return callbacks.revertMysteryGiftEdit(
       change.slotId.slice('__mystery_gift__:'.length),
     )
   const pokedexAction = parsePokedexActionSlotId(change.slotId)
-  if (pokedexAction) return revertPokedexAction(pokedexAction)
+  if (pokedexAction) return callbacks.revertPokedexAction(pokedexAction)
   const arceusResearchBulk = parseArceusResearchBulkSlotId(change.slotId)
-  if (arceusResearchBulk) return revertArceusResearchBulk(arceusResearchBulk)
+  if (arceusResearchBulk) return callbacks.revertArceusResearchBulk(arceusResearchBulk)
   const arceusResearchAction = parseArceusResearchActionSlotId(change.slotId)
   if (arceusResearchAction)
-    return revertArceusResearchAction(arceusResearchAction)
+    return callbacks.revertArceusResearchAction(arceusResearchAction)
   if (change.slotId.startsWith('__donut__:'))
-    return revertDonutDraft(change.slotId.slice('__donut__:'.length))
-  if (change.slotId === '__met_date_fixer__') return revertMetDateFixerDraft()
+    return callbacks.revertDonutDraft(change.slotId.slice('__donut__:'.length))
+  if (change.slotId === '__met_date_fixer__') return callbacks.revertMetDateFixerDraft()
 
   const base = baseDetails[change.slotId]
   const current = drafts[change.slotId]

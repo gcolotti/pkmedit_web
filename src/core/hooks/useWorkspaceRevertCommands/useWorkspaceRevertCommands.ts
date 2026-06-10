@@ -11,22 +11,18 @@ export function useWorkspaceRevertCommands(input: WorkspaceCommandsInput) {
 
   const revertChange = useCallback(
     (change: DraftChange) => {
-      revertWorkspaceChange(
-        change,
-        baseDetails,
-        drafts,
-        setDrafts,
-        input.sections.actions.revertTrainerEdit,
-        input.sections.actions.revertItemsEdit,
-        input.database.revertMysteryGiftEdit,
-        input.pokedex.revertPokedexAction,
-        input.donuts.revertDonutDraft,
-        input.metDate.revertMetDateFixerDraft,
-        input.sections.actions.revertUndergroundDraft,
-        input.raids.actions.revert,
-        input.arceusResearch.revertAction,
-        input.arceusResearch.revertBulk,
-      )
+      revertWorkspaceChange(change, baseDetails, drafts, setDrafts, {
+        revertArceusResearchAction: input.arceusResearch.revertAction,
+        revertArceusResearchBulk: input.arceusResearch.revertBulk,
+        revertDonutDraft: input.donuts.revertDonutDraft,
+        revertItemsEdit: input.sections.actions.revertItemsEdit,
+        revertMetDateFixerDraft: input.metDate.revertMetDateFixerDraft,
+        revertMysteryGiftEdit: input.database.revertMysteryGiftEdit,
+        revertPokedexAction: input.pokedex.revertPokedexAction,
+        revertRaidsDraft: input.raids.actions.revert,
+        revertTrainerEdit: input.sections.actions.revertTrainerEdit,
+        revertUndergroundDraft: input.sections.actions.revertUndergroundDraft,
+      })
       if (!change.slotId.startsWith('__'))
         setReplacementDrafts((current) => {
           if (!(change.slotId in current)) return current
