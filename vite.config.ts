@@ -25,6 +25,7 @@ export default defineConfig({
         'src/core/utils/**/*.{ts,tsx}',
         'src/core/state/**/*.{ts,tsx}',
         'src/core/i18n/**/*.{ts,tsx}',
+        'src/core/services/**/*.{ts,tsx}',
       ],
       exclude: [
         'src/**/*.d.ts',
