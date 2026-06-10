@@ -8,7 +8,10 @@ import type {
   MysteryGiftDatabasePreview,
   PokemonReplacement,
 } from '../../types/database/database'
-import type { DraftLegalityViolation, PokemonDetail } from '../../types/index/index'
+import type {
+  DraftLegalityViolation,
+  PokemonDetail,
+} from '../../types/index/index'
 
 type Context = {
   api: ApiClient

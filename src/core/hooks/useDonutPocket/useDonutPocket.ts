@@ -1,7 +1,11 @@
 import { useEffect, useState } from 'react'
 
 import type { Translator } from '../../i18n/i18n/i18n'
-import type { DonutDraft, DonutEntry, DonutPocket } from '../../types/donut/donut'
+import type {
+  DonutDraft,
+  DonutEntry,
+  DonutPocket,
+} from '../../types/donut/donut'
 import { donutDisplayName } from '../../types/donut/donut'
 import type { CatalogEntry } from '../../types/index/index'
 

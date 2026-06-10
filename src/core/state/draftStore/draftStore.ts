@@ -2,7 +2,11 @@ import { create } from 'zustand'
 
 import { samePokedexAction } from '../../services/pokedexActionUtils/pokedexActionUtils'
 import { createArceusResearchSlice } from '../arceusResearchSlice/arceusResearchSlice'
-import type { DraftState, NullableUpdater, Updater } from '../draftStoreTypes/draftStoreTypes'
+import type {
+  DraftState,
+  NullableUpdater,
+  Updater,
+} from '../draftStoreTypes/draftStoreTypes'
 import { emptyDraftSlices } from '../draftStoreTypes/draftStoreTypes'
 
 function applyUpdater<T>(current: T, updater: Updater<T>): T {

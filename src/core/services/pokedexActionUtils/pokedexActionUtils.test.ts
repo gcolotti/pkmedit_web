@@ -22,9 +22,9 @@ describe('pokedexActionSlotId', () => {
   })
 
   it('handles the global dex id', () => {
-    expect(pokedexActionSlotId({ dexId: POKEDEX_GLOBAL_DEX_ID, action: 'complete' })).toBe(
-      '__pokedex__:all:complete',
-    )
+    expect(
+      pokedexActionSlotId({ dexId: POKEDEX_GLOBAL_DEX_ID, action: 'complete' }),
+    ).toBe('__pokedex__:all:complete')
   })
 })
 
@@ -45,7 +45,9 @@ describe('parsePokedexActionSlotId', () => {
   })
 
   it('returns null for unknown action', () => {
-    expect(parsePokedexActionSlotId('__pokedex__:national:unknownAction')).toBeNull()
+    expect(
+      parsePokedexActionSlotId('__pokedex__:national:unknownAction'),
+    ).toBeNull()
   })
 
   it('returns null for missing action', () => {
@@ -56,16 +58,25 @@ describe('parsePokedexActionSlotId', () => {
 describe('samePokedexAction', () => {
   it('returns true for identical keys', () => {
     expect(
-      samePokedexAction({ dexId: 'a', action: 'seen' }, { dexId: 'a', action: 'seen' }),
+      samePokedexAction(
+        { dexId: 'a', action: 'seen' },
+        { dexId: 'a', action: 'seen' },
+      ),
     ).toBe(true)
   })
 
   it('returns false if either field differs', () => {
     expect(
-      samePokedexAction({ dexId: 'a', action: 'seen' }, { dexId: 'b', action: 'seen' }),
+      samePokedexAction(
+        { dexId: 'a', action: 'seen' },
+        { dexId: 'b', action: 'seen' },
+      ),
     ).toBe(false)
     expect(
-      samePokedexAction({ dexId: 'a', action: 'seen' }, { dexId: 'a', action: 'caught' }),
+      samePokedexAction(
+        { dexId: 'a', action: 'seen' },
+        { dexId: 'a', action: 'caught' },
+      ),
     ).toBe(false)
   })
 })
@@ -73,19 +84,19 @@ describe('samePokedexAction', () => {
 describe('hasPokedexAction', () => {
   it('finds a matching action in the list', () => {
     expect(
-      hasPokedexAction(
-        [{ dexId: 'a', action: 'seen' }],
-        { dexId: 'a', action: 'seen' },
-      ),
+      hasPokedexAction([{ dexId: 'a', action: 'seen' }], {
+        dexId: 'a',
+        action: 'seen',
+      }),
     ).toBe(true)
   })
 
   it('returns false when not in the list', () => {
     expect(
-      hasPokedexAction(
-        [{ dexId: 'a', action: 'seen' }],
-        { dexId: 'a', action: 'caught' },
-      ),
+      hasPokedexAction([{ dexId: 'a', action: 'seen' }], {
+        dexId: 'a',
+        action: 'caught',
+      }),
     ).toBe(false)
   })
 
@@ -119,7 +130,9 @@ describe('pokedexDexLabel', () => {
   })
 
   it('falls back to the raw dex id when no matching entry exists', () => {
-    expect(pokedexDexLabel(t, 'unknown', { dexes: [] } as never)).toBe('unknown')
+    expect(pokedexDexLabel(t, 'unknown', { dexes: [] } as never)).toBe(
+      'unknown',
+    )
   })
 })
 

@@ -55,7 +55,11 @@ describe('getActiveFlags', () => {
   })
 
   it('flags contact when contact is true', () => {
-    expect(getActiveFlags(detail({ contact: true })).some((f) => f.flag === 'contact')).toBe(true)
+    expect(
+      getActiveFlags(detail({ contact: true })).some(
+        (f) => f.flag === 'contact',
+      ),
+    ).toBe(true)
   })
 
   it('flags reflectable, mirror, snatch from their respective booleans', () => {
@@ -86,8 +90,21 @@ describe('getActiveFlags', () => {
         bullet: true,
       }),
     )
-    for (const f of ['sound', 'punch', 'slicing', 'wind', 'dance', 'heal', 'charge',
-      'recharge', 'defrost', 'gravity', 'powder', 'pulse', 'bite'] as const) {
+    for (const f of [
+      'sound',
+      'punch',
+      'slicing',
+      'wind',
+      'dance',
+      'heal',
+      'charge',
+      'recharge',
+      'defrost',
+      'gravity',
+      'powder',
+      'pulse',
+      'bite',
+    ] as const) {
       expect(flags.some((flag) => flag.flag === f)).toBe(true)
     }
   })

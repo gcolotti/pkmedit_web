@@ -7,16 +7,34 @@ const t = createTranslator('en')
 
 describe('buildWorkspaceDraftChanges', () => {
   it('returns an empty list when nothing is given', () => {
-    expect(buildWorkspaceDraftChanges([], t, null, null, [], [], null)).toEqual([])
+    expect(buildWorkspaceDraftChanges([], t, null, null, [], [], null)).toEqual(
+      [],
+    )
   })
 
   it('emits a trainer slot when trainerDraft is non-null', () => {
-    const result = buildWorkspaceDraftChanges([], t, { otName: 'A' } as never, null, [], [], null)
+    const result = buildWorkspaceDraftChanges(
+      [],
+      t,
+      { otName: 'A' } as never,
+      null,
+      [],
+      [],
+      null,
+    )
     expect(result[0]?.slotId).toBe('__trainer__')
   })
 
   it('emits an items slot when itemsDraft is non-null', () => {
-    const result = buildWorkspaceDraftChanges([], t, null, { pockets: [] }, [], [], null)
+    const result = buildWorkspaceDraftChanges(
+      [],
+      t,
+      null,
+      { pockets: [] },
+      [],
+      [],
+      null,
+    )
     expect(result[0]?.slotId).toBe('__items__')
   })
 
@@ -89,26 +107,17 @@ describe('buildWorkspaceDraftChanges', () => {
   })
 
   it('emits a slot per donut draft with the donut id and label', () => {
-    const result = buildWorkspaceDraftChanges(
-      [],
-      t,
-      null,
-      null,
-      [],
-      [],
-      null,
-      [
-        {
-          id: 'd1',
-          label: 'Sweet Donut',
-          berries: [1],
-          berryName: 1,
-          flavor0: 0,
-          flavor1: 0,
-          flavor2: 0,
-        } as never,
-      ],
-    )
+    const result = buildWorkspaceDraftChanges([], t, null, null, [], [], null, [
+      {
+        id: 'd1',
+        label: 'Sweet Donut',
+        berries: [1],
+        berryName: 1,
+        flavor0: 0,
+        flavor1: 0,
+        flavor2: 0,
+      } as never,
+    ])
     expect(result[0]?.slotId).toBe('__donut__:d1')
     expect(result[0]?.after).toBe('Sweet Donut')
   })
@@ -130,7 +139,13 @@ describe('buildWorkspaceDraftChanges', () => {
   })
 
   it('appends arceus research drafts at the end, after pokemon changes', () => {
-    const pokemonChange = { slotId: 'slot-1', path: 'main.nickname', label: 'x', before: '', after: 'A' }
+    const pokemonChange = {
+      slotId: 'slot-1',
+      path: 'main.nickname',
+      label: 'x',
+      before: '',
+      after: 'A',
+    }
     const result = buildWorkspaceDraftChanges(
       [pokemonChange],
       t,

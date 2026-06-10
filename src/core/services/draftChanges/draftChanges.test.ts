@@ -55,10 +55,7 @@ describe('hasPokemonChanged', () => {
 
   it('returns true when draft differs from base', () => {
     expect(
-      hasPokemonChanged(
-        base(),
-        base({ main: { nickname: 'New' } as never }),
-      ),
+      hasPokemonChanged(base(), base({ main: { nickname: 'New' } as never })),
     ).toBe(true)
   })
 })
@@ -85,10 +82,16 @@ describe('buildDraftRequests', () => {
   it('prefers replacement over pokemon when one is provided', () => {
     const b = base()
     const d = base({ main: { nickname: 'X' } as never })
-    const result = buildDraftRequests({ a: b }, { a: d }, {
-      a: { dataBase64: 'AA==' },
-    })
-    expect(result).toEqual([{ slotId: 'a', replacement: { dataBase64: 'AA==' } }])
+    const result = buildDraftRequests(
+      { a: b },
+      { a: d },
+      {
+        a: { dataBase64: 'AA==' },
+      },
+    )
+    expect(result).toEqual([
+      { slotId: 'a', replacement: { dataBase64: 'AA==' } },
+    ])
   })
 })
 

@@ -2,7 +2,10 @@ import { Fragment } from 'react'
 
 import type { Translator } from '../../../core/i18n/i18n/i18n'
 import type { CatalogEntry } from '../../../core/types/index/index'
-import type { PokemonMoves, PokemonPlusMoves } from '../../../core/types/pokemon/pokemon'
+import type {
+  PokemonMoves,
+  PokemonPlusMoves,
+} from '../../../core/types/pokemon/pokemon'
 import { groupCatalogEntriesByType } from '../../../core/utils/catalogSort/catalogSort'
 import { MoveListbox } from '../../pokemon/moves/MoveListbox/MoveListbox'
 import { PlusMovesSection } from '../PlusMovesSection/PlusMovesSection'

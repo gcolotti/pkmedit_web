@@ -3,7 +3,10 @@ import { useMemo } from 'react'
 import { useStatReconciliation } from '../../../../core/hooks/useStatReconciliation/useStatReconciliation'
 import { useWorkspace } from '../../../../core/hooks/workspaceContext/workspaceContext'
 import type { Translator } from '../../../../core/i18n/i18n/i18n'
-import type { CatalogEntry, PokemonDetail } from '../../../../core/types/index/index'
+import type {
+  CatalogEntry,
+  PokemonDetail,
+} from '../../../../core/types/index/index'
 import { natureModifier } from '../../../../core/utils/natureData/natureData'
 import { computeDraftStats } from '../../computeDraftStats/computeDraftStats'
 import { StatsGroup } from '../StatsGroup/StatsGroup'

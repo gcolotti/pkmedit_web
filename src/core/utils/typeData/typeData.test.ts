@@ -15,9 +15,15 @@ import {
 
 const t = ((key: string) => key) as never
 
-const catalog = (entries: { id: number; name?: string; color?: number | null }[]) => {
+const catalog = (
+  entries: { id: number; name?: string; color?: number | null }[],
+) => {
   setTypeCatalog(
-    entries.map((e) => ({ id: e.id, name: e.name ?? `Type${e.id}`, color: e.color ?? null })),
+    entries.map((e) => ({
+      id: e.id,
+      name: e.name ?? `Type${e.id}`,
+      color: e.color ?? null,
+    })),
   )
 }
 
@@ -31,7 +37,9 @@ describe('typeData constants', () => {
   })
 
   it('BASE_TYPE_IDS is 0..17', () => {
-    expect(BASE_TYPE_IDS).toEqual([0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17])
+    expect(BASE_TYPE_IDS).toEqual([
+      0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17,
+    ])
   })
 
   it('STELLAR_GRADIENT contains the stellar image reference', () => {
@@ -90,7 +98,9 @@ describe('getTypeColor', () => {
 
 describe('getTypeIconUrl', () => {
   it('returns the stellar icon for TERA_TYPE_STELLAR', () => {
-    expect(getTypeIconUrl(TERA_TYPE_STELLAR)).toBe('/assets/stellar/stellar_icon.png')
+    expect(getTypeIconUrl(TERA_TYPE_STELLAR)).toBe(
+      '/assets/stellar/stellar_icon.png',
+    )
   })
 
   it('returns undefined for typeId undefined', () => {

@@ -7,7 +7,10 @@ import type {
   RaidListResponse,
   SevenStarRaidEntry,
 } from '../../../core/types/saveFeature/saveFeature'
-import type { RaidFilter, RaidHelpTopic } from '../../../core/utils/raidDisplay/raidDisplay'
+import type {
+  RaidFilter,
+  RaidHelpTopic,
+} from '../../../core/utils/raidDisplay/raidDisplay'
 import {
   getRaidSummary,
   isSevenStarRelevant,

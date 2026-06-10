@@ -6,7 +6,9 @@ import { requestJson } from '../apiHttp/apiHttp'
 import { PokemonApi } from './pokemonApi'
 
 const make = () =>
-  new PokemonApi((path, opts) => requestJson('http://api.test', 'en', path, opts))
+  new PokemonApi((path, opts) =>
+    requestJson('http://api.test', 'en', path, opts),
+  )
 
 describe('PokemonApi', () => {
   it('getParty fetches /api/saves/:id/party', async () => {
@@ -49,11 +51,14 @@ describe('PokemonApi', () => {
     let receivedMethod = ''
     let receivedBody: unknown = null
     server.use(
-      http.post('*/api/saves/:id/pokemon/:slotId/preview', async ({ request }) => {
-        receivedMethod = request.method
-        receivedBody = await request.json()
-        return HttpResponse.json({})
-      }),
+      http.post(
+        '*/api/saves/:id/pokemon/:slotId/preview',
+        async ({ request }) => {
+          receivedMethod = request.method
+          receivedBody = await request.json()
+          return HttpResponse.json({})
+        },
+      ),
     )
     await make().previewPokemonUpdate('ses-1', 'slot-7', { nickname: 'X' })
     expect(receivedMethod).toBe('POST')
@@ -65,11 +70,18 @@ describe('PokemonApi', () => {
     server.use(
       http.post('*/api/saves/:id/legality/check-draft', async ({ request }) => {
         receivedBody = await request.json()
-        return HttpResponse.json({ reports: [], violations: [], blocked: false })
+        return HttpResponse.json({
+          reports: [],
+          violations: [],
+          blocked: false,
+        })
       }),
     )
     const result = await make().checkDraft('ses-1', [{ slotId: 'a' }], true)
-    expect(receivedBody).toEqual({ allowIllegalChanges: true, changes: [{ slotId: 'a' }] })
+    expect(receivedBody).toEqual({
+      allowIllegalChanges: true,
+      changes: [{ slotId: 'a' }],
+    })
     expect(result).toEqual({ reports: [], violations: [], blocked: false })
   })
 

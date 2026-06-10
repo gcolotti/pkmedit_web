@@ -104,6 +104,8 @@ describe('SaveApi', () => {
       ),
     )
     await make().getArceusResearchSpecies('ses-1', 25, 'es')
-    expect(url).toMatch(/\/api\/saves\/ses-1\/pokedex\/arceus-research\/25\?lang=es$/)
+    expect(url).toMatch(
+      /\/api\/saves\/ses-1\/pokedex\/arceus-research\/25\?lang=es$/,
+    )
   })
 })

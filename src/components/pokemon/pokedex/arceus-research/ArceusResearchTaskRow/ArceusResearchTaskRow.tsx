@@ -3,7 +3,10 @@ import type {
   ArceusResearchActionKey,
   ArceusResearchTaskEntry,
 } from '../../../../../core/types/index/index'
-import { formatTaskProgress, isTaskComplete } from '../arceusResearchPanelUtils/arceusResearchPanelUtils'
+import {
+  formatTaskProgress,
+  isTaskComplete,
+} from '../arceusResearchPanelUtils/arceusResearchPanelUtils'
 
 export function ArceusResearchTaskRow({
   species,

@@ -3,7 +3,10 @@ import { describe, expect, it } from 'vitest'
 
 import type { Translator } from '../../i18n/i18n/i18n'
 import type { GenerationEffectChange } from '../generationData/generationData'
-import { renderCategoryStat, renderMoveEffectInCombat } from './generationRendering'
+import {
+  renderCategoryStat,
+  renderMoveEffectInCombat,
+} from './generationRendering'
 
 const t = ((key: string, params?: Record<string, unknown>) => {
   if (params) {
@@ -43,7 +46,11 @@ describe('renderCategoryStat', () => {
 describe('renderMoveEffectInCombat', () => {
   it('shows the current effect text when provided', () => {
     render(
-      renderMoveEffectInCombat('Effective against foes.', [], t) as React.ReactElement,
+      renderMoveEffectInCombat(
+        'Effective against foes.',
+        [],
+        t,
+      ) as React.ReactElement,
     )
     expect(screen.getByText('Effective against foes.')).toBeInTheDocument()
   })
@@ -58,11 +65,15 @@ describe('renderMoveEffectInCombat', () => {
       { generation: 5, text: 'Gen 5 effect.' },
       { generation: 3, text: 'Gen 3 effect.' },
     ]
-    render(renderMoveEffectInCombat('current', changes, t) as React.ReactElement)
+    render(
+      renderMoveEffectInCombat('current', changes, t) as React.ReactElement,
+    )
     expect(screen.getByText('Gen 5 effect.')).toBeInTheDocument()
     expect(screen.getByText('Gen 3 effect.')).toBeInTheDocument()
     // The header is localized as "moveGenerationSingle" with a {generation} param
-    expect(screen.getAllByText(/moveGenerationSingle/).length).toBeGreaterThan(0)
+    expect(screen.getAllByText(/moveGenerationSingle/).length).toBeGreaterThan(
+      0,
+    )
   })
 
   it('does not render the changes section when changes is empty', () => {

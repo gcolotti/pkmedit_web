@@ -1,10 +1,6 @@
 import { describe, expect, it } from 'vitest'
 
-import {
-  GEN_LABELS,
-  GEN_TYPES,
-  TYPE_CHARTS,
-} from './typeChartData'
+import { GEN_LABELS, GEN_TYPES, TYPE_CHARTS } from './typeChartData'
 
 describe('GEN_LABELS', () => {
   it('has the expected labels for each gen', () => {

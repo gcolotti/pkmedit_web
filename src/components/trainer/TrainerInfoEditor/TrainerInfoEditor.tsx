@@ -2,10 +2,16 @@ import { useState } from 'react'
 
 import type { Translator } from '../../../core/i18n/i18n/i18n'
 import type { DonutDraft, DonutPocket } from '../../../core/types/donut/donut'
-import type { CatalogEntry, SaveSectionStatus } from '../../../core/types/index/index'
+import type {
+  CatalogEntry,
+  SaveSectionStatus,
+} from '../../../core/types/index/index'
 import type { TrainerInfo } from '../../../core/types/trainer/trainer'
 import { SubPanelTabs } from '../../ui/SubPanelTabs/SubPanelTabs'
-import { hasTrainerDlcContent, TrainerDlcSection } from '../TrainerDlcSection/TrainerDlcSection'
+import {
+  hasTrainerDlcContent,
+  TrainerDlcSection,
+} from '../TrainerDlcSection/TrainerDlcSection'
 import { TrainerImagesSection } from '../TrainerImagesSection/TrainerImagesSection'
 import { TrainerMapPositionSection } from '../TrainerMapPositionSection/TrainerMapPositionSection'
 import { TrainerOverviewSection } from '../TrainerOverviewSection/TrainerOverviewSection'

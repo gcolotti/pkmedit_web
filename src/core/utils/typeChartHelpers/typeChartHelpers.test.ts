@@ -10,7 +10,9 @@ describe('WIKIDEX_TYPE_ORDER', () => {
   it('contains 18 unique type ids 0..17', () => {
     expect(new Set(WIKIDEX_TYPE_ORDER).size).toBe(18)
     const sorted = [...WIKIDEX_TYPE_ORDER].sort((a, b) => a - b)
-    expect(sorted).toEqual([0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17])
+    expect(sorted).toEqual([
+      0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17,
+    ])
   })
 })
 

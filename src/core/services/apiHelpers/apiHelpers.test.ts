@@ -53,14 +53,19 @@ describe('buildArceusResearchActionsPayload', () => {
   })
 
   it('produces targets = [] when keys is undefined but bulk is present', () => {
-    const result = buildArceusResearchActionsPayload(undefined, ['markAllPerfect'])
+    const result = buildArceusResearchActionsPayload(undefined, [
+      'markAllPerfect',
+    ])
     expect(result?.targets).toEqual([])
     expect(result?.markAllPerfect).toBe(true)
     expect(result?.markAllComplete).toBe(false)
   })
 
   it('marks markAllPerfect / markAllComplete based on bulk presence', () => {
-    const result = buildArceusResearchActionsPayload([], ['markAllPerfect', 'markAllComplete'])
+    const result = buildArceusResearchActionsPayload(
+      [],
+      ['markAllPerfect', 'markAllComplete'],
+    )
     expect(result?.markAllPerfect).toBe(true)
     expect(result?.markAllComplete).toBe(true)
   })

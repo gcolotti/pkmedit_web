@@ -1,8 +1,15 @@
 import type { Translator } from '../../i18n/i18n/i18n'
-import type { PokemonDraftChange, PokemonReplacement } from '../../types/database/database'
+import type {
+  PokemonDraftChange,
+  PokemonReplacement,
+} from '../../types/database/database'
 import type { DraftChange, PokemonDetail } from '../../types/index/index'
 import type { PokemonSummary } from '../../types/pokemon/pokemon'
-import { flatten, formatValue, labelPath } from '../draftPathUtils/draftPathUtils'
+import {
+  flatten,
+  formatValue,
+  labelPath,
+} from '../draftPathUtils/draftPathUtils'
 import { buildPokemonPayload } from '../pokemonPayload/pokemonPayload'
 import { areStructurallyEqual } from '../structuralEquality/structuralEquality'
 

@@ -18,7 +18,11 @@ const noopT = ((key: string) => key) as never
 
 describe('sortCatalogEntriesByName', () => {
   it('sorts alphabetically by name (locale-aware)', () => {
-    const entries = [makeEntry(1, 'Charlie'), makeEntry(2, 'Alpha'), makeEntry(3, 'Bravo')]
+    const entries = [
+      makeEntry(1, 'Charlie'),
+      makeEntry(2, 'Alpha'),
+      makeEntry(3, 'Bravo'),
+    ]
     const sorted = sortCatalogEntriesByName(entries)
     expect(sorted.map((e) => e.name)).toEqual(['Alpha', 'Bravo', 'Charlie'])
   })
@@ -82,7 +86,8 @@ describe('groupCatalogEntriesByType', () => {
   it('uses getTypeName for known typeIds', () => {
     setTypeCatalog([{ id: 42, name: 'Type-42' }])
     try {
-      const tMock = ((key: string) => (key === 'typeUnknown' ? '???' : key)) as never
+      const tMock = ((key: string) =>
+        key === 'typeUnknown' ? '???' : key) as never
       const entries = [makeEntry(1, 'A', 42)]
       const groups = groupCatalogEntriesByType(entries, tMock)
       expect(groups[0].label).toBe('Type-42')

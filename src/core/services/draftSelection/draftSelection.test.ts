@@ -8,7 +8,9 @@ const pokemon = (id: number): PokemonDetail =>
 
 describe('selectedDetail', () => {
   it('returns null when no slot is selected', () => {
-    expect(selectedDetail(null, { a: pokemon(1) }, { a: pokemon(2) })).toBeNull()
+    expect(
+      selectedDetail(null, { a: pokemon(1) }, { a: pokemon(2) }),
+    ).toBeNull()
   })
 
   it('prefers the draft over the base detail', () => {

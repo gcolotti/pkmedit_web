@@ -3,7 +3,10 @@ import { useCallback, useEffect, useState } from 'react'
 
 import type { Translator } from '../../../core/i18n/i18n/i18n'
 import type { BoxSummary, CatalogEntry } from '../../../core/types/index/index'
-import { getDenseSlotGridColumnCount, SlotGrid } from '../../common/SlotGrid/SlotGrid'
+import {
+  getDenseSlotGridColumnCount,
+  SlotGrid,
+} from '../../common/SlotGrid/SlotGrid'
 
 type Props = {
   boxIndex: number

@@ -1,6 +1,9 @@
 import type { Translator } from '../../../core/i18n/i18n/i18n'
 import type { CatalogEntry, Language } from '../../../core/types/index/index'
-import type { PokemonMoves, PokemonPlusMoves } from '../../../core/types/pokemon/pokemon'
+import type {
+  PokemonMoves,
+  PokemonPlusMoves,
+} from '../../../core/types/pokemon/pokemon'
 
 export type MoveFocusedEditorPageProps = {
   language: Language

@@ -20,7 +20,11 @@ describe('arceusResearchActionSlotId', () => {
 
   it('uses the numeric task index when present', () => {
     expect(
-      arceusResearchActionSlotId({ species: 25, action: 'completeTask', taskIndex: 2 }),
+      arceusResearchActionSlotId({
+        species: 25,
+        action: 'completeTask',
+        taskIndex: 2,
+      }),
     ).toBe('__arceus_research__:25:completeTask:2')
   })
 })
@@ -42,12 +46,16 @@ describe('parseArceusResearchActionSlotId', () => {
 
   it('parses a slot id with "all" task placeholder into null', () => {
     expect(
-      parseArceusResearchActionSlotId('__arceus_research__:25:completeTask:all'),
+      parseArceusResearchActionSlotId(
+        '__arceus_research__:25:completeTask:all',
+      ),
     ).toEqual({ species: 25, action: 'completeTask', taskIndex: null })
   })
 
   it('parses a slot id missing the task portion into null', () => {
-    expect(parseArceusResearchActionSlotId('__arceus_research__:25:completeTask')).toEqual({
+    expect(
+      parseArceusResearchActionSlotId('__arceus_research__:25:completeTask'),
+    ).toEqual({
       species: 25,
       action: 'completeTask',
       taskIndex: null,
@@ -59,18 +67,24 @@ describe('parseArceusResearchActionSlotId', () => {
   })
 
   it('returns null for an unknown action', () => {
-    expect(parseArceusResearchActionSlotId('__arceus_research__:25:bogus:all')).toBeNull()
+    expect(
+      parseArceusResearchActionSlotId('__arceus_research__:25:bogus:all'),
+    ).toBeNull()
   })
 
   it('returns null for a non-numeric species', () => {
     expect(
-      parseArceusResearchActionSlotId('__arceus_research__:abc:completeTask:all'),
+      parseArceusResearchActionSlotId(
+        '__arceus_research__:abc:completeTask:all',
+      ),
     ).toBeNull()
   })
 
   it('returns null for a non-numeric task index that is not "all"', () => {
     expect(
-      parseArceusResearchActionSlotId('__arceus_research__:25:completeTask:abc'),
+      parseArceusResearchActionSlotId(
+        '__arceus_research__:25:completeTask:abc',
+      ),
     ).toBeNull()
   })
 
@@ -81,13 +95,15 @@ describe('parseArceusResearchActionSlotId', () => {
 
 describe('parseArceusResearchBulkSlotId', () => {
   it('parses a valid bulk action', () => {
-    expect(parseArceusResearchBulkSlotId('__arceus_research_bulk__:markAllComplete')).toBe(
-      'markAllComplete',
-    )
+    expect(
+      parseArceusResearchBulkSlotId('__arceus_research_bulk__:markAllComplete'),
+    ).toBe('markAllComplete')
   })
 
   it('returns null for unknown bulk action', () => {
-    expect(parseArceusResearchBulkSlotId('__arceus_research_bulk__:nope')).toBeNull()
+    expect(
+      parseArceusResearchBulkSlotId('__arceus_research_bulk__:nope'),
+    ).toBeNull()
   })
 
   it('returns null for unrelated slot id', () => {

@@ -1,5 +1,8 @@
 import type { Translator } from '../../../../core/i18n/i18n/i18n'
-import type { CatalogBundle, PokemonDetail } from '../../../../core/types/index/index'
+import type {
+  CatalogBundle,
+  PokemonDetail,
+} from '../../../../core/types/index/index'
 import { getHeldItemImageUrl } from '../../../../core/utils/wikiDexAssets/wikiDexAssets'
 import { CatalogSearchCombobox } from '../../../ui/catalog-select/CatalogSearchCombobox/CatalogSearchCombobox'
 

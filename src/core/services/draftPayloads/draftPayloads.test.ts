@@ -9,30 +9,29 @@ import {
   isSameDraft,
 } from './draftPayloads'
 
-const makeTrainer = (overrides: Partial<TrainerInfo> = {}): TrainerInfo =>
-  ({
-    otName: 'A',
-    gender: 0,
-    language: 0,
-    displayTID: 0,
-    displaySID: 0,
-    money: 0,
-    playedHours: null,
-    playedMinutes: null,
-    playedSeconds: null,
-    lastSaved: null,
-    canEditPlayTime: false,
-    canEditMoney: false,
-    saveKind: 'main',
-    gameFields: [],
-    gameActions: [],
-    images: [],
-    timeline: [],
-    map: null,
-    royale: null,
-    dlc: null,
-    ...overrides,
-  })
+const makeTrainer = (overrides: Partial<TrainerInfo> = {}): TrainerInfo => ({
+  otName: 'A',
+  gender: 0,
+  language: 0,
+  displayTID: 0,
+  displaySID: 0,
+  money: 0,
+  playedHours: null,
+  playedMinutes: null,
+  playedSeconds: null,
+  lastSaved: null,
+  canEditPlayTime: false,
+  canEditMoney: false,
+  saveKind: 'main',
+  gameFields: [],
+  gameActions: [],
+  images: [],
+  timeline: [],
+  map: null,
+  royale: null,
+  dlc: null,
+  ...overrides,
+})
 
 describe('isSameDraft', () => {
   it('returns false when base is null', () => {
@@ -56,7 +55,16 @@ describe('buildTrainerUpdatePayload', () => {
       displayTID: 12345,
       displaySID: 54321,
       money: 100,
-      gameFields: [{ key: 'a', value: '1', labelKey: 'a', kind: 'text', min: null, max: null }],
+      gameFields: [
+        {
+          key: 'a',
+          value: '1',
+          labelKey: 'a',
+          kind: 'text',
+          min: null,
+          max: null,
+        },
+      ],
     })
     const payload = buildTrainerUpdatePayload(trainer)
     expect(payload.otName).toBe('Ash')
@@ -71,14 +79,39 @@ describe('buildTrainerUpdatePayload', () => {
   it('flattens gameFields and dlcGameFields into a single record', () => {
     const trainer = makeTrainer({
       gameFields: [
-        { key: 'a', value: '1', labelKey: 'a', kind: 'text', min: null, max: null },
-        { key: 'b', value: '2', labelKey: 'b', kind: 'text', min: null, max: null },
+        {
+          key: 'a',
+          value: '1',
+          labelKey: 'a',
+          kind: 'text',
+          min: null,
+          max: null,
+        },
+        {
+          key: 'b',
+          value: '2',
+          labelKey: 'b',
+          kind: 'text',
+          min: null,
+          max: null,
+        },
       ],
       dlcGameFields: [
-        { key: 'c', value: '3', labelKey: 'c', kind: 'text', min: null, max: null },
+        {
+          key: 'c',
+          value: '3',
+          labelKey: 'c',
+          kind: 'text',
+          min: null,
+          max: null,
+        },
       ],
     })
-    expect(buildTrainerUpdatePayload(trainer).gameFields).toEqual({ a: '1', b: '2', c: '3' })
+    expect(buildTrainerUpdatePayload(trainer).gameFields).toEqual({
+      a: '1',
+      b: '2',
+      c: '3',
+    })
   })
 
   it('excludes played* and lastSaved when null', () => {
@@ -91,7 +124,12 @@ describe('buildTrainerUpdatePayload', () => {
 
   it('includes played* and lastSaved when set', () => {
     const payload = buildTrainerUpdatePayload(
-      makeTrainer({ playedHours: 5, playedMinutes: 30, playedSeconds: 45, lastSaved: '2024-01-01' }),
+      makeTrainer({
+        playedHours: 5,
+        playedMinutes: 30,
+        playedSeconds: 45,
+        lastSaved: '2024-01-01',
+      }),
     )
     expect(payload.playedHours).toBe(5)
     expect(payload.playedMinutes).toBe(30)
@@ -119,7 +157,8 @@ describe('buildTrainerUpdatePayload', () => {
   it('omits gameActions when pendingGameActions is empty or missing', () => {
     expect(buildTrainerUpdatePayload(makeTrainer()).gameActions).toBeUndefined()
     expect(
-      buildTrainerUpdatePayload(makeTrainer({ pendingGameActions: [] })).gameActions,
+      buildTrainerUpdatePayload(makeTrainer({ pendingGameActions: [] }))
+        .gameActions,
     ).toBeUndefined()
   })
 
@@ -138,7 +177,10 @@ describe('buildTrainerUpdatePayload', () => {
 
   it('includes collectAllColorfulScrews / collectAllTechnicalMachines when truthy', () => {
     const payload = buildTrainerUpdatePayload(
-      makeTrainer({ collectAllColorfulScrews: true, collectAllTechnicalMachines: true }),
+      makeTrainer({
+        collectAllColorfulScrews: true,
+        collectAllTechnicalMachines: true,
+      }),
     )
     expect(payload.collectAllColorfulScrews).toBe(true)
     expect(payload.collectAllTechnicalMachines).toBe(true)
@@ -147,9 +189,21 @@ describe('buildTrainerUpdatePayload', () => {
   it('omits timeline when no editable non-text entries are present', () => {
     const trainer = makeTrainer({
       timeline: [
-        { key: 'k1', value: 'v1', labelKey: 'k1', kind: 'date', editable: false },
+        {
+          key: 'k1',
+          value: 'v1',
+          labelKey: 'k1',
+          kind: 'date',
+          editable: false,
+        },
         { key: 'k2', value: '', labelKey: 'k2', kind: 'date', editable: true },
-        { key: 'k3', value: 'v3', labelKey: 'k3', kind: 'text', editable: true },
+        {
+          key: 'k3',
+          value: 'v3',
+          labelKey: 'k3',
+          kind: 'text',
+          editable: true,
+        },
       ],
     })
     expect(buildTrainerUpdatePayload(trainer).timeline).toBeUndefined()
@@ -159,7 +213,13 @@ describe('buildTrainerUpdatePayload', () => {
     const trainer = makeTrainer({
       timeline: [
         { key: 'k1', value: '', labelKey: 'k1', kind: 'date', editable: true },
-        { key: 'k2', value: 'v2', labelKey: 'k2', kind: 'date', editable: true },
+        {
+          key: 'k2',
+          value: 'v2',
+          labelKey: 'k2',
+          kind: 'date',
+          editable: true,
+        },
       ],
     })
     expect(buildTrainerUpdatePayload(trainer).timeline).toEqual({ k2: 'v2' })
@@ -185,7 +245,10 @@ describe('buildItemsUpdatePayload', () => {
 describe('buildRaidsUpdatePayload', () => {
   it('maps groups with key and raids only', () => {
     const data = {
-      groups: [{ key: 'a', raids: [1, 2] }, { key: 'b', raids: [] }],
+      groups: [
+        { key: 'a', raids: [1, 2] },
+        { key: 'b', raids: [] },
+      ],
       sevenStar: { raids: [3, 4] },
     } as never
     const payload = buildRaidsUpdatePayload(data)

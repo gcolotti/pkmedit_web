@@ -37,7 +37,8 @@ export function revertWorkspaceChange(
 ) {
   if (change.slotId === '__trainer__') return callbacks.revertTrainerEdit()
   if (change.slotId === '__items__') return callbacks.revertItemsEdit()
-  if (change.slotId === '__underground__') return callbacks.revertUndergroundDraft()
+  if (change.slotId === '__underground__')
+    return callbacks.revertUndergroundDraft()
   if (change.slotId === '__raids__') return callbacks.revertRaidsDraft()
   if (change.slotId.startsWith('__mystery_gift__:'))
     return callbacks.revertMysteryGiftEdit(
@@ -46,13 +47,15 @@ export function revertWorkspaceChange(
   const pokedexAction = parsePokedexActionSlotId(change.slotId)
   if (pokedexAction) return callbacks.revertPokedexAction(pokedexAction)
   const arceusResearchBulk = parseArceusResearchBulkSlotId(change.slotId)
-  if (arceusResearchBulk) return callbacks.revertArceusResearchBulk(arceusResearchBulk)
+  if (arceusResearchBulk)
+    return callbacks.revertArceusResearchBulk(arceusResearchBulk)
   const arceusResearchAction = parseArceusResearchActionSlotId(change.slotId)
   if (arceusResearchAction)
     return callbacks.revertArceusResearchAction(arceusResearchAction)
   if (change.slotId.startsWith('__donut__:'))
     return callbacks.revertDonutDraft(change.slotId.slice('__donut__:'.length))
-  if (change.slotId === '__met_date_fixer__') return callbacks.revertMetDateFixerDraft()
+  if (change.slotId === '__met_date_fixer__')
+    return callbacks.revertMetDateFixerDraft()
 
   const base = baseDetails[change.slotId]
   const current = drafts[change.slotId]

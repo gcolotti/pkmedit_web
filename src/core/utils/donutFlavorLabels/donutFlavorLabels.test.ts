@@ -52,7 +52,10 @@ describe('availableHighestFlavorLevels', () => {
       flavor('b', 'sweet', 'berry_basic', 3, 15),
       flavor('c', 'sweet', 'berry_basic', 2, 10),
     ]
-    const result = availableHighestFlavorLevels(flavors, preview({ sweet: 50, total: 50 }))
+    const result = availableHighestFlavorLevels(
+      flavors,
+      preview({ sweet: 50, total: 50 }),
+    )
     expect(result.map((f) => f.hash)).toEqual(['b'])
   })
 
@@ -61,7 +64,10 @@ describe('availableHighestFlavorLevels', () => {
       flavor('a', 'sweet', 'berry_basic', 5, 20),
       flavor('b', 'sweet', 'sprinkle_advanced', 1, 5),
     ]
-    const result = availableHighestFlavorLevels(flavors, preview({ sweet: 100, total: 100 }))
+    const result = availableHighestFlavorLevels(
+      flavors,
+      preview({ sweet: 100, total: 100 }),
+    )
     expect(result.map((f) => f.hash).sort()).toEqual(['a', 'b'])
   })
 
@@ -70,19 +76,28 @@ describe('availableHighestFlavorLevels', () => {
       flavor('a', 'sp', 'pepper_basic', 3, 10),
       flavor('b', 'sweet', 'candy_basic', 1, 5),
     ]
-    const result = availableHighestFlavorLevels(flavors, preview({ sweet: 50, total: 50 }))
+    const result = availableHighestFlavorLevels(
+      flavors,
+      preview({ sweet: 50, total: 50 }),
+    )
     expect(result.map((f) => f.hash)).toEqual(['b'])
   })
 
   it('excludes flavors whose cost exceeds the per-flavor budget', () => {
     const flavors = [flavor('a', 'sweet', 'candy_basic', 1, 100)]
-    const result = availableHighestFlavorLevels(flavors, preview({ sweet: 10, total: 1000 }))
+    const result = availableHighestFlavorLevels(
+      flavors,
+      preview({ sweet: 10, total: 1000 }),
+    )
     expect(result).toEqual([])
   })
 
   it('excludes flavors whose cost exceeds the total budget', () => {
     const flavors = [flavor('a', 'sweet', 'candy_basic', 1, 50)]
-    const result = availableHighestFlavorLevels(flavors, preview({ sweet: 100, total: 30 }))
+    const result = availableHighestFlavorLevels(
+      flavors,
+      preview({ sweet: 100, total: 30 }),
+    )
     expect(result).toEqual([])
   })
 
@@ -91,26 +106,37 @@ describe('availableHighestFlavorLevels', () => {
       flavor('a', 'sweet', 'candy_basic', 1, 0),
       flavor('b', 'sweet', 'candy_advanced', 1, 5),
     ]
-    const result = availableHighestFlavorLevels(flavors, preview({ sweet: 100, total: 100 }))
+    const result = availableHighestFlavorLevels(
+      flavors,
+      preview({ sweet: 100, total: 100 }),
+    )
     expect(result.map((f) => f.hash)).toEqual(['b'])
   })
 
   it('falls back to 0 budget for unknown flavor keys', () => {
     const flavors = [flavor('a', 'mystery', 'xxx_yyy', 1, 1)]
     // No entry in BUDGET_BY_FLAVOR for 'mystery' → budgetKey = undefined → flavorBudget = 0
-    const result = availableHighestFlavorLevels(flavors, preview({ total: 100 }))
+    const result = availableHighestFlavorLevels(
+      flavors,
+      preview({ total: 100 }),
+    )
     expect(result).toEqual([])
   })
 
   it('falls back to whole name when no underscore split is possible', () => {
     // 'name' has no '_'; the key uses the whole name
     const flavors = [flavor('a', 'sweet', 'lonely', 1, 5)]
-    const result = availableHighestFlavorLevels(flavors, preview({ sweet: 10, total: 10 }))
+    const result = availableHighestFlavorLevels(
+      flavors,
+      preview({ sweet: 10, total: 10 }),
+    )
     expect(result).toHaveLength(1)
   })
 
   it('returns empty when no flavors are given', () => {
-    expect(availableHighestFlavorLevels([], preview({ total: 100 }))).toEqual([])
+    expect(availableHighestFlavorLevels([], preview({ total: 100 }))).toEqual(
+      [],
+    )
   })
 })
 
@@ -121,7 +147,9 @@ describe('hasSelectedFlavorCategory', () => {
   ]
 
   it('returns true when any selected hash maps to the category', () => {
-    expect(hasSelectedFlavorCategory(['a', 'x'], flavors, 'sweet-cat')).toBe(true)
+    expect(hasSelectedFlavorCategory(['a', 'x'], flavors, 'sweet-cat')).toBe(
+      true,
+    )
   })
 
   it('returns false when no selected hash matches the category', () => {

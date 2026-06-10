@@ -19,7 +19,10 @@ import {
   formatStructuredSecondaryEffects,
   getSourceUrls,
 } from '../../../core/utils/moveParsers/moveParsers'
-import { renderEffect, renderStat } from '../../../core/utils/moveRenderers/moveRenderers'
+import {
+  renderEffect,
+  renderStat,
+} from '../../../core/utils/moveRenderers/moveRenderers'
 import { TypeIcon } from '../../ui/TypeIcon/TypeIcon'
 import { MoveCardFlags } from '../MoveCardFlags/MoveCardFlags'
 import { MoveCardModifiers } from '../MoveCardModifiers/MoveCardModifiers'

@@ -1,5 +1,8 @@
 import type { Translator } from '../../../core/i18n/i18n/i18n'
-import { getTypeBackground, getTypeName } from '../../../core/utils/typeData/typeData'
+import {
+  getTypeBackground,
+  getTypeName,
+} from '../../../core/utils/typeData/typeData'
 import { TypeIcon } from '../TypeIcon/TypeIcon'
 
 export function TypeBadge({

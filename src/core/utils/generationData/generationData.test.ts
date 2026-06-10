@@ -27,7 +27,9 @@ describe('getMaxGeneration', () => {
   })
 
   it('returns the maximum numeric key from generations', () => {
-    const detail = { generations: { '1': {}, '5': {}, '3': {} } } as unknown as MoveDetail
+    const detail = {
+      generations: { '1': {}, '5': {}, '3': {} },
+    } as unknown as MoveDetail
     expect(getMaxGeneration(detail)).toBe(5)
   })
 
@@ -37,7 +39,9 @@ describe('getMaxGeneration', () => {
   })
 
   it('ignores non-numeric keys', () => {
-    const detail = { generations: { abc: {}, '2': {} } } as unknown as MoveDetail
+    const detail = {
+      generations: { abc: {}, '2': {} },
+    } as unknown as MoveDetail
     expect(getMaxGeneration(detail)).toBe(2)
   })
 })
@@ -52,7 +56,9 @@ describe('getIntroducedGeneration', () => {
   })
 
   it('returns the introducedGeneration value', () => {
-    const detail = { current: { availability: { introducedGeneration: 4 } } } as unknown as MoveDetail
+    const detail = {
+      current: { availability: { introducedGeneration: 4 } },
+    } as unknown as MoveDetail
     expect(getIntroducedGeneration(detail)).toBe(4)
   })
 
@@ -65,7 +71,9 @@ describe('getIntroducedGeneration', () => {
 
 describe('getAvailableGenerationNumbers', () => {
   it('returns [1..9] when no generation data', () => {
-    expect(getAvailableGenerationNumbers(null)).toEqual([1, 2, 3, 4, 5, 6, 7, 8, 9])
+    expect(getAvailableGenerationNumbers(null)).toEqual([
+      1, 2, 3, 4, 5, 6, 7, 8, 9,
+    ])
   })
 
   it('uses introducedGeneration and maxGeneration to bound the list', () => {
@@ -79,7 +87,10 @@ describe('getAvailableGenerationNumbers', () => {
   it('excludes unavailableInGenerations', () => {
     const detail = {
       current: {
-        availability: { introducedGeneration: 1, unavailableInGenerations: [3, 5] },
+        availability: {
+          introducedGeneration: 1,
+          unavailableInGenerations: [3, 5],
+        },
       },
       generations: { '1': {}, '5': {} },
     } as unknown as MoveDetail
@@ -123,7 +134,9 @@ describe('getMoveEffectChanges', () => {
     } as unknown as MoveDetail
     const result = getMoveEffectChanges(detail, 'en')
     expect(result).toHaveLength(1)
-    expect(result[0].text).toBe('In-battle effect paragraph.\n\nAnother in-battle paragraph.')
+    expect(result[0].text).toBe(
+      'In-battle effect paragraph.\n\nAnother in-battle paragraph.',
+    )
   })
 
   it('drops the entry when only Contest paragraphs are present', () => {
@@ -142,7 +155,11 @@ describe('getMoveEffectChanges', () => {
   it('uses the language parameter to pick the description', () => {
     const detail = {
       generations: {
-        '5': { effectChanges: { description: { en: 'EN text.', es: 'ES text.', jp: null } } },
+        '5': {
+          effectChanges: {
+            description: { en: 'EN text.', es: 'ES text.', jp: null },
+          },
+        },
       },
     } as unknown as MoveDetail
     expect(getMoveEffectChanges(detail, 'en')[0].text).toBe('EN text.')

@@ -62,8 +62,22 @@ describe('buildPokemonPayload', () => {
     })
     const payload = buildPokemonPayload(detail)
     expect(payload.cosmetic).toEqual({ alpha: true })
-    expect(payload.evs).toEqual({ hp: 252, atk: 0, def: 0, spa: 0, spd: 0, spe: 0 })
-    expect(payload.ivs).toEqual({ hp: 31, atk: 31, def: 31, spa: 31, spd: 31, spe: 31 })
+    expect(payload.evs).toEqual({
+      hp: 252,
+      atk: 0,
+      def: 0,
+      spa: 0,
+      spd: 0,
+      spe: 0,
+    })
+    expect(payload.ivs).toEqual({
+      hp: 31,
+      atk: 31,
+      def: 31,
+      spa: 31,
+      spd: 31,
+      spe: 31,
+    })
     expect(payload.main).toEqual({ nickname: 'Pikachu' })
     expect(payload.moves).toEqual([{ id: 1 }])
   })
@@ -95,7 +109,10 @@ describe('buildPokemonPayload', () => {
   })
 
   it('includes teraType fields when both equal TERA_TYPE_OVERRIDE_NONE', () => {
-    const detail = baseDetail({ teraTypeOriginal: 0, teraTypeOverride: TERA_TYPE_OVERRIDE_NONE })
+    const detail = baseDetail({
+      teraTypeOriginal: 0,
+      teraTypeOverride: TERA_TYPE_OVERRIDE_NONE,
+    })
     const payload = buildPokemonPayload(detail) as unknown as {
       teraTypeOriginal: number
       teraTypeOverride: number

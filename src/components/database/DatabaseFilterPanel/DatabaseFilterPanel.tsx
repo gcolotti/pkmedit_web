@@ -1,6 +1,9 @@
 import type { DatabaseBrowserState } from '../../../core/hooks/useDatabaseBrowser/useDatabaseBrowser'
 import type { Translator } from '../../../core/i18n/i18n/i18n'
-import type { CatalogBundle, DatabaseView } from '../../../core/types/index/index'
+import type {
+  CatalogBundle,
+  DatabaseView,
+} from '../../../core/types/index/index'
 import { SubPanelTabs } from '../../ui/SubPanelTabs/SubPanelTabs'
 import { EncounterDatabaseFilters } from '../encounters/EncounterDatabaseFilters/EncounterDatabaseFilters'
 import { MysteryGiftDatabaseFilters } from '../mystery-gift/MysteryGiftDatabaseFilters/MysteryGiftDatabaseFilters'

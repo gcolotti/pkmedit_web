@@ -58,10 +58,7 @@ describe('areStructurallyEqual', () => {
 
   it('ignores keys whose value is undefined', () => {
     expect(
-      areStructurallyEqual(
-        { a: 1, b: undefined },
-        { a: 1, b: 2, c: 3 },
-      ),
+      areStructurallyEqual({ a: 1, b: undefined }, { a: 1, b: 2, c: 3 }),
     ).toBe(false)
   })
 

@@ -1,5 +1,8 @@
 import type { Translator } from '../../../../core/i18n/i18n/i18n'
-import type { CatalogEntry, PokemonDetail } from '../../../../core/types/index/index'
+import type {
+  CatalogEntry,
+  PokemonDetail,
+} from '../../../../core/types/index/index'
 import {
   BASE_TYPE_IDS,
   getTypeName,

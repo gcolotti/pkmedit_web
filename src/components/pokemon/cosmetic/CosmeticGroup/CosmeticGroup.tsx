@@ -1,5 +1,8 @@
 import type { Translator } from '../../../../core/i18n/i18n/i18n'
-import type { PokemonCosmetic, PokemonStats } from '../../../../core/types/pokemon/pokemon'
+import type {
+  PokemonCosmetic,
+  PokemonStats,
+} from '../../../../core/types/pokemon/pokemon'
 import { UINT32_MAX } from '../../../../core/utils/numberInput/numberInput'
 import { EditorGroup } from '../../../core/EditorGroup/EditorGroup'
 import { CompactNumberField } from '../../../ui/CompactNumberField/CompactNumberField'

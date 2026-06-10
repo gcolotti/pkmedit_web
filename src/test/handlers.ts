@@ -6,9 +6,7 @@ const json = (data: JsonBodyType, init?: ResponseInit): Response =>
 // Catch-all default. Tests override with server.use(...) in beforeEach.
 // Returning 200/empty here is intentionally permissive so the test setup
 // doesn't fail on requests the suite hasn't explicitly stubbed yet.
-export const defaultHandlers = [
-  http.all('*', () => HttpResponse.json({})),
-]
+export const defaultHandlers = [http.all('*', () => HttpResponse.json({}))]
 
 // --- Health & capabilities ---
 
@@ -30,13 +28,13 @@ export const openSaveHandler = http.post('*/api/saves/open', () =>
   json({ sessionId: 'ses-1', summary: {} }),
 )
 
-export const uploadAndOpenSaveHandler = http.post('*/api/saves/upload-open', () =>
-  json({ sessionId: 'ses-2', summary: {} }),
+export const uploadAndOpenSaveHandler = http.post(
+  '*/api/saves/upload-open',
+  () => json({ sessionId: 'ses-2', summary: {} }),
 )
 
-export const summaryHandler = http.get(
-  '*/api/saves/:sessionId/summary',
-  () => json({}),
+export const summaryHandler = http.get('*/api/saves/:sessionId/summary', () =>
+  json({}),
 )
 
 export const pokedexStatusHandler = http.get(
@@ -56,14 +54,12 @@ export const arceusResearchSpeciesHandler = http.get(
 
 // --- Pokemon ---
 
-export const partyHandler = http.get(
-  '*/api/saves/:sessionId/party',
-  () => json({ slots: [] }),
+export const partyHandler = http.get('*/api/saves/:sessionId/party', () =>
+  json({ slots: [] }),
 )
 
-export const boxesHandler = http.get(
-  '*/api/saves/:sessionId/boxes',
-  () => json({ boxes: [] }),
+export const boxesHandler = http.get('*/api/saves/:sessionId/boxes', () =>
+  json({ boxes: [] }),
 )
 
 export const pokemonHandler = http.get(
@@ -81,9 +77,8 @@ export const checkDraftHandler = http.post(
   () => json({ reports: [], violations: [], blocked: false }),
 )
 
-export const trainerHandler = http.get(
-  '*/api/saves/:sessionId/trainer',
-  () => json({}),
+export const trainerHandler = http.get('*/api/saves/:sessionId/trainer', () =>
+  json({}),
 )
 
 // --- Catalogs ---
@@ -92,26 +87,38 @@ export const catalogsHandler = http.get('*/api/catalogs', () =>
   json({ types: [], moves: [], abilities: [] }),
 )
 
-export const moveDetailsHandler = http.get(
-  '*/api/catalogs/move-details',
-  () => json({ entries: [], total: 0, page: null, pageSize: null, hasNext: null, hasPrevious: null }),
+export const moveDetailsHandler = http.get('*/api/catalogs/move-details', () =>
+  json({
+    entries: [],
+    total: 0,
+    page: null,
+    pageSize: null,
+    hasNext: null,
+    hasPrevious: null,
+  }),
 )
 
 export const abilityDetailsHandler = http.get(
   '*/api/catalogs/ability-details',
-  () => json({ entries: [], total: 0, page: null, pageSize: null, hasNext: null, hasPrevious: null }),
+  () =>
+    json({
+      entries: [],
+      total: 0,
+      page: null,
+      pageSize: null,
+      hasNext: null,
+      hasPrevious: null,
+    }),
 )
 
 // --- Items ---
 
-export const itemBagHandler = http.get(
-  '*/api/saves/:sessionId/items',
-  () => json({}),
+export const itemBagHandler = http.get('*/api/saves/:sessionId/items', () =>
+  json({}),
 )
 
-export const donutsHandler = http.get(
-  '*/api/saves/:sessionId/donuts',
-  () => json({}),
+export const donutsHandler = http.get('*/api/saves/:sessionId/donuts', () =>
+  json({}),
 )
 
 export const previewDonutHandler = http.post(
@@ -124,9 +131,8 @@ export const undergroundHandler = http.get(
   () => json({}),
 )
 
-export const raidsHandler = http.get(
-  '*/api/saves/:sessionId/raids',
-  () => json({}),
+export const raidsHandler = http.get('*/api/saves/:sessionId/raids', () =>
+  json({}),
 )
 
 // --- Databases ---

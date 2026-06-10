@@ -13,7 +13,9 @@ const pokemon = (id: number): PokemonDetail =>
   ({ species: id, nickname: `Mon${id}` }) as unknown as PokemonDetail
 
 const mysteryGift = (id: number): MysteryGiftDatabasePreview =>
-  ({ entry: { id, name: `Gift${id}` } } as unknown as MysteryGiftDatabasePreview)
+  ({
+    entry: { id, name: `Gift${id}` },
+  }) as unknown as MysteryGiftDatabasePreview
 
 const initial = () => ({
   pokemonDrafts: {} as Record<string, PokemonDetail>,
@@ -54,16 +56,12 @@ describe('useDraftStore', () => {
 
   describe('pokemon drafts', () => {
     it('setPokemonDrafts replaces the map', () => {
-      act(() =>
-        useDraftStore.getState().setPokemonDrafts({ a: pokemon(1) }),
-      )
+      act(() => useDraftStore.getState().setPokemonDrafts({ a: pokemon(1) }))
       expect(useDraftStore.getState().pokemonDrafts).toEqual({ a: pokemon(1) })
     })
 
     it('setPokemonDrafts accepts a functional updater', () => {
-      act(() =>
-        useDraftStore.getState().setPokemonDrafts({ a: pokemon(1) }),
-      )
+      act(() => useDraftStore.getState().setPokemonDrafts({ a: pokemon(1) }))
       act(() =>
         useDraftStore
           .getState()
@@ -142,52 +140,41 @@ describe('useDraftStore', () => {
 
   describe('mystery gifts', () => {
     it('setMysteryGiftDrafts replaces the list', () => {
-      act(() =>
-        useDraftStore.getState().setMysteryGiftDrafts([mysteryGift(1)]),
-      )
+      act(() => useDraftStore.getState().setMysteryGiftDrafts([mysteryGift(1)]))
       expect(useDraftStore.getState().mysteryGiftDrafts).toEqual([
         mysteryGift(1),
       ])
     })
 
     it('addMysteryGiftDraft appends a new gift', () => {
-      act(() =>
-        useDraftStore.getState().addMysteryGiftDraft(mysteryGift(1)),
-      )
-      act(() =>
-        useDraftStore.getState().addMysteryGiftDraft(mysteryGift(2)),
-      )
-      expect(useDraftStore.getState().mysteryGiftDrafts.map((g) => g.entry.id))
-        .toEqual([1, 2])
+      act(() => useDraftStore.getState().addMysteryGiftDraft(mysteryGift(1)))
+      act(() => useDraftStore.getState().addMysteryGiftDraft(mysteryGift(2)))
+      expect(
+        useDraftStore.getState().mysteryGiftDrafts.map((g) => g.entry.id),
+      ).toEqual([1, 2])
     })
 
     it('addMysteryGiftDraft dedupes by entry.id', () => {
-      act(() =>
-        useDraftStore.getState().addMysteryGiftDraft(mysteryGift(1)),
-      )
-      act(() =>
-        useDraftStore.getState().addMysteryGiftDraft(mysteryGift(1)),
-      )
+      act(() => useDraftStore.getState().addMysteryGiftDraft(mysteryGift(1)))
+      act(() => useDraftStore.getState().addMysteryGiftDraft(mysteryGift(1)))
       expect(useDraftStore.getState().mysteryGiftDrafts).toHaveLength(1)
     })
 
     it('revertMysteryGiftDraft removes by entry.id', () => {
       act(() =>
-        useDraftStore.getState().setMysteryGiftDrafts([
-          mysteryGift(1),
-          mysteryGift(2),
-        ]),
+        useDraftStore
+          .getState()
+          .setMysteryGiftDrafts([mysteryGift(1), mysteryGift(2)]),
       )
       // The store expects an `id` string, but the synthetic gifts use numeric
       // ids to keep the test data simple. The store compares with `!==`, so
       // coercion is not relevant — only the type signature is.
       act(() =>
-        useDraftStore
-          .getState()
-          .revertMysteryGiftDraft(1 as unknown as string),
+        useDraftStore.getState().revertMysteryGiftDraft(1 as unknown as string),
       )
-      expect(useDraftStore.getState().mysteryGiftDrafts.map((g) => g.entry.id))
-        .toEqual([2])
+      expect(
+        useDraftStore.getState().mysteryGiftDrafts.map((g) => g.entry.id),
+      ).toEqual([2])
     })
   })
 
@@ -218,12 +205,10 @@ describe('useDraftStore', () => {
 
     it('clearReplacementDraft removes the entry', () => {
       act(() =>
-        useDraftStore
-          .getState()
-          .setReplacementDraft('a', {
-            species: 25,
-            dataBase64: 'AA==',
-          } as PokemonReplacement),
+        useDraftStore.getState().setReplacementDraft('a', {
+          species: 25,
+          dataBase64: 'AA==',
+        } as PokemonReplacement),
       )
       act(() => useDraftStore.getState().clearReplacementDraft('a'))
       expect(useDraftStore.getState().replacementDrafts).toEqual({})
@@ -251,9 +236,7 @@ describe('useDraftStore', () => {
     })
 
     it('revertPokedexAction removes the target', () => {
-      act(() =>
-        useDraftStore.getState().setPokedexDrafts([targetA, targetB]),
-      )
+      act(() => useDraftStore.getState().setPokedexDrafts([targetA, targetB]))
       act(() => useDraftStore.getState().revertPokedexAction(targetA))
       expect(useDraftStore.getState().pokedexDrafts).toEqual([targetB])
     })
@@ -261,14 +244,9 @@ describe('useDraftStore', () => {
     it('setPokedexDrafts accepts a functional updater', () => {
       act(() => useDraftStore.getState().setPokedexDrafts([targetA]))
       act(() =>
-        useDraftStore
-          .getState()
-          .setPokedexDrafts((prev) => [...prev, targetB]),
+        useDraftStore.getState().setPokedexDrafts((prev) => [...prev, targetB]),
       )
-      expect(useDraftStore.getState().pokedexDrafts).toEqual([
-        targetA,
-        targetB,
-      ])
+      expect(useDraftStore.getState().pokedexDrafts).toEqual([targetA, targetB])
     })
 
     it('setPokedexStatus replaces the status', () => {
@@ -348,9 +326,7 @@ describe('useDraftStore', () => {
 
   describe('met date fixer', () => {
     it('setMetDateFixerDraft replaces the draft', () => {
-      act(() =>
-        useDraftStore.getState().setMetDateFixerDraft({} as never),
-      )
+      act(() => useDraftStore.getState().setMetDateFixerDraft({} as never))
       expect(useDraftStore.getState().metDateFixerDraft).toEqual({})
     })
   })

@@ -1,7 +1,11 @@
 // Ability-specific sub-types of the v3 pokemon-knowledge schema.
 // Shared base (V3Base, LocalizedText, FlavorTextEntry) lives in ./moveDetail.
 
-import type { FlavorTextEntry, LocalizedText, V3Base } from '../moveDetail/moveDetail'
+import type {
+  FlavorTextEntry,
+  LocalizedText,
+  V3Base,
+} from '../moveDetail/moveDetail'
 
 export type { LocalizedText }
 

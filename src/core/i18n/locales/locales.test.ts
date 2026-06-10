@@ -20,7 +20,11 @@ const groups = {
   core: { en, es, ja },
   enDatabase: { en: enDatabase, es: esDatabase, ja: jaDatabase },
   enInventory: { en: enInventory, es: esInventory, ja: jaInventory },
-  enMetDateFixer: { en: enMetDateFixer, es: esMetDateFixer, ja: jaMetDateFixer },
+  enMetDateFixer: {
+    en: enMetDateFixer,
+    es: esMetDateFixer,
+    ja: jaMetDateFixer,
+  },
   enTrainerSave: { en: enTrainerSave, es: esTrainerSave, ja: jaTrainerSave },
 } as const
 

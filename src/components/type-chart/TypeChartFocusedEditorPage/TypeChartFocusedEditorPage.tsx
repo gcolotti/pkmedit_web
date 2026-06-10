@@ -1,8 +1,14 @@
 import { useState } from 'react'
 
 import type { Translator } from '../../../core/i18n/i18n/i18n'
-import { GEN_LABELS, type GenKey } from '../../../core/utils/typeChartData/typeChartData'
-import { getTypeName, TERA_TYPE_STELLAR } from '../../../core/utils/typeData/typeData'
+import {
+  GEN_LABELS,
+  type GenKey,
+} from '../../../core/utils/typeChartData/typeChartData'
+import {
+  getTypeName,
+  TERA_TYPE_STELLAR,
+} from '../../../core/utils/typeData/typeData'
 import { FocusedEditorShell } from '../../core/focused/FocusedEditorShell/FocusedEditorShell'
 import { StellarTypeInfoPage } from '../StellarTypeInfoPage/StellarTypeInfoPage'
 import { TypeChartMultCell } from '../TypeChartMultCell/TypeChartMultCell'

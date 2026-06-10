@@ -5,13 +5,17 @@ import { saveBlob } from './exportSave'
 const makeBlob = (text = 'save-bytes') => new Blob([text])
 
 describe('saveBlob', () => {
-  const originalPicker = (window as unknown as { showSaveFilePicker?: unknown }).showSaveFilePicker
+  const originalPicker = (window as unknown as { showSaveFilePicker?: unknown })
+    .showSaveFilePicker
 
   afterEach(() => {
     if (originalPicker === undefined) {
-      delete (window as unknown as { showSaveFilePicker?: unknown }).showSaveFilePicker
+      delete (window as unknown as { showSaveFilePicker?: unknown })
+        .showSaveFilePicker
     } else {
-      ;(window as unknown as { showSaveFilePicker?: unknown }).showSaveFilePicker = originalPicker
+      ;(
+        window as unknown as { showSaveFilePicker?: unknown }
+      ).showSaveFilePicker = originalPicker
     }
     vi.restoreAllMocks()
   })
@@ -22,16 +26,17 @@ describe('saveBlob', () => {
       const close = vi.fn().mockResolvedValue(undefined)
       const createWritable = vi.fn().mockResolvedValue({ write, close })
       const handle = { createWritable }
-      ;(window as unknown as { showSaveFilePicker?: unknown }).showSaveFilePicker = vi
-        .fn()
-        .mockResolvedValue(handle)
+      ;(
+        window as unknown as { showSaveFilePicker?: unknown }
+      ).showSaveFilePicker = vi.fn().mockResolvedValue(handle)
     })
 
     it('writes a .sav with the sav mime accept list', async () => {
       const blob = makeBlob()
       await saveBlob(blob, 'pokemon.sav', 'Pokemon save')
-      const picker = (window as unknown as { showSaveFilePicker: ReturnType<typeof vi.fn> })
-        .showSaveFilePicker
+      const picker = (
+        window as unknown as { showSaveFilePicker: ReturnType<typeof vi.fn> }
+      ).showSaveFilePicker
       expect(picker).toHaveBeenCalledOnce()
       const opts = picker.mock.calls[0]?.[0] as {
         suggestedName: string
@@ -49,8 +54,9 @@ describe('saveBlob', () => {
     it('writes a .zip with the zip mime accept list', async () => {
       const blob = makeBlob()
       await saveBlob(blob, 'pokemon.zip', 'Pokemon zip')
-      const picker = (window as unknown as { showSaveFilePicker: ReturnType<typeof vi.fn> })
-        .showSaveFilePicker
+      const picker = (
+        window as unknown as { showSaveFilePicker: ReturnType<typeof vi.fn> }
+      ).showSaveFilePicker
       const opts = picker.mock.calls[0]?.[0] as {
         types: Array<{ accept: Record<string, string[]> }>
       }
@@ -60,7 +66,8 @@ describe('saveBlob', () => {
 
   describe('without showSaveFilePicker', () => {
     beforeEach(() => {
-      delete (window as unknown as { showSaveFilePicker?: unknown }).showSaveFilePicker
+      delete (window as unknown as { showSaveFilePicker?: unknown })
+        .showSaveFilePicker
     })
 
     it('creates a temporary URL and clicks a download link', async () => {

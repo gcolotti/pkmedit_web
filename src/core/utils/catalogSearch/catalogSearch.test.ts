@@ -7,18 +7,28 @@ const makeEntry = (id: number, name: string): CatalogEntry => ({ id, name })
 
 describe('getCatalogSearchResults', () => {
   it('returns sorted entries when query is empty (with selectedId first)', () => {
-    const entries = [makeEntry(1, 'Bravo'), makeEntry(2, 'Alpha'), makeEntry(3, 'Charlie')]
+    const entries = [
+      makeEntry(1, 'Bravo'),
+      makeEntry(2, 'Alpha'),
+      makeEntry(3, 'Charlie'),
+    ]
     const result = getCatalogSearchResults(entries, '')
     expect(result.map((e) => e.id)).toEqual([2, 1, 3])
   })
 
   it('returns sorted entries when query is whitespace only', () => {
     const entries = [makeEntry(2, 'Alpha'), makeEntry(1, 'Bravo')]
-    expect(getCatalogSearchResults(entries, '   ').map((e) => e.id)).toEqual([2, 1])
+    expect(getCatalogSearchResults(entries, '   ').map((e) => e.id)).toEqual([
+      2, 1,
+    ])
   })
 
   it('puts the selectedId first when it exists in the entry list', () => {
-    const entries = [makeEntry(1, 'Alpha'), makeEntry(2, 'Bravo'), makeEntry(3, 'Charlie')]
+    const entries = [
+      makeEntry(1, 'Alpha'),
+      makeEntry(2, 'Bravo'),
+      makeEntry(3, 'Charlie'),
+    ]
     const result = getCatalogSearchResults(entries, '', 2)
     expect(result[0].id).toBe(2)
     expect(result.slice(1).map((e) => e.id)).toEqual([1, 3])
@@ -31,21 +41,33 @@ describe('getCatalogSearchResults', () => {
   })
 
   it('finds entries by name substring (case-insensitive)', () => {
-    const entries = [makeEntry(1, 'FlyingPichu'), makeEntry(2, 'Charizard'), makeEntry(3, 'Pichu')]
+    const entries = [
+      makeEntry(1, 'FlyingPichu'),
+      makeEntry(2, 'Charizard'),
+      makeEntry(3, 'Pichu'),
+    ]
     const result = getCatalogSearchResults(entries, 'pich')
     // FlyingPichu has 'pich' at index 6; Pichu has it at index 0
     expect(result.map((e) => e.id)).toEqual([3, 1])
   })
 
   it('finds entries by id substring', () => {
-    const entries = [makeEntry(25, 'Pikachu'), makeEntry(26, 'Raichu'), makeEntry(250, 'Hippopotas')]
+    const entries = [
+      makeEntry(25, 'Pikachu'),
+      makeEntry(26, 'Raichu'),
+      makeEntry(250, 'Hippopotas'),
+    ]
     const result = getCatalogSearchResults(entries, '25')
     // Match in id "25" or "250"
     expect(result.map((e) => e.id)).toEqual([25, 250])
   })
 
   it('prioritizes entries that start with the query (sorted by name length on tie)', () => {
-    const entries = [makeEntry(1, 'Bulbasaur'), makeEntry(2, 'Pikachu'), makeEntry(3, 'Pichu')]
+    const entries = [
+      makeEntry(1, 'Bulbasaur'),
+      makeEntry(2, 'Pikachu'),
+      makeEntry(3, 'Pichu'),
+    ]
     // For query "pi", both Pikachu and Pichu start with pi (matchIndex=0);
     // tie broken by length: Pichu (5) < Pikachu (7) → Pichu first.
     const result = getCatalogSearchResults(entries, 'pi')
@@ -59,7 +81,9 @@ describe('getCatalogSearchResults', () => {
   })
 
   it('returns at most 10 results', () => {
-    const entries = Array.from({ length: 30 }, (_, i) => makeEntry(i + 1, `Mon${i + 1}`))
+    const entries = Array.from({ length: 30 }, (_, i) =>
+      makeEntry(i + 1, `Mon${i + 1}`),
+    )
     const result = getCatalogSearchResults(entries, 'mon')
     expect(result).toHaveLength(10)
   })

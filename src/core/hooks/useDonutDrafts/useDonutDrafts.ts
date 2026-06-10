@@ -2,7 +2,11 @@ import { useShallow } from 'zustand/react/shallow'
 
 import type { ApiClient } from '../../services/api/api'
 import { useDraftStore } from '../../state/draftStore/draftStore'
-import type { DonutDraft, DonutPocket, DonutPreview } from '../../types/donut/donut'
+import type {
+  DonutDraft,
+  DonutPocket,
+  DonutPreview,
+} from '../../types/donut/donut'
 
 export function useDonutDrafts(api: ApiClient, sessionId: string | undefined) {
   const { addDonut, donutDrafts, revertDonut, setDonutDrafts } = useDraftStore(

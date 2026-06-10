@@ -1,5 +1,8 @@
 import type { Translator } from '../../../../core/i18n/i18n/i18n'
-import type { CatalogEntry, PokemonDetail } from '../../../../core/types/index/index'
+import type {
+  CatalogEntry,
+  PokemonDetail,
+} from '../../../../core/types/index/index'
 import { CatalogSearchCombobox } from '../../../ui/catalog-select/CatalogSearchCombobox/CatalogSearchCombobox'
 
 type Props = {

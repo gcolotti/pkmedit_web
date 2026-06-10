@@ -28,7 +28,9 @@ describe('formatStructuredSecondaryEffects', () => {
       [{ kind: 'volatile', effect: 'flinch', chance: 20 }],
       'en',
     )
-    expect(result).toEqual([{ chance: '20%', effect: 'Make the target flinch' }])
+    expect(result).toEqual([
+      { chance: '20%', effect: 'Make the target flinch' },
+    ])
   })
 
   it('formats a stat-lowering effect in en (plural for |stages| > 1)', () => {
@@ -119,10 +121,7 @@ describe('formatStructuredSecondaryEffects', () => {
   })
 
   it('falls back to the literal "effect" when both kind and effect are missing', () => {
-    const result = formatStructuredSecondaryEffects(
-      [{ chance: 10 }],
-      'en',
-    )
+    const result = formatStructuredSecondaryEffects([{ chance: 10 }], 'en')
     expect(result[0].effect).toBe('Effect')
   })
 
@@ -164,11 +163,17 @@ describe('getSourceUrls', () => {
   })
 
   it('returns null values when detail is undefined', () => {
-    expect(getSourceUrls(undefined)).toEqual({ wikidex: null, bulbapedia: null })
+    expect(getSourceUrls(undefined)).toEqual({
+      wikidex: null,
+      bulbapedia: null,
+    })
   })
 
   it('returns nulls when urls are missing from detail', () => {
-    expect(getSourceUrls({} as never)).toEqual({ wikidex: null, bulbapedia: null })
+    expect(getSourceUrls({} as never)).toEqual({
+      wikidex: null,
+      bulbapedia: null,
+    })
   })
 
   it('returns the urls when present', () => {
@@ -178,9 +183,10 @@ describe('getSourceUrls', () => {
   })
 
   it('returns null for missing url entries', () => {
-    expect(
-      getSourceUrls({ urls: { wikidex: 'w' } } as never),
-    ).toEqual({ wikidex: 'w', bulbapedia: null })
+    expect(getSourceUrls({ urls: { wikidex: 'w' } } as never)).toEqual({
+      wikidex: 'w',
+      bulbapedia: null,
+    })
   })
 })
 
@@ -190,7 +196,9 @@ describe('extractSecondaryEffect', () => {
   })
 
   it('extracts English "X% chance to Y"', () => {
-    const result = extractSecondaryEffect('Has a 30% chance to flinch the target.')
+    const result = extractSecondaryEffect(
+      'Has a 30% chance to flinch the target.',
+    )
     expect(result).toEqual({ chance: '30%', effect: 'Flinch the target' })
   })
 
@@ -199,36 +207,52 @@ describe('extractSecondaryEffect', () => {
   })
 
   it('extracts Spanish "probabilidad del X% de Y"', () => {
-    expect(extractSecondaryEffect('Probabilidad del 20% de confundir al objetivo')).toEqual({
+    expect(
+      extractSecondaryEffect('Probabilidad del 20% de confundir al objetivo'),
+    ).toEqual({
       chance: '20%',
       effect: 'Confundir al objetivo',
     })
   })
 
   it('extracts Spanish "X% de probabilidad de Y"', () => {
-    expect(extractSecondaryEffect('50% de probabilidad de envenenar al objetivo')).toEqual({
+    expect(
+      extractSecondaryEffect('50% de probabilidad de envenenar al objetivo'),
+    ).toEqual({
       chance: '50%',
       effect: 'Envenenar al objetivo',
     })
   })
 
   it('extracts Spanish "tiene X% de Y"', () => {
-    expect(extractSecondaryEffect('Tiene un 30% de bajar el ataque')!.effect).toBe('Bajar el ataque')
+    expect(
+      extractSecondaryEffect('Tiene un 30% de bajar el ataque')!.effect,
+    ).toBe('Bajar el ataque')
   })
 
   it('handles decimal percentages', () => {
-    expect(extractSecondaryEffect('Has 12.5% chance to confuse')!.chance).toBe('12.5%')
+    expect(extractSecondaryEffect('Has 12.5% chance to confuse')!.chance).toBe(
+      '12.5%',
+    )
   })
 
   it('handles comma as decimal separator', () => {
-    expect(extractSecondaryEffect('Tiene 12,5% de confundir')!.chance).toBe('12.5%')
+    expect(extractSecondaryEffect('Tiene 12,5% de confundir')!.chance).toBe(
+      '12.5%',
+    )
   })
 
   it('normalizes whitespace and trims', () => {
-    expect(extractSecondaryEffect('  Has  20%   chance   to  burn  ')!.chance).toBe('20%')
+    expect(
+      extractSecondaryEffect('  Has  20%   chance   to  burn  ')!.chance,
+    ).toBe('20%')
   })
 
   it('stops at the first sentence boundary', () => {
-    expect(extractSecondaryEffect('Has 20% chance to burn. Also 30% chance to flinch.')!.effect).toBe('Burn')
+    expect(
+      extractSecondaryEffect(
+        'Has 20% chance to burn. Also 30% chance to flinch.',
+      )!.effect,
+    ).toBe('Burn')
   })
 })

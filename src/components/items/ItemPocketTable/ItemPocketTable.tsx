@@ -2,7 +2,10 @@ import { Trash2 } from 'lucide-react'
 import type { ReactNode } from 'react'
 
 import type { Translator } from '../../../core/i18n/i18n/i18n'
-import type { InventoryItemEntry, ItemPocket } from '../../../core/types/index/index'
+import type {
+  InventoryItemEntry,
+  ItemPocket,
+} from '../../../core/types/index/index'
 import { parseClampedNumberInput } from '../../../core/utils/numberInput/numberInput'
 
 export function ItemPocketTable({

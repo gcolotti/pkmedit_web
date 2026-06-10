@@ -10,7 +10,8 @@ describe('localDb', () => {
     await new Promise<void>((resolve, reject) => {
       const req = indexedDB.deleteDatabase('pkmedit')
       req.onsuccess = () => resolve()
-      req.onerror = () => reject(new Error(req.error?.message ?? 'delete-failed'))
+      req.onerror = () =>
+        reject(new Error(req.error?.message ?? 'delete-failed'))
       req.onblocked = () => resolve()
     })
   })
@@ -20,7 +21,9 @@ describe('localDb', () => {
   })
 
   it('persists and reads back a stored save', async () => {
-    const blob = new Blob(['fake-save-bytes'], { type: 'application/octet-stream' })
+    const blob = new Blob(['fake-save-bytes'], {
+      type: 'application/octet-stream',
+    })
     await storeLastUploadedSave('pokemon.zip', blob)
     const result = await readLastUploadedSave()
     expect(result).toBeDefined()
@@ -76,7 +79,9 @@ function defineHandlers<K extends keyof HandlerSet>(
   return handlers
 }
 
-function buildMockTransaction(onError: (tx: IDBTransaction) => void): IDBTransaction {
+function buildMockTransaction(
+  onError: (tx: IDBTransaction) => void,
+): IDBTransaction {
   const tx = {} as IDBTransaction
   const onerror = defineHandlers(tx, 'onerror')
   const oncomplete = defineHandlers(tx, 'oncomplete')
@@ -91,15 +96,21 @@ function buildMockTransaction(onError: (tx: IDBTransaction) => void): IDBTransac
       void reqOnSuccess
       setTimeout(() => {
         const error = new Error('read-fail')
-        Object.defineProperty(req, 'error', { value: error, configurable: true })
+        Object.defineProperty(req, 'error', {
+          value: error,
+          configurable: true,
+        })
         const fn = reqOnError.value
         if (fn) fn(new Event('error'))
       }, 0)
       return req
     },
-    put: (): IDBRequest => ({} as IDBRequest),
+    put: (): IDBRequest => ({}) as IDBRequest,
   } as unknown as IDBObjectStore
-  Object.defineProperty(tx, 'objectStore', { value: () => objectStore, configurable: true })
+  Object.defineProperty(tx, 'objectStore', {
+    value: () => objectStore,
+    configurable: true,
+  })
   setTimeout(() => {
     const error = new Error('write-fail')
     Object.defineProperty(tx, 'error', { value: error, configurable: true })
@@ -119,7 +130,10 @@ function buildMockOpen(): IDBOpenDBRequest {
   void onupgradeneeded
   queueMicrotask(() => {
     const error = new Error('open-fail')
-    Object.defineProperty(request, 'error', { value: error, configurable: true })
+    Object.defineProperty(request, 'error', {
+      value: error,
+      configurable: true,
+    })
     const fn = onerror.value
     if (fn) fn(new Event('error'))
   })
@@ -136,7 +150,9 @@ describe('error paths', () => {
     IDBDatabase.prototype.transaction = mockTransaction
     try {
       const blob = new Blob(['x'])
-      await expect(storeLastUploadedSave('x.zip', blob)).rejects.toThrow('write-fail')
+      await expect(storeLastUploadedSave('x.zip', blob)).rejects.toThrow(
+        'write-fail',
+      )
     } finally {
       IDBDatabase.prototype.transaction = originalTransaction
     }
@@ -165,7 +181,10 @@ describe('error paths', () => {
     try {
       await expect(readLastUploadedSave()).rejects.toThrow('open-fail')
     } finally {
-      Object.defineProperty(indexedDB, 'open', { value: originalOpen, configurable: true })
+      Object.defineProperty(indexedDB, 'open', {
+        value: originalOpen,
+        configurable: true,
+      })
     }
   })
 })

@@ -29,7 +29,11 @@ const plusMoves = (
 describe('buildPlusMoveRows', () => {
   it('returns rows with correct legal flag based on legalMoveSet', () => {
     const pm = plusMoves([1, 2, 3], [true, false, true])
-    const moveById = new Map([[1, move(1, 'A')], [2, move(2, 'B')], [3, move(3, 'C')]])
+    const moveById = new Map([
+      [1, move(1, 'A')],
+      [2, move(2, 'B')],
+      [3, move(3, 'C')],
+    ])
     const rows = buildPlusMoveRows(pm, moveById, new Set([1, 3]), true)
     expect(rows).toHaveLength(2)
     expect(rows.every((r) => r.legal)).toBe(true)
@@ -38,7 +42,11 @@ describe('buildPlusMoveRows', () => {
 
   it('returns only illegal rows when legal=false', () => {
     const pm = plusMoves([1, 2, 3], [true, false, true])
-    const moveById = new Map([[1, move(1, 'A')], [2, move(2, 'B')], [3, move(3, 'C')]])
+    const moveById = new Map([
+      [1, move(1, 'A')],
+      [2, move(2, 'B')],
+      [3, move(3, 'C')],
+    ])
     const rows = buildPlusMoveRows(pm, moveById, new Set([1, 3]), false)
     expect(rows).toHaveLength(1)
     expect(rows[0].entry.id).toBe(2)
@@ -54,7 +62,11 @@ describe('buildPlusMoveRows', () => {
 
   it('preserves the original index from permittedMoves', () => {
     const pm = plusMoves([1, 2, 3], [true, false, true])
-    const moveById = new Map([[1, move(1, 'A')], [2, move(2, 'B')], [3, move(3, 'C')]])
+    const moveById = new Map([
+      [1, move(1, 'A')],
+      [2, move(2, 'B')],
+      [3, move(3, 'C')],
+    ])
     // moves 1 and 3 are legal; move 2 is illegal. Filter for illegal rows.
     const rows = buildPlusMoveRows(pm, moveById, new Set([1, 3]), false)
     expect(rows).toHaveLength(1)
@@ -80,7 +92,10 @@ describe('buildPlusMoveRows', () => {
     // instead of emitting a row with a missing match.
     const spy = vi.spyOn(catalogSort, 'sortCatalogEntriesByType')
     const pm = plusMoves([1, 2], [true, true])
-    const moveById = new Map([[1, move(1, 'A')], [2, move(2, 'B')]])
+    const moveById = new Map([
+      [1, move(1, 'A')],
+      [2, move(2, 'B')],
+    ])
     spy.mockReturnValueOnce([move(1, 'A'), { id: 999, name: 'Phantom' }])
     try {
       const rows = buildPlusMoveRows(pm, moveById, new Set([1, 2]), true)
@@ -105,20 +120,35 @@ describe('markAllLegalAsPlus', () => {
   })
 
   it('defaults missing mastered flags to false for illegal moves', () => {
-    const pm = { permittedMoves: [1, 2], masteredFlags: [true], hasPurchasedFlags: false, purchasedFlags: [] } as PokemonPlusMoves
+    const pm = {
+      permittedMoves: [1, 2],
+      masteredFlags: [true],
+      hasPurchasedFlags: false,
+      purchasedFlags: [],
+    } as PokemonPlusMoves
     const result = markAllLegalAsPlus(pm, new Set([1]))
     // index 1 has no entry in masteredFlags → undefined ?? false
     expect(result.masteredFlags).toEqual([true, false])
   })
 
   it('sets purchased flags when hasPurchasedFlags is true', () => {
-    const pm = { permittedMoves: [1, 2], masteredFlags: [false, false], hasPurchasedFlags: true, purchasedFlags: [false, false] }
+    const pm = {
+      permittedMoves: [1, 2],
+      masteredFlags: [false, false],
+      hasPurchasedFlags: true,
+      purchasedFlags: [false, false],
+    }
     const result = markAllLegalAsPlus(pm, new Set([2]))
     expect(result.purchasedFlags).toEqual([false, true])
   })
 
   it('leaves purchased flags unchanged when hasPurchasedFlags is false', () => {
-    const pm = { permittedMoves: [1, 2], masteredFlags: [false, false], hasPurchasedFlags: false, purchasedFlags: [true, false] }
+    const pm = {
+      permittedMoves: [1, 2],
+      masteredFlags: [false, false],
+      hasPurchasedFlags: false,
+      purchasedFlags: [true, false],
+    }
     const result = markAllLegalAsPlus(pm, new Set([1, 2]))
     expect(result.purchasedFlags).toEqual([true, false])
   })
@@ -152,7 +182,12 @@ describe('updatePlusMoveFlag', () => {
   })
 
   it('updates the purchased flag at the given index', () => {
-    const pm = { permittedMoves: [1, 2], masteredFlags: [true, false], hasPurchasedFlags: true, purchasedFlags: [false, false] }
+    const pm = {
+      permittedMoves: [1, 2],
+      masteredFlags: [true, false],
+      hasPurchasedFlags: true,
+      purchasedFlags: [false, false],
+    }
     const result = updatePlusMoveFlag(pm, 'purchasedFlags', 0, true)
     expect(result.purchasedFlags).toEqual([true, false])
   })

@@ -7,7 +7,10 @@ import { ApiClient } from './api'
 const baseUrl = 'http://api.test'
 
 const make = (language: 'en' | 'es' | 'ja' = 'en') =>
-  new ApiClient(() => baseUrl, () => language)
+  new ApiClient(
+    () => baseUrl,
+    () => language,
+  )
 
 describe('ApiClient', () => {
   it('composes all sub-API instances', () => {
@@ -133,10 +136,13 @@ describe('ApiClient', () => {
   it('previewPokemonUpdate delegates to pokemon.previewPokemonUpdate', async () => {
     let receivedBody: unknown = null
     server.use(
-      http.post('*/api/saves/:id/pokemon/:slotId/preview', async ({ request }) => {
-        receivedBody = await request.json()
-        return HttpResponse.json({})
-      }),
+      http.post(
+        '*/api/saves/:id/pokemon/:slotId/preview',
+        async ({ request }) => {
+          receivedBody = await request.json()
+          return HttpResponse.json({})
+        },
+      ),
     )
     await make().previewPokemonUpdate('ses-1', 'slot-7', { x: 1 })
     expect(receivedBody).toEqual({ x: 1 })
@@ -147,11 +153,18 @@ describe('ApiClient', () => {
     server.use(
       http.post('*/api/saves/:id/legality/check-draft', async ({ request }) => {
         receivedBody = await request.json()
-        return HttpResponse.json({ reports: [], violations: [], blocked: false })
+        return HttpResponse.json({
+          reports: [],
+          violations: [],
+          blocked: false,
+        })
       }),
     )
     await make().checkDraft('ses-1', [{ slotId: 'a' }], false)
-    expect(receivedBody).toEqual({ allowIllegalChanges: false, changes: [{ slotId: 'a' }] })
+    expect(receivedBody).toEqual({
+      allowIllegalChanges: false,
+      changes: [{ slotId: 'a' }],
+    })
   })
 
   it('getTrainerInfo delegates to pokemon.getTrainerInfo', async () => {
@@ -241,10 +254,19 @@ describe('ApiClient', () => {
   it('searchEncounters delegates to database.searchEncounters', async () => {
     let receivedBody: unknown = null
     server.use(
-      http.post('*/api/saves/:id/databases/encounters/search', async ({ request }) => {
-        receivedBody = await request.json()
-        return HttpResponse.json({ total: 0, page: 0, pageSize: 0, pageCount: 0, results: [] })
-      }),
+      http.post(
+        '*/api/saves/:id/databases/encounters/search',
+        async ({ request }) => {
+          receivedBody = await request.json()
+          return HttpResponse.json({
+            total: 0,
+            page: 0,
+            pageSize: 0,
+            pageCount: 0,
+            results: [],
+          })
+        },
+      ),
     )
     await make().searchEncounters('ses-1', { species: 1 } as never)
     expect(receivedBody).toEqual({ species: 1 })
@@ -253,10 +275,17 @@ describe('ApiClient', () => {
   it('previewEncounter delegates to database.previewEncounter', async () => {
     let receivedBody: unknown = null
     server.use(
-      http.post('*/api/saves/:id/databases/encounters/preview', async ({ request }) => {
-        receivedBody = await request.json()
-        return HttpResponse.json({ entry: {}, pokemon: {}, replacement: { dataBase64: '' } })
-      }),
+      http.post(
+        '*/api/saves/:id/databases/encounters/preview',
+        async ({ request }) => {
+          receivedBody = await request.json()
+          return HttpResponse.json({
+            entry: {},
+            pokemon: {},
+            replacement: { dataBase64: '' },
+          })
+        },
+      ),
     )
     await make().previewEncounter('ses-1', { species: 1 } as never, 'res-1')
     expect(receivedBody).toEqual({ search: { species: 1 }, resultId: 'res-1' })
@@ -265,18 +294,21 @@ describe('ApiClient', () => {
   it('searchMysteryGifts delegates to database.searchMysteryGifts', async () => {
     let receivedBody: unknown = null
     server.use(
-      http.post('*/api/saves/:id/databases/mystery-gifts/search', async ({ request }) => {
-        receivedBody = await request.json()
-        return HttpResponse.json({
-          total: 0,
-          page: 0,
-          pageSize: 0,
-          pageCount: 0,
-          storage: { supported: true, full: false, capacity: 0, used: 0 },
-          legalityCounts: { legal: 0, uncertain: 0, illegal: 0 },
-          results: [],
-        })
-      }),
+      http.post(
+        '*/api/saves/:id/databases/mystery-gifts/search',
+        async ({ request }) => {
+          receivedBody = await request.json()
+          return HttpResponse.json({
+            total: 0,
+            page: 0,
+            pageSize: 0,
+            pageCount: 0,
+            storage: { supported: true, full: false, capacity: 0, used: 0 },
+            legalityCounts: { legal: 0, uncertain: 0, illegal: 0 },
+            results: [],
+          })
+        },
+      ),
     )
     await make().searchMysteryGifts('ses-1', { format: 1 } as never)
     expect(receivedBody).toEqual({ format: 1 })
@@ -285,16 +317,19 @@ describe('ApiClient', () => {
   it('previewMysteryGift delegates to database.previewMysteryGift', async () => {
     let receivedBody: unknown = null
     server.use(
-      http.post('*/api/saves/:id/databases/mystery-gifts/preview', async ({ request }) => {
-        receivedBody = await request.json()
-        return HttpResponse.json({
-          entry: {},
-          pokemon: null,
-          draft: { giftDataBase64: '', extension: '' },
-          replacement: null,
-          storage: { supported: true, full: false, capacity: 0, used: 0 },
-        })
-      }),
+      http.post(
+        '*/api/saves/:id/databases/mystery-gifts/preview',
+        async ({ request }) => {
+          receivedBody = await request.json()
+          return HttpResponse.json({
+            entry: {},
+            pokemon: null,
+            draft: { giftDataBase64: '', extension: '' },
+            replacement: null,
+            storage: { supported: true, full: false, capacity: 0, used: 0 },
+          })
+        },
+      ),
     )
     await make().previewMysteryGift('ses-1', 'res-1')
     expect(receivedBody).toEqual({ resultId: 'res-1' })
@@ -303,12 +338,17 @@ describe('ApiClient', () => {
   it('previewMetDateFixer delegates to database.previewMetDateFixer', async () => {
     let receivedBody: unknown = null
     server.use(
-      http.post('*/api/saves/:id/met-date-fixer/preview', async ({ request }) => {
-        receivedBody = await request.json()
-        return HttpResponse.json({})
-      }),
+      http.post(
+        '*/api/saves/:id/met-date-fixer/preview',
+        async ({ request }) => {
+          receivedBody = await request.json()
+          return HttpResponse.json({})
+        },
+      ),
     )
-    await make().previewMetDateFixer('ses-1', { fixInvalidDates: true } as never)
+    await make().previewMetDateFixer('ses-1', {
+      fixInvalidDates: true,
+    } as never)
     expect(receivedBody).toEqual({ fixInvalidDates: true })
   })
 
@@ -317,7 +357,9 @@ describe('ApiClient', () => {
     server.use(
       http.get('*/api/saves/:id/export', ({ request }) => {
         url = request.url
-        return new HttpResponse('x', { headers: { 'content-type': 'application/octet-stream' } })
+        return new HttpResponse('x', {
+          headers: { 'content-type': 'application/octet-stream' },
+        })
       }),
     )
     await make().exportSave('ses-1')
@@ -329,7 +371,9 @@ describe('ApiClient', () => {
     server.use(
       http.get('*/api/saves/:id/export', ({ request }) => {
         url = request.url
-        return new HttpResponse('x', { headers: { 'content-type': 'application/octet-stream' } })
+        return new HttpResponse('x', {
+          headers: { 'content-type': 'application/octet-stream' },
+        })
       }),
     )
     await make().exportSave('ses-1', 'zip')
@@ -341,7 +385,9 @@ describe('ApiClient', () => {
     server.use(
       http.post('*/api/saves/:id/export-draft', async ({ request }) => {
         receivedBody = await request.json()
-        return new HttpResponse('x', { headers: { 'content-type': 'application/octet-stream' } })
+        return new HttpResponse('x', {
+          headers: { 'content-type': 'application/octet-stream' },
+        })
       }),
     )
     await make().exportDraft('ses-1', [{ slotId: 'a' }], true)

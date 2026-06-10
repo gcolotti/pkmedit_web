@@ -40,14 +40,25 @@ describe('computeVisibleFlavors', () => {
   })
 
   it('returns flavors filtered by case-insensitive substring on displayName', () => {
-    const flavors = [flavor('Berry Smooth'), flavor('Candy Crunch'), flavor('Berry Tart')]
+    const flavors = [
+      flavor('Berry Smooth'),
+      flavor('Candy Crunch'),
+      flavor('Berry Tart'),
+    ]
     const result = computeVisibleFlavors('berry', preview(), flavors)
-    expect(result.map((f) => f.displayName).sort()).toEqual(['Berry Smooth', 'Berry Tart'])
+    expect(result.map((f) => f.displayName).sort()).toEqual([
+      'Berry Smooth',
+      'Berry Tart',
+    ])
   })
 
   it('trims the filter', () => {
     const flavors = [flavor('Berry'), flavor('Candy')]
-    expect(computeVisibleFlavors('  berry  ', preview(), flavors).map((f) => f.displayName)).toEqual(['Berry'])
+    expect(
+      computeVisibleFlavors('  berry  ', preview(), flavors).map(
+        (f) => f.displayName,
+      ),
+    ).toEqual(['Berry'])
   })
 
   it('returns all available flavors when filter is empty', () => {
@@ -63,7 +74,9 @@ describe('computeVisibleFlavors', () => {
   })
 
   it('caps results at 80', () => {
-    const flavors = Array.from({ length: 100 }, (_, i) => flavor(`name_${i.toString().padStart(3, '0')}`))
+    const flavors = Array.from({ length: 100 }, (_, i) =>
+      flavor(`name_${i.toString().padStart(3, '0')}`),
+    )
     const result = computeVisibleFlavors('', preview(), flavors)
     expect(result).toHaveLength(80)
   })

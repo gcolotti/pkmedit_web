@@ -2,7 +2,10 @@ import { type ReactNode } from 'react'
 
 import type { Translator } from '../../../core/i18n/i18n/i18n'
 import type { I18nKey } from '../../../core/i18n/i18n/i18n'
-import { getTypeBackground, TERA_TYPE_STELLAR } from '../../../core/utils/typeData/typeData'
+import {
+  getTypeBackground,
+  TERA_TYPE_STELLAR,
+} from '../../../core/utils/typeData/typeData'
 import { FocusedEditorShell } from '../../core/focused/FocusedEditorShell/FocusedEditorShell'
 import { TypeIcon } from '../../ui/TypeIcon/TypeIcon'
 

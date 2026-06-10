@@ -79,7 +79,9 @@ describe('useShellStore', () => {
   describe('setApiBase', () => {
     it('persists the URL and updates the store', () => {
       act(() => useShellStore.getState().setApiBase('http://example.test'))
-      expect(storageMock.writeApiBase).toHaveBeenCalledWith('http://example.test')
+      expect(storageMock.writeApiBase).toHaveBeenCalledWith(
+        'http://example.test',
+      )
       expect(useShellStore.getState().apiBase).toBe('http://example.test')
     })
   })

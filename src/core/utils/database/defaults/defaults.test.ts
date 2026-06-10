@@ -9,7 +9,12 @@ import {
 
 describe('defaultMoveFilters', () => {
   it('is all zeros for move1-4', () => {
-    expect(defaultMoveFilters).toEqual({ move1: 0, move2: 0, move3: 0, move4: 0 })
+    expect(defaultMoveFilters).toEqual({
+      move1: 0,
+      move2: 0,
+      move3: 0,
+      move4: 0,
+    })
   })
 })
 
@@ -45,7 +50,14 @@ describe('createDefaultEncounterSearch', () => {
     expect(result.criteria.ability).toBe(-1)
     expect(result.criteria.levelMin).toBe(0)
     expect(result.criteria.levelMax).toBe(0)
-    for (const key of ['ivHp', 'ivAtk', 'ivDef', 'ivSpa', 'ivSpd', 'ivSpe'] as const) {
+    for (const key of [
+      'ivHp',
+      'ivAtk',
+      'ivDef',
+      'ivSpa',
+      'ivSpd',
+      'ivSpe',
+    ] as const) {
       expect(result.criteria[key]).toBe(-1)
     }
   })

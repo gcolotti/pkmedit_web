@@ -1,6 +1,9 @@
 import type { Translator } from '../../i18n/i18n/i18n'
 import type { PokemonDetail } from '../../types/index/index'
-import { getTypeName, TERA_TYPE_OVERRIDE_NONE } from '../../utils/typeData/typeData'
+import {
+  getTypeName,
+  TERA_TYPE_OVERRIDE_NONE,
+} from '../../utils/typeData/typeData'
 import { buildPokemonPayload } from '../pokemonPayload/pokemonPayload'
 
 const summaryPathMap: Record<string, string> = {

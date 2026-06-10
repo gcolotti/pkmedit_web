@@ -146,7 +146,10 @@ describe('revertWorkspaceChange', () => {
       vi.fn(),
       withCallback('revertPokedexAction', revertPokedexAction),
     )
-    expect(revertPokedexAction).toHaveBeenCalledWith({ dexId: 'national', action: 'seen' })
+    expect(revertPokedexAction).toHaveBeenCalledWith({
+      dexId: 'national',
+      action: 'seen',
+    })
   })
 
   it('reverts an arceus research bulk change via revertArceusResearchBulk', () => {
@@ -230,11 +233,21 @@ describe('revertWorkspaceChange', () => {
       before: 'X',
       after: 'Y',
     }
-    revertWorkspaceChange(change, { a: baseDetail }, { a: draftDetail }, setDrafts, noopCallbacks())
+    revertWorkspaceChange(
+      change,
+      { a: baseDetail },
+      { a: draftDetail },
+      setDrafts,
+      noopCallbacks(),
+    )
     expect(setDrafts).toHaveBeenCalledOnce()
-    const updater = setDrafts.mock.calls[0]?.[0] as (prev: Record<string, typeof baseDetail>) => Record<string, typeof baseDetail>
+    const updater = setDrafts.mock.calls[0]?.[0] as (
+      prev: Record<string, typeof baseDetail>,
+    ) => Record<string, typeof baseDetail>
     const next = updater({ a: draftDetail })
-    const a = next.a as (typeof baseDetail & { main: { nickname: string } }) | undefined
+    const a = next.a as
+      | (typeof baseDetail & { main: { nickname: string } })
+      | undefined
     expect(a?.main.nickname).toBe('Original')
   })
 
@@ -248,8 +261,16 @@ describe('revertWorkspaceChange', () => {
       before: 'X',
       after: 'Y',
     }
-    revertWorkspaceChange(change, { a: baseDetail }, { a: draft(baseDetail) }, setDrafts, noopCallbacks())
-    const updater = setDrafts.mock.calls[0]?.[0] as (prev: Record<string, PokemonDetail>) => Record<string, PokemonDetail>
+    revertWorkspaceChange(
+      change,
+      { a: baseDetail },
+      { a: draft(baseDetail) },
+      setDrafts,
+      noopCallbacks(),
+    )
+    const updater = setDrafts.mock.calls[0]?.[0] as (
+      prev: Record<string, PokemonDetail>,
+    ) => Record<string, PokemonDetail>
     const next = updater({ a: baseDetail })
     expect(next).not.toHaveProperty('a')
   })

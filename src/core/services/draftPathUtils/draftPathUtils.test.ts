@@ -3,7 +3,12 @@ import { describe, expect, it } from 'vitest'
 import { createTranslator } from '../../i18n/i18n/i18n'
 import type { PokemonDetail } from '../../types/index/index'
 import { TERA_TYPE_OVERRIDE_NONE } from '../../utils/typeData/typeData'
-import { flatten, formatValue, labelPath, revertDraftPath } from './draftPathUtils'
+import {
+  flatten,
+  formatValue,
+  labelPath,
+  revertDraftPath,
+} from './draftPathUtils'
 
 const t = createTranslator('en')
 
@@ -13,7 +18,10 @@ describe('flatten', () => {
   })
 
   it('flattens a flat object with a top-level prefix', () => {
-    expect(flatten({ a: 1, b: 2 }, 'root')).toEqual({ 'root.a': 1, 'root.b': 2 })
+    expect(flatten({ a: 1, b: 2 }, 'root')).toEqual({
+      'root.a': 1,
+      'root.b': 2,
+    })
   })
 
   it('flattens nested objects with dotted paths', () => {
@@ -65,7 +73,9 @@ describe('formatValue', () => {
   })
 
   it('translates TERA_TYPE_OVERRIDE_NONE as "none"', () => {
-    expect(formatValue(TERA_TYPE_OVERRIDE_NONE, t, 'teraTypeOverride')).toBe(t('none'))
+    expect(formatValue(TERA_TYPE_OVERRIDE_NONE, t, 'teraTypeOverride')).toBe(
+      t('none'),
+    )
   })
 
   it('formats teraTypeOriginal as the type name for numeric values', () => {
@@ -112,8 +122,12 @@ describe('writePath (via revertDraftPath)', () => {
     }) as unknown as PokemonDetail
 
   it('reverts a summary field (species) to the base value', () => {
-    const base = makeDetail({ summary: { ...makeDetail().summary, species: 25 } })
-    const draft = makeDetail({ summary: { ...makeDetail().summary, species: 100 } })
+    const base = makeDetail({
+      summary: { ...makeDetail().summary, species: 25 },
+    })
+    const draft = makeDetail({
+      summary: { ...makeDetail().summary, species: 100 },
+    })
     const result = revertDraftPath(base, draft, 'species')
     expect(result.summary.species).toBe(25)
   })
@@ -180,7 +194,9 @@ describe('revertDraftPath', () => {
 
   it('reverts a simple summary field to the base value', () => {
     const base = makeDetail({ summary: { ...makeDetail().summary, level: 10 } })
-    const draft = makeDetail({ summary: { ...makeDetail().summary, level: 50 } })
+    const draft = makeDetail({
+      summary: { ...makeDetail().summary, level: 50 },
+    })
     const result = revertDraftPath(base, draft, 'level')
     expect(result.summary.level).toBe(10)
   })

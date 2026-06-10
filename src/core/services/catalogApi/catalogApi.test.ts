@@ -9,16 +9,16 @@ import { CatalogApi } from './catalogApi'
 // can assert it's called with the right argument without depending on
 // the rest of typeData.
 vi.mock('../../utils/typeData/typeData', async (importOriginal) => {
-  const actual = await importOriginal<typeof import('../../utils/typeData/typeData')>()
+  const actual =
+    await importOriginal<typeof import('../../utils/typeData/typeData')>()
   return {
     ...actual,
     setTypeCatalog: vi.fn(),
   }
 })
 
-const setTypeCatalog = (
-  await import('../../utils/typeData/typeData')
-).setTypeCatalog as unknown as ReturnType<typeof vi.fn>
+const setTypeCatalog = (await import('../../utils/typeData/typeData'))
+  .setTypeCatalog as unknown as ReturnType<typeof vi.fn>
 
 const make = () =>
   new CatalogApi(
@@ -32,14 +32,22 @@ describe('CatalogApi', () => {
     server.use(
       http.get('*/api/catalogs', ({ request }) => {
         url = request.url
-        return HttpResponse.json({ types: [{ id: 1, name: 'Fire' }], moves: [], abilities: [] })
+        return HttpResponse.json({
+          types: [{ id: 1, name: 'Fire' }],
+          moves: [],
+          abilities: [],
+        })
       }),
     )
     setTypeCatalog.mockClear()
     const result = await make().getCatalogs()
     expect(url).toMatch(/\/api\/catalogs\?lang=en$/)
     expect(setTypeCatalog).toHaveBeenCalledWith([{ id: 1, name: 'Fire' }])
-    expect(result).toEqual({ types: [{ id: 1, name: 'Fire' }], moves: [], abilities: [] })
+    expect(result).toEqual({
+      types: [{ id: 1, name: 'Fire' }],
+      moves: [],
+      abilities: [],
+    })
   })
 
   it('getMoveDetails omits ?ids when none provided', async () => {
@@ -47,7 +55,14 @@ describe('CatalogApi', () => {
     server.use(
       http.get('*/api/catalogs/move-details', ({ request }) => {
         url = request.url
-        return HttpResponse.json({ entries: [], total: 0, page: null, pageSize: null, hasNext: null, hasPrevious: null })
+        return HttpResponse.json({
+          entries: [],
+          total: 0,
+          page: null,
+          pageSize: null,
+          hasNext: null,
+          hasPrevious: null,
+        })
       }),
     )
     await make().getMoveDetails()
@@ -59,7 +74,14 @@ describe('CatalogApi', () => {
     server.use(
       http.get('*/api/catalogs/move-details', ({ request }) => {
         url = request.url
-        return HttpResponse.json({ entries: [], total: 0, page: null, pageSize: null, hasNext: null, hasPrevious: null })
+        return HttpResponse.json({
+          entries: [],
+          total: 0,
+          page: null,
+          pageSize: null,
+          hasNext: null,
+          hasPrevious: null,
+        })
       }),
     )
     await make().getMoveDetails({ ids: [1, 2, 3] })
@@ -71,7 +93,14 @@ describe('CatalogApi', () => {
     server.use(
       http.get('*/api/catalogs/move-details', ({ request }) => {
         url = request.url
-        return HttpResponse.json({ entries: [], total: 0, page: null, pageSize: null, hasNext: null, hasPrevious: null })
+        return HttpResponse.json({
+          entries: [],
+          total: 0,
+          page: null,
+          pageSize: null,
+          hasNext: null,
+          hasPrevious: null,
+        })
       }),
     )
     await make().getMoveDetails({ ids: [] })
@@ -83,7 +112,14 @@ describe('CatalogApi', () => {
     server.use(
       http.get('*/api/catalogs/ability-details', ({ request }) => {
         url = request.url
-        return HttpResponse.json({ entries: [], total: 0, page: null, pageSize: null, hasNext: null, hasPrevious: null })
+        return HttpResponse.json({
+          entries: [],
+          total: 0,
+          page: null,
+          pageSize: null,
+          hasNext: null,
+          hasPrevious: null,
+        })
       }),
     )
     await make().getAbilityDetails({ ids: [7, 8] })
@@ -95,7 +131,14 @@ describe('CatalogApi', () => {
     server.use(
       http.get('*/api/catalogs/ability-details', ({ request }) => {
         url = request.url
-        return HttpResponse.json({ entries: [], total: 0, page: null, pageSize: null, hasNext: null, hasPrevious: null })
+        return HttpResponse.json({
+          entries: [],
+          total: 0,
+          page: null,
+          pageSize: null,
+          hasNext: null,
+          hasPrevious: null,
+        })
       }),
     )
     await make().getAbilityDetails({ slugs: ['overgrow', 'blaze'] })
@@ -107,7 +150,14 @@ describe('CatalogApi', () => {
     server.use(
       http.get('*/api/catalogs/ability-details', ({ request }) => {
         url = request.url
-        return HttpResponse.json({ entries: [], total: 0, page: null, pageSize: null, hasNext: null, hasPrevious: null })
+        return HttpResponse.json({
+          entries: [],
+          total: 0,
+          page: null,
+          pageSize: null,
+          hasNext: null,
+          hasPrevious: null,
+        })
       }),
     )
     await make().getAbilityDetails({ ids: [], slugs: [] })

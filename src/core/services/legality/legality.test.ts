@@ -46,12 +46,17 @@ const base = (overrides: Partial<PokemonDetail> = {}): PokemonDetail =>
 
 const summary: SaveSummary = { sessionId: 'ses-1' } as unknown as SaveSummary
 
-const makeContext = (overrides: Partial<Parameters<typeof checkWorkspaceDraft>[0]> = {}) => {
+const makeContext = (
+  overrides: Partial<Parameters<typeof checkWorkspaceDraft>[0]> = {},
+) => {
   const setDrafts = vi.fn()
   const setDraftViolations = vi.fn()
   const setLegalityReports = vi.fn()
   const setToast = vi.fn()
-  const api = new ApiClient(() => 'http://api.test', () => 'en')
+  const api = new ApiClient(
+    () => 'http://api.test',
+    () => 'en',
+  )
   const ctx = {
     allowIllegalChanges: false,
     api,
@@ -82,7 +87,11 @@ describe('checkWorkspaceDraft', () => {
     server.use(
       http.post('*/api/saves/:id/legality/check-draft', async ({ request }) => {
         receivedBody = await request.json()
-        return HttpResponse.json({ reports: [], violations: [], blocked: false })
+        return HttpResponse.json({
+          reports: [],
+          violations: [],
+          blocked: false,
+        })
       }),
     )
     await checkWorkspaceDraft(makeContext())
@@ -97,7 +106,11 @@ describe('checkWorkspaceDraft', () => {
     server.use(
       http.post('*/api/saves/:id/legality/check-draft', async ({ request }) => {
         receivedBody = await request.json()
-        return HttpResponse.json({ reports: [], violations: [], blocked: false })
+        return HttpResponse.json({
+          reports: [],
+          violations: [],
+          blocked: false,
+        })
       }),
     )
     const ctx = makeContext({
@@ -149,7 +162,10 @@ describe('checkWorkspaceDraft', () => {
     const result = await checkWorkspaceDraft(ctx, true)
     expect(result).toEqual(existingReport)
     expect(captured).toBeDefined()
-    const next = captured!([staleReport, { slotId: 'b', severity: 'ok', report: [] } as never])
+    const next = captured!([
+      staleReport,
+      { slotId: 'b', severity: 'ok', report: [] } as never,
+    ])
     expect(next[0]).toEqual(existingReport)
     expect(next).toHaveLength(2)
   })
@@ -162,7 +178,11 @@ describe('checkWorkspaceDraft', () => {
     } as unknown as LegalityReport
     server.use(
       http.post('*/api/saves/:id/legality/check-draft', () =>
-        HttpResponse.json({ reports: [report], violations: [], blocked: false }),
+        HttpResponse.json({
+          reports: [report],
+          violations: [],
+          blocked: false,
+        }),
       ),
     )
     const result = await checkWorkspaceDraft(makeContext(), true)
@@ -244,7 +264,11 @@ describe('checkWorkspaceDraft', () => {
     } as unknown as LegalityReport
     server.use(
       http.post('*/api/saves/:id/legality/check-draft', () =>
-        HttpResponse.json({ reports: [report, otherReport], violations: [], blocked: false }),
+        HttpResponse.json({
+          reports: [report, otherReport],
+          violations: [],
+          blocked: false,
+        }),
       ),
     )
     const ctx = makeContext({
@@ -255,10 +279,15 @@ describe('checkWorkspaceDraft', () => {
     })
     await checkWorkspaceDraft(ctx, true)
     expect(ctx.setDrafts).toHaveBeenCalledOnce()
-    const updater = ctx.setDrafts.mock.calls[0]?.[0] as (prev: Record<string, PokemonDetail>) => Record<string, PokemonDetail>
+    const updater = ctx.setDrafts.mock.calls[0]?.[0] as (
+      prev: Record<string, PokemonDetail>,
+    ) => Record<string, PokemonDetail>
     // simulate an existing report for the same slot in the list
     const next = updater({
-      a: base({ main: { nickname: 'Y' } as never, legality: { slotId: 'old' } as never }),
+      a: base({
+        main: { nickname: 'Y' } as never,
+        legality: { slotId: 'old' } as never,
+      }),
     })
     expect(next.a?.legality).toEqual(report)
   })
@@ -271,7 +300,11 @@ describe('checkWorkspaceDraft', () => {
     } as unknown as LegalityReport
     server.use(
       http.post('*/api/saves/:id/legality/check-draft', () =>
-        HttpResponse.json({ reports: [report], violations: [], blocked: false }),
+        HttpResponse.json({
+          reports: [report],
+          violations: [],
+          blocked: false,
+        }),
       ),
     )
     // selectedSlotId 'a' has no base and no draft
@@ -283,7 +316,9 @@ describe('checkWorkspaceDraft', () => {
     })
     await checkWorkspaceDraft(ctx, true)
     expect(ctx.setDrafts).toHaveBeenCalledOnce()
-    const updater = ctx.setDrafts.mock.calls[0]?.[0] as (prev: Record<string, PokemonDetail>) => Record<string, PokemonDetail>
+    const updater = ctx.setDrafts.mock.calls[0]?.[0] as (
+      prev: Record<string, PokemonDetail>,
+    ) => Record<string, PokemonDetail>
     const next = updater({})
     expect(next).toEqual({})
   })

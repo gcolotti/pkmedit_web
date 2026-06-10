@@ -21,7 +21,13 @@ describe('renderStat', () => {
 
 describe('renderEffect', () => {
   it('renders the label and the effect text when text is non-null', () => {
-    render(renderEffect('Effect', 'Inflicts regular damage.', t) as React.ReactElement)
+    render(
+      renderEffect(
+        'Effect',
+        'Inflicts regular damage.',
+        t,
+      ) as React.ReactElement,
+    )
     expect(screen.getByText('Effect')).toBeInTheDocument()
     expect(screen.getByText('Inflicts regular damage.')).toBeInTheDocument()
   })
