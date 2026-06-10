@@ -1,5 +1,5 @@
 import { http, HttpResponse } from 'msw'
-import { describe, expect, it } from 'vitest'
+import { describe, expect, it, vi } from 'vitest'
 
 import { server } from '../../../test/server'
 import { requestBlob, requestJson } from '../apiHttp/apiHttp'
@@ -77,13 +77,17 @@ describe('ExportApi', () => {
     server.use(
       http.post('*/api/saves/:id/export-draft', async ({ request }) => {
         receivedBody = await request.json()
-        return new HttpResponse('', { headers: { 'content-type': 'application/octet-stream' } })
+        return new HttpResponse('', {
+          headers: { 'content-type': 'application/octet-stream' },
+        })
       }),
     )
     await make().exportDraft('ses-1', [], false, null, null, null, [
       { dexId: 'national', action: 'seen' },
     ])
-    expect((receivedBody as { pokedexActions: unknown }).pokedexActions).toEqual({
+    expect(
+      (receivedBody as { pokedexActions: unknown }).pokedexActions,
+    ).toEqual({
       targets: [{ dexId: 'national', action: 'seen' }],
     })
   })
@@ -93,7 +97,9 @@ describe('ExportApi', () => {
     server.use(
       http.post('*/api/saves/:id/export-draft', async ({ request }) => {
         receivedBody = await request.json()
-        return new HttpResponse('', { headers: { 'content-type': 'application/octet-stream' } })
+        return new HttpResponse('', {
+          headers: { 'content-type': 'application/octet-stream' },
+        })
       }),
     )
     const donut = {
@@ -105,7 +111,9 @@ describe('ExportApi', () => {
       flavor1: 1,
       flavor2: 2,
     } as never
-    await make().exportDraft('ses-1', [], false, null, null, null, null, [donut])
+    await make().exportDraft('ses-1', [], false, null, null, null, null, [
+      donut,
+    ])
     expect((receivedBody as { donutDrafts: unknown }).donutDrafts).toEqual([
       { berries: [1, 2], berryName: 10, flavor0: 0, flavor1: 1, flavor2: 2 },
     ])
@@ -116,7 +124,9 @@ describe('ExportApi', () => {
     server.use(
       http.post('*/api/saves/:id/export-draft', async ({ request }) => {
         receivedBody = await request.json()
-        return new HttpResponse('', { headers: { 'content-type': 'application/octet-stream' } })
+        return new HttpResponse('', {
+          headers: { 'content-type': 'application/octet-stream' },
+        })
       }),
     )
     await make().exportDraft(
@@ -134,11 +144,31 @@ describe('ExportApi', () => {
       [{ species: 25, action: 'completeTask', taskIndex: 2 }],
       ['markAllPerfect'],
     )
-    expect((receivedBody as { arceusResearchActions: unknown }).arceusResearchActions).toEqual({
+    expect(
+      (receivedBody as { arceusResearchActions: unknown })
+        .arceusResearchActions,
+    ).toEqual({
       targets: [{ species: 25, action: 'completeTask', taskIndex: 2 }],
       markAllPerfect: true,
       markAllComplete: false,
     })
+  })
+
+  it('requests exports with a raised timeout', async () => {
+    const requestBlob = vi.fn().mockResolvedValue(new Blob())
+    const api = new ExportApi(requestBlob, vi.fn())
+    await api.exportSave('ses-1')
+    await api.exportDraft('ses-1', [], false)
+    expect(requestBlob).toHaveBeenNthCalledWith(
+      1,
+      '/api/saves/ses-1/export',
+      expect.objectContaining({ timeoutMs: 300_000 }),
+    )
+    expect(requestBlob).toHaveBeenNthCalledWith(
+      2,
+      '/api/saves/ses-1/export-draft',
+      expect.objectContaining({ timeoutMs: 300_000 }),
+    )
   })
 
   it('exportDraft appends ?format=zip when format is "zip"', async () => {
@@ -146,10 +176,27 @@ describe('ExportApi', () => {
     server.use(
       http.post('*/api/saves/:id/export-draft', ({ request }) => {
         url = request.url
-        return new HttpResponse('', { headers: { 'content-type': 'application/octet-stream' } })
+        return new HttpResponse('', {
+          headers: { 'content-type': 'application/octet-stream' },
+        })
       }),
     )
-    await make().exportDraft('ses-1', [], false, undefined, undefined, undefined, undefined, undefined, undefined, undefined, undefined, undefined, undefined, 'zip')
+    await make().exportDraft(
+      'ses-1',
+      [],
+      false,
+      undefined,
+      undefined,
+      undefined,
+      undefined,
+      undefined,
+      undefined,
+      undefined,
+      undefined,
+      undefined,
+      undefined,
+      'zip',
+    )
     expect(url).toMatch(/\/api\/saves\/ses-1\/export-draft\?format=zip$/)
   })
 })

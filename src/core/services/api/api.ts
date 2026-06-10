@@ -1,5 +1,9 @@
 import type { Language } from '../../types/index/index'
-import { requestBlob, requestJson } from '../apiHttp/apiHttp'
+import {
+  requestBlob,
+  requestJson,
+  type RequestOptions,
+} from '../apiHttp/apiHttp'
 import { CatalogApi } from '../catalogApi/catalogApi'
 import { DatabaseApi } from '../databaseApi/databaseApi'
 import { ExportApi } from '../exportApi/exportApi'
@@ -7,8 +11,8 @@ import { ItemApi } from '../itemApi/itemApi'
 import { PokemonApi } from '../pokemonApi/pokemonApi'
 import { SaveApi } from '../saveApi/saveApi'
 
-type Req = <T>(path: string, options?: RequestInit) => Promise<T>
-type ReqBlob = (path: string, options?: RequestInit) => Promise<Blob>
+type Req = <T>(path: string, options?: RequestOptions) => Promise<T>
+type ReqBlob = (path: string, options?: RequestOptions) => Promise<Blob>
 
 export class ApiClient {
   readonly save: SaveApi
@@ -114,6 +118,6 @@ export class ApiClient {
       format,
     )
 
-  private request = <T>(path: string, options?: RequestInit) =>
+  private request = <T>(path: string, options?: RequestOptions) =>
     requestJson<T>(this.getBaseUrl(), this.getLanguage(), path, options)
 }

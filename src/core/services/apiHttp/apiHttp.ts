@@ -1,12 +1,16 @@
 import type { Language } from '../../types/index/index'
 
+export type RequestOptions = RequestInit & {
+  // Overrides the default 60s timeout for known-slow requests (big exports).
+  timeoutMs?: number
+}
 export type RequestJsonFn = <T>(
   path: string,
-  options?: RequestInit,
+  options?: RequestOptions,
 ) => Promise<T>
 export type RequestBlobFn = (
   path: string,
-  options?: RequestInit,
+  options?: RequestOptions,
 ) => Promise<Blob>
 
 const requestTimeoutMs = 60_000
@@ -15,7 +19,7 @@ export async function requestJson<T>(
   baseUrl: string,
   language: Language,
   path: string,
-  options: RequestInit = {},
+  options: RequestOptions = {},
 ): Promise<T> {
   const response = await sendRequest(baseUrl, language, path, options)
   const text = await response.text()
@@ -30,7 +34,7 @@ export async function requestBlob(
   baseUrl: string,
   language: Language,
   path: string,
-  options: RequestInit = {},
+  options: RequestOptions = {},
 ): Promise<Blob> {
   const response = await sendRequest(baseUrl, language, path, options)
   if (!response.ok) {
@@ -46,12 +50,14 @@ async function sendRequest(
   baseUrl: string,
   language: Language,
   path: string,
-  options: RequestInit,
+  options: RequestOptions,
 ) {
+  const { timeoutMs, ...fetchOptions } = options
+  const timeout = timeoutMs ?? requestTimeoutMs
   const base = baseUrl.replace(/\/$/, '')
   const controller = new AbortController()
-  const timeoutId = setTimeout(() => controller.abort(), requestTimeoutMs)
-  const externalSignal = options.signal
+  const timeoutId = setTimeout(() => controller.abort(), timeout)
+  const externalSignal = fetchOptions.signal
   const abortFromExternalSignal = () => controller.abort()
 
   if (externalSignal?.aborted) controller.abort()
@@ -62,15 +68,13 @@ async function sendRequest(
 
   try {
     return await fetch(`${base}${path}`, {
-      ...options,
+      ...fetchOptions,
       signal: controller.signal,
-      headers: buildHeaders(language, options),
+      headers: buildHeaders(language, fetchOptions),
     })
   } catch {
     if (controller.signal.aborted && !externalSignal?.aborted) {
-      throw new Error(
-        `API request timed out after ${requestTimeoutMs / 1000} seconds.`,
-      )
+      throw new Error(`API request timed out after ${timeout / 1000} seconds.`)
     }
     if (externalSignal?.aborted) throw new Error('API request was cancelled.')
     throw new Error(`Could not reach the API at ${base}.`)

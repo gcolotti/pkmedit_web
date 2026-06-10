@@ -18,10 +18,10 @@ afterEach(() => {
 
 describe('requestJson', () => {
   it('returns parsed JSON on a 2xx response', async () => {
-    server.use(
-      http.get(urlPattern, () => HttpResponse.json({ value: 42 })),
-    )
-    await expect(requestJson(baseUrl, 'en', path)).resolves.toEqual({ value: 42 })
+    server.use(http.get(urlPattern, () => HttpResponse.json({ value: 42 })))
+    await expect(requestJson(baseUrl, 'en', path)).resolves.toEqual({
+      value: 42,
+    })
   })
 
   it('returns null on 2xx with an empty body', async () => {
@@ -42,14 +42,26 @@ describe('requestJson', () => {
 
   it('throws status text when the body is non-JSON text', async () => {
     server.use(
-      http.get(urlPattern, () => new HttpResponse('not-json-at-all', { status: 500 })),
+      http.get(
+        urlPattern,
+        () => new HttpResponse('not-json-at-all', { status: 500 }),
+      ),
     )
-    await expect(requestJson(baseUrl, 'en', path)).rejects.toThrow(/not-json-at-all/)
+    await expect(requestJson(baseUrl, 'en', path)).rejects.toThrow(
+      /not-json-at-all/,
+    )
   })
 
   it('throws the status text when the body is empty and non-OK', async () => {
     server.use(
-      http.get(urlPattern, () => new HttpResponse(null, { status: 503, statusText: 'Service Unavailable' })),
+      http.get(
+        urlPattern,
+        () =>
+          new HttpResponse(null, {
+            status: 503,
+            statusText: 'Service Unavailable',
+          }),
+      ),
     )
     await expect(requestJson(baseUrl, 'en', path)).rejects.toThrow('503')
   })
@@ -172,21 +184,39 @@ describe('requestJson', () => {
     await expect(promise).rejects.toThrow('API request timed out')
   })
 
-  it('rejects with a "could not reach" error when fetch throws a generic network error', async () => {
+  it('honors a per-request timeoutMs override', async () => {
+    vi.useFakeTimers()
     server.use(
-      http.get(urlPattern, () => HttpResponse.error()),
+      http.get(urlPattern, async () => {
+        await new Promise((r) => setTimeout(r, 70_000))
+        return HttpResponse.json({})
+      }),
     )
-    await expect(requestJson(baseUrl, 'en', path)).rejects.toThrow(/Could not reach the API/)
+    const promise = requestJson(baseUrl, 'en', path, { timeoutMs: 5_000 })
+    promise.catch(() => undefined)
+    await vi.advanceTimersByTimeAsync(5_000)
+    await expect(promise).rejects.toThrow(
+      'API request timed out after 5 seconds',
+    )
+  })
+
+  it('rejects with a "could not reach" error when fetch throws a generic network error', async () => {
+    server.use(http.get(urlPattern, () => HttpResponse.error()))
+    await expect(requestJson(baseUrl, 'en', path)).rejects.toThrow(
+      /Could not reach the API/,
+    )
   })
 })
 
 describe('requestBlob', () => {
   it('returns a Blob on a 2xx response', async () => {
     server.use(
-      http.get(urlPattern, () =>
-        new HttpResponse('hello', {
-          headers: { 'content-type': 'application/octet-stream' },
-        }),
+      http.get(
+        urlPattern,
+        () =>
+          new HttpResponse('hello', {
+            headers: { 'content-type': 'application/octet-stream' },
+          }),
       ),
     )
     const blob = await requestBlob(baseUrl, 'en', path)
@@ -212,7 +242,11 @@ describe('requestBlob', () => {
 
   it('throws the status text when the body is empty and non-OK', async () => {
     server.use(
-      http.get(urlPattern, () => new HttpResponse(null, { status: 502, statusText: 'Bad Gateway' })),
+      http.get(
+        urlPattern,
+        () =>
+          new HttpResponse(null, { status: 502, statusText: 'Bad Gateway' }),
+      ),
     )
     await expect(requestBlob(baseUrl, 'en', path)).rejects.toThrow('502')
   })

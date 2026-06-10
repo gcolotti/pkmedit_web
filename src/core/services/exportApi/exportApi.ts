@@ -16,6 +16,10 @@ import {
 } from '../apiHelpers/apiHelpers'
 import type { RequestBlobFn, RequestJsonFn } from '../apiHttp/apiHttp'
 
+// Exports rebuild and zip whole saves server-side; the default 60s request
+// timeout is too tight for the big ones.
+const exportTimeoutMs = 300_000
+
 export class ExportApi {
   constructor(
     private readonly requestBlob: RequestBlobFn,
@@ -27,7 +31,9 @@ export class ExportApi {
     format: 'sav' | 'zip' = 'sav',
   ): Promise<Blob> {
     const suffix = format === 'zip' ? '?format=zip' : ''
-    return this.requestBlob(`/api/saves/${sessionId}/export${suffix}`)
+    return this.requestBlob(`/api/saves/${sessionId}/export${suffix}`, {
+      timeoutMs: exportTimeoutMs,
+    })
   }
 
   async exportDraft(
@@ -49,6 +55,7 @@ export class ExportApi {
     const suffix = format === 'zip' ? '?format=zip' : ''
     return this.requestBlob(`/api/saves/${sessionId}/export-draft${suffix}`, {
       method: 'POST',
+      timeoutMs: exportTimeoutMs,
       body: JSON.stringify({
         allowIllegalChanges,
         changes,
