@@ -1,33 +1,20 @@
-import type { PokemonHyperTrain, PokemonStats } from '../../types/pokemon/pokemon'
+import type {
+  PokemonHyperTrain,
+  PokemonStats,
+} from '../../types/pokemon/pokemon'
 
-// [beneficial stat index, detrimental stat index]; 0 = neutral/hp
-const NATURE_EFFECTS: [number, number][] = [
-  [0, 0], // Hardy
-  [1, 2], // Lonely
-  [1, 5], // Brave
-  [1, 3], // Adamant
-  [1, 4], // Naughty
-  [2, 1], // Bold
-  [0, 0], // Docile
-  [2, 5], // Relaxed
-  [2, 3], // Impish
-  [2, 4], // Lax
-  [5, 1], // Timid
-  [5, 2], // Hasty
-  [0, 0], // Serious
-  [5, 3], // Jolly
-  [5, 4], // Naive
-  [3, 1], // Modest
-  [3, 2], // Mild
-  [3, 5], // Quiet
-  [0, 0], // Bashful
-  [3, 4], // Rash
-  [4, 1], // Calm
-  [4, 2], // Gentle
-  [4, 5], // Sassy
-  [4, 3], // Careful
-  [0, 0], // Quirky
-]
+// Nature n raises stat n/5 and lowers stat n%5 over the amp order
+// [Atk, Def, Spe, SpA, SpD] (PKHeX rule); equal indices = neutral nature.
+// Values map into STAT_INDEX positions; [0, 0] = neutral/hp.
+const AMP_TO_STAT_INDEX = [1, 2, 5, 3, 4] as const
+
+function natureEffects(nature: number): [number, number] {
+  if (nature < 0 || nature >= 25) return [0, 0]
+  const up = Math.trunc(nature / 5)
+  const down = nature % 5
+  if (up === down) return [0, 0]
+  return [AMP_TO_STAT_INDEX[up], AMP_TO_STAT_INDEX[down]]
+}
 
 const STAT_INDEX: Record<keyof PokemonStats, number> = {
   hp: 0,
@@ -68,7 +55,7 @@ export function calculateStatsLA(
   statNature: number,
   hyperTrainedIvs?: PokemonHyperTrain,
 ): PokemonStats {
-  const [beneficial, detrimental] = NATURE_EFFECTS[statNature] ?? [0, 0]
+  const [beneficial, detrimental] = natureEffects(statNature)
   const iv = (key: keyof PokemonStats): number =>
     hyperTrainedIvs?.[key] ? 31 : ivs[key]
 
@@ -131,7 +118,7 @@ export function calculateStats(
   species: number,
   hyperTrainedIvs?: PokemonHyperTrain,
 ): PokemonStats {
-  const [beneficial, detrimental] = NATURE_EFFECTS[statNature] ?? [0, 0]
+  const [beneficial, detrimental] = natureEffects(statNature)
 
   function calcStat(key: keyof PokemonStats): number {
     const b = base[key]
