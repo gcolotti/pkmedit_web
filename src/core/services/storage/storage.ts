@@ -41,13 +41,30 @@ export function writeAllowIllegalChanges(value: boolean) {
 }
 
 export function readApiBase() {
-  const urlApi = new URLSearchParams(window.location.search).get('api')?.trim()
+  const urlApi = sanitizeApiBase(
+    new URLSearchParams(window.location.search).get('api'),
+  )
   if (urlApi) {
     localStorage.setItem(apiBaseKey, urlApi)
     return urlApi
   }
 
-  return localStorage.getItem(apiBaseKey) || defaultApiBase
+  return sanitizeApiBase(localStorage.getItem(apiBaseKey)) ?? defaultApiBase
+}
+
+// The override reaches fetch() as-is, so anything that is not an absolute
+// http(s) URL is dropped instead of persisted.
+function sanitizeApiBase(value: string | null) {
+  const trimmed = value?.trim()
+  if (!trimmed) return null
+  try {
+    const url = new URL(trimmed)
+    return url.protocol === 'http:' || url.protocol === 'https:'
+      ? trimmed
+      : null
+  } catch {
+    return null
+  }
 }
 
 export function writeApiBase(value: string) {

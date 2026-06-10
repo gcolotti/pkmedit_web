@@ -142,7 +142,9 @@ describe('storage', () => {
 
     it('writeAllowIllegalChanges persists the boolean', () => {
       writeAllowIllegalChanges(false)
-      expect(localStorage.getItem('pkmedit_allow_illegal_changes')).toBe('false')
+      expect(localStorage.getItem('pkmedit_allow_illegal_changes')).toBe(
+        'false',
+      )
       writeAllowIllegalChanges(true)
       expect(localStorage.getItem('pkmedit_allow_illegal_changes')).toBe('true')
     })
@@ -163,6 +165,37 @@ describe('storage', () => {
       expect(localStorage.getItem('pkmedit_api_base')).toBe('https://x.test')
     })
 
+    it('ignores an invalid stored api base and falls back to the default', () => {
+      localStorage.setItem('pkmedit_api_base', 'not a url')
+      expect(readApiBase()).toBe('http://localhost:8080')
+    })
+
+    it('ignores a stored api base with a non-http scheme', () => {
+      localStorage.setItem('pkmedit_api_base', 'javascript:alert(1)')
+      expect(readApiBase()).toBe('http://localhost:8080')
+    })
+
+    it('ignores a ?api= param that is not an http(s) URL and does not persist it', () => {
+      const originalLocation = window.location
+      delete (window as unknown as { location?: unknown }).location
+      Object.defineProperty(window, 'location', {
+        configurable: true,
+        value: {
+          ...originalLocation,
+          search: '?api=javascript%3Aalert(1)',
+        },
+      })
+      try {
+        expect(readApiBase()).toBe('http://localhost:8080')
+        expect(localStorage.getItem('pkmedit_api_base')).toBeNull()
+      } finally {
+        Object.defineProperty(window, 'location', {
+          configurable: true,
+          value: originalLocation,
+        })
+      }
+    })
+
     it('uses a ?api= URL param when present and persists it', () => {
       // simulate ?api=... by directly invoking the URL parameter branch via a stubbed location
       const originalLocation = window.location
@@ -177,7 +210,9 @@ describe('storage', () => {
       try {
         const result = readApiBase()
         expect(result).toBe('https://param.test')
-        expect(localStorage.getItem('pkmedit_api_base')).toBe('https://param.test')
+        expect(localStorage.getItem('pkmedit_api_base')).toBe(
+          'https://param.test',
+        )
       } finally {
         Object.defineProperty(window, 'location', {
           configurable: true,
