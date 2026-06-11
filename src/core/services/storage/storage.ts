@@ -4,8 +4,19 @@ const languageCookie = 'pkmedit_language'
 const themeKey = 'pkmedit_theme'
 const allowIllegalChangesKey = 'pkmedit_allow_illegal_changes'
 const apiBaseKey = 'pkmedit_api_base'
+const clientInstanceIdKey = 'pkmedit_client_instance_id'
+const apiRegistrationPrefix = 'pkmedit_api_registration:'
 const defaultApiBase =
   import.meta.env.VITE_API_BASE?.trim() || 'http://localhost:8080'
+
+export type ApiRegistration = {
+  apiKey: string
+  appId: string
+  clientInstanceId: string
+  clientKind: string
+  clientName: string
+  expiresAt: string
+}
 
 export function readLanguage(): Language {
   const match = document.cookie.match(
@@ -69,4 +80,56 @@ function sanitizeApiBase(value: string | null) {
 
 export function writeApiBase(value: string) {
   localStorage.setItem(apiBaseKey, value)
+}
+
+export function readClientInstanceId() {
+  const stored = localStorage.getItem(clientInstanceIdKey)?.trim()
+  if (stored) return stored
+
+  const generated = crypto.randomUUID?.() ?? `web-${Date.now().toString(36)}`
+  localStorage.setItem(clientInstanceIdKey, generated)
+  return generated
+}
+
+export function readApiRegistration(apiBase: string): ApiRegistration | null {
+  const raw = localStorage.getItem(apiRegistrationKey(apiBase))
+  if (!raw) return null
+  try {
+    const parsed = JSON.parse(raw) as Partial<ApiRegistration>
+    if (
+      !parsed.apiKey ||
+      !parsed.appId ||
+      !parsed.clientInstanceId ||
+      !parsed.expiresAt
+    ) {
+      return null
+    }
+    return {
+      apiKey: parsed.apiKey,
+      appId: parsed.appId,
+      clientInstanceId: parsed.clientInstanceId,
+      clientKind: parsed.clientKind ?? 'web',
+      clientName: parsed.clientName ?? 'pkmedit_web',
+      expiresAt: parsed.expiresAt,
+    }
+  } catch {
+    return null
+  }
+}
+
+export function writeApiRegistration(
+  apiBase: string,
+  registration: ApiRegistration,
+) {
+  localStorage.setItem(apiRegistrationKey(apiBase), JSON.stringify(registration))
+  window.dispatchEvent(new Event('pkmedit-api-registration-changed'))
+}
+
+export function clearApiRegistration(apiBase: string) {
+  localStorage.removeItem(apiRegistrationKey(apiBase))
+  window.dispatchEvent(new Event('pkmedit-api-registration-changed'))
+}
+
+function apiRegistrationKey(apiBase: string) {
+  return `${apiRegistrationPrefix}${encodeURIComponent(apiBase)}`
 }

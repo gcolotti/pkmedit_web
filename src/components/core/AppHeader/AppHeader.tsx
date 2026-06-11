@@ -1,26 +1,35 @@
-import { Database, Languages, Moon, Sun } from 'lucide-react'
+import { Database, KeyRound, Languages, Moon, Sun } from 'lucide-react'
+import { useState } from 'react'
 
 import type { Translator } from '../../../core/i18n/i18n/i18n'
 import { languages } from '../../../core/i18n/i18n/i18n'
+import type { ApiRegistration } from '../../../core/services/storage/storage'
 import type { Language, Theme } from '../../../core/types/index/index'
+import { ApiKeyDialog } from '../ApiKeyDialog/ApiKeyDialog'
 
 export function AppHeader({
   apiBase,
+  apiRegistration,
   language,
   onApiBaseChange,
+  onApiKeyRotate,
   onLanguageChange,
   onThemeChange,
   t,
   theme,
 }: {
   apiBase: string
+  apiRegistration: ApiRegistration | null
   language: Language
   onApiBaseChange: (value: string) => void
+  onApiKeyRotate: () => Promise<void>
   onLanguageChange: (value: Language) => void
   onThemeChange: (value: Theme) => void
   t: Translator
   theme: Theme
 }) {
+  const [showKeyDialog, setShowKeyDialog] = useState(false)
+
   return (
     <header className="border-b border-black/10 bg-white/60 backdrop-blur-xl dark:border-white/10 dark:bg-ink/55">
       <div className="mx-auto flex max-w-shell flex-col gap-4 px-4 py-3 lg:flex-row lg:items-center lg:justify-between">
@@ -30,7 +39,7 @@ export function AppHeader({
           </div>
           <h1 className="text-2xl font-black tracking-normal">Pkmedit</h1>
         </div>
-        <div className="grid gap-2 md:grid-cols-[minmax(320px,1fr)_minmax(150px,auto)_auto] md:items-center">
+        <div className="grid gap-2 md:grid-cols-[minmax(320px,1fr)_minmax(150px,auto)_auto_auto] md:items-center">
           <label className="grid grid-cols-[auto_minmax(220px,1fr)] items-center gap-2">
             <span className="label text-[0.65rem]">{t('api')}</span>
             <input
@@ -63,6 +72,15 @@ export function AppHeader({
               </select>
             </div>
           </label>
+          <button
+            aria-label={t('apiKey')}
+            className={`grid h-9 w-9 place-items-center rounded-md border transition ${apiRegistration ? 'border-lagoon bg-lagoon/15 text-lagoon' : 'border-black/10 bg-white/70 text-stone-500 hover:bg-black/5 dark:border-white/10 dark:bg-white/5 dark:text-stone-300 dark:hover:bg-white/10'}`}
+            title={t('apiKey')}
+            type="button"
+            onClick={() => setShowKeyDialog(true)}
+          >
+            <KeyRound aria-hidden="true" size={16} />
+          </button>
           <div
             aria-label={t('theme')}
             className="surface-muted flex h-9 items-center gap-1 rounded-md p-0.5"
@@ -89,6 +107,21 @@ export function AppHeader({
           </div>
         </div>
       </div>
+      {showKeyDialog && (
+        <ApiKeyDialog
+          apiRegistration={apiRegistration}
+          closeLabel={t('cancel')}
+          emptyLabel={t('apiKeyPending')}
+          expiresLabel={t('apiKeyExpires')}
+          failureLabel={t('apiKeyRotateFailed')}
+          idLabel={t('apiClientId')}
+          rotateLabel={t('apiKeyRotate')}
+          title={t('apiKey')}
+          rotatingLabel={t('apiKeyRotating')}
+          onClose={() => setShowKeyDialog(false)}
+          onRotate={onApiKeyRotate}
+        />
+      )}
     </header>
   )
 }

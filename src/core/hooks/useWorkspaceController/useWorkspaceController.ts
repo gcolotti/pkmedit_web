@@ -8,6 +8,10 @@ import { useApiStatus } from '../../query/useApiStatus/useApiStatus'
 import { useCatalogs } from '../../query/useCatalogs/useCatalogs'
 import { useSavesList } from '../../query/useSavesList/useSavesList'
 import { ApiClient } from '../../services/api/api'
+import {
+  type ApiRegistration,
+  readApiRegistration,
+} from '../../services/storage/storage'
 import { useShellStore } from '../../state/shellStore/shellStore'
 import { defaultCatalogs } from '../../utils/defaultCatalogs/defaultCatalogs'
 import { useSaveWorkspace } from '../useSaveWorkspace/useSaveWorkspace'
@@ -39,6 +43,8 @@ export function useWorkspaceController() {
     })),
   )
   const [selectedSave, setSelectedSave] = useState('')
+  const [apiRegistration, setApiRegistration] =
+    useState<ApiRegistration | null>(() => readApiRegistration(apiBase))
 
   const t = useTranslator()
   const api = useMemo(
@@ -65,6 +71,21 @@ export function useWorkspaceController() {
   useEffect(() => {
     workspaceActionsRef.current = workspace.actions
   }, [workspace.actions])
+
+  useEffect(() => {
+    const refreshRegistration = () =>
+      setApiRegistration(readApiRegistration(apiBase))
+    refreshRegistration()
+    window.addEventListener(
+      'pkmedit-api-registration-changed',
+      refreshRegistration,
+    )
+    return () =>
+      window.removeEventListener(
+        'pkmedit-api-registration-changed',
+        refreshRegistration,
+      )
+  }, [apiBase])
 
   const hasRestoredSave = useRef(false)
   useEffect(() => {
@@ -98,6 +119,10 @@ export function useWorkspaceController() {
       openSelectedSave: () =>
         workspace.actions.openSelectedSave(effectiveSelectedSave),
       refreshApi,
+      rotateApiKey: async () => {
+        const registration = await api.rotateApiKey()
+        setApiRegistration(registration)
+      },
       refreshSaves,
       setAllowIllegalChanges,
       setApiBase,
@@ -109,6 +134,7 @@ export function useWorkspaceController() {
       ...workspace.state,
       allowIllegalChanges,
       apiBase,
+      apiRegistration,
       apiStatus,
       catalogs: catalogsQuery.data ?? defaultCatalogs,
       language,

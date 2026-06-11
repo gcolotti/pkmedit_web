@@ -12,6 +12,7 @@ beforeAll(() => {
 afterEach(() => {
   server.resetHandlers()
   vi.useRealTimers()
+  localStorage.clear()
   cleanup()
 })
 

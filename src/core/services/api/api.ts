@@ -3,6 +3,7 @@ import {
   requestBlob,
   requestJson,
   type RequestOptions,
+  rotateApiRegistration,
 } from '../apiHttp/apiHttp'
 import { CatalogApi } from '../catalogApi/catalogApi'
 import { DatabaseApi } from '../databaseApi/databaseApi'
@@ -41,6 +42,7 @@ export class ApiClient {
   getHealth = () => this.request<{ status: string }>('/api/health')
   getCapabilities = () =>
     this.request<{ pkhexCoreVersion: string }>('/api/capabilities')
+  rotateApiKey = () => rotateApiRegistration(this.getBaseUrl())
 
   listSaves = () => this.save.listSaves()
   openSave = (path: string) => this.save.openSave(path)

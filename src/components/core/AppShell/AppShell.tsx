@@ -10,10 +10,12 @@ export function AppShell({ children }: { children: ReactNode }) {
     <div className="app-shell min-h-screen text-ink dark:text-stone-100 xl:grid xl:h-screen xl:grid-rows-[auto_minmax(0,1fr)] xl:overflow-hidden">
       <AppHeader
         apiBase={state.apiBase}
+        apiRegistration={state.apiRegistration}
         language={state.language}
         t={state.t}
         theme={state.theme}
         onApiBaseChange={actions.setApiBase}
+        onApiKeyRotate={actions.rotateApiKey}
         onLanguageChange={actions.setLanguage}
         onThemeChange={actions.setTheme}
       />
