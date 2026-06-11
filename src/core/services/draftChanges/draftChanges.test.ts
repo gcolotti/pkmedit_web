@@ -79,7 +79,7 @@ describe('buildDraftRequests', () => {
     expect((result[0] as { pokemon?: unknown }).pokemon).toBeDefined()
   })
 
-  it('prefers replacement over pokemon when one is provided', () => {
+  it('sends both replacement and pokemon when a replacement is provided', () => {
     const b = base()
     const d = base({ main: { nickname: 'X' } as never })
     const result = buildDraftRequests(
@@ -89,9 +89,14 @@ describe('buildDraftRequests', () => {
         a: { dataBase64: 'AA==' },
       },
     )
-    expect(result).toEqual([
-      { slotId: 'a', replacement: { dataBase64: 'AA==' } },
-    ])
+    expect(result).toHaveLength(1)
+    expect(result[0]?.slotId).toBe('a')
+    expect(result[0]?.replacement).toEqual({ dataBase64: 'AA==' })
+    // The field payload rides along so edits made after applying an
+    // encounter survive the export (the backend applies it on top of the
+    // replacement bytes).
+    const pokemon = result[0]?.pokemon as { main?: { nickname?: string } }
+    expect(pokemon?.main?.nickname).toBe('X')
   })
 })
 

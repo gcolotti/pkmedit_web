@@ -18,11 +18,19 @@ export function buildDraftRequests(
   drafts: Record<string, PokemonDetail>,
   replacements: Record<string, PokemonReplacement> = {},
 ): PokemonDraftChange[] {
+  // A slot with a replacement (applied database encounter) sends the raw
+  // bytes AND the field payload: the backend builds the mon from the bytes,
+  // then applies the payload on top, so manual edits made after "Apply to
+  // draft" survive the export (replacement alone silently dropped them).
   return Object.entries(drafts)
     .filter(([slotId, draft]) => hasPokemonChanged(baseDetails[slotId], draft))
     .map(([slotId, draft]) =>
       replacements[slotId]
-        ? { slotId, replacement: replacements[slotId] }
+        ? {
+            slotId,
+            pokemon: buildPokemonPayload(draft),
+            replacement: replacements[slotId],
+          }
         : { slotId, pokemon: buildPokemonPayload(draft) },
     )
 }
