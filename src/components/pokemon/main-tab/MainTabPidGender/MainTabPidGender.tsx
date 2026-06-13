@@ -2,6 +2,7 @@ import { useState } from 'react'
 
 import { useWorkspace } from '../../../../core/hooks/workspaceContext/workspaceContext'
 import type { Translator } from '../../../../core/i18n/i18n/i18n'
+import { useDraftStore } from '../../../../core/state/draftStore/draftStore'
 import type { PokemonDetail } from '../../../../core/types/index/index'
 import { UINT32_MAX } from '../../../../core/utils/numberInput/numberInput'
 import { CompactNumberField } from '../../../ui/CompactNumberField/CompactNumberField'
@@ -33,6 +34,7 @@ export function MainTabPidGender({
   update,
 }: Props) {
   const { api } = useWorkspace()
+  const setDrafts = useDraftStore((s) => s.setPokemonDrafts)
   const [busy, setBusy] = useState(false)
   const [error, setError] = useState<string | null>(null)
 
@@ -46,7 +48,17 @@ export function MainTabPidGender({
         selectedSlotId,
         flags,
       )
-      update((copy) => Object.assign(copy, next))
+      // Replace the slot's draft wholesale with the preview result. Using
+      // setPokemonDrafts directly (same pattern as usePokemonSelection
+      // changeDraftSpecies) so the reroll is visible to every consumer of
+      // `drafts` (legality check, party/box summaries, etc.) — not just the
+      // local useState inside PokemonEditor.
+      const slot = selectedSlotId
+      setDrafts((current) => {
+        const latest = current[slot]
+        if (!latest) return current
+        return { ...current, [slot]: next }
+      })
     } catch (err) {
       const message = err instanceof Error ? err.message : String(err)
       console.error('PID reroll failed', err)
@@ -73,7 +85,9 @@ export function MainTabPidGender({
     })
   }
   const onSetGender = (gender: number) => {
-    if (busy) return
+    if (busy || !selectedSlotId) return
+    // Optimistic local toggle — flips the displayed gender immediately and
+    // updates the draft so the optimistic UI matches the eventual result.
     update((copy) => {
       copy.main.gender = gender
       copy.summary.gender = gender
