@@ -12,6 +12,7 @@ import { PokemonStatusFlags } from '../../PokemonStatusFlags/PokemonStatusFlags'
 import { PokemonTypeBadges } from '../../PokemonTypeBadges/PokemonTypeBadges'
 import { MainTabHeldItemSelect } from '../MainTabHeldItemSelect/MainTabHeldItemSelect'
 import { MainTabLevelExpFields } from '../MainTabLevelExpFields/MainTabLevelExpFields'
+import { MainTabPidGender } from '../MainTabPidGender/MainTabPidGender'
 import { MainTabSpeciesSelect } from '../MainTabSpeciesSelect/MainTabSpeciesSelect'
 import { MainTabTeraTypeSelects } from '../MainTabTeraTypeSelects/MainTabTeraTypeSelects'
 
@@ -22,6 +23,8 @@ type Props = {
   onFormChange: (form: number) => void
   onOpenTypeChart?: (typeId: number) => void
   onSpeciesChange: (species: number, speciesName: string) => void
+  selectedSlotId: string | null
+  sessionId: string | null
   showHeldItem: boolean
   t: Translator
   update: (mutate: (copy: PokemonDetail) => void) => void
@@ -34,6 +37,8 @@ export function MainTabFields({
   onFormChange,
   onOpenTypeChart,
   onSpeciesChange,
+  selectedSlotId,
+  sessionId,
   showHeldItem,
   t,
   update,
@@ -52,6 +57,7 @@ export function MainTabFields({
         type2={draft.type2}
         onOpenTypeChart={onOpenTypeChart}
       />
+      <MainTabPidGender draft={draft} selectedSlotId={selectedSlotId} sessionId={sessionId} t={t} update={update} />
       <MainTabSpeciesSelect
         catalogs={catalogs}
         draft={draft}
@@ -109,7 +115,7 @@ export function MainTabFields({
         entries={abilityEntries}
         contextAbilities={contextAbilities}
         language={language}
-        onChange={(value) =>
+        onChange={(value) => {
           update((copy) => {
             copy.summary.ability = value
             const abilityIndex = contextAbilities.findIndex(
@@ -120,7 +126,7 @@ export function MainTabFields({
                 abilityIndex === 2 ? 4 : abilityIndex + 1
             }
           })
-        }
+        }}
       />
       {showHeldItem && (
         <MainTabHeldItemSelect
@@ -138,8 +144,7 @@ export function MainTabFields({
         t={t}
         onCuredChange={(v) => update((copy) => (copy.main.cured = v))}
         onInfectedChange={(v) => update((copy) => (copy.main.infected = v))}
-        onIsEggChange={(v) => update((copy) => (copy.origin.isEgg = v))}
-      />
+        onIsEggChange={(v) => update((copy) => (copy.origin.isEgg = v))} />
     </>
   )
 }

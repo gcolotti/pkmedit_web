@@ -38,6 +38,26 @@ export class PokemonApi {
     )
   }
 
+  async previewRerollPid(
+    sessionId: string,
+    slotId: string,
+    flags: {
+      preserveGender: boolean
+      preserveNature: boolean
+      preserveAbility: boolean
+      preserveShiny: boolean
+      desiredGender?: number | null
+    },
+  ): Promise<PokemonDetail> {
+    return this.requestJson(
+      `/api/saves/${sessionId}/pokemon/${slotId}/preview/reroll-pid`,
+      {
+        method: 'POST',
+        body: JSON.stringify(flags),
+      },
+    )
+  }
+
   async checkDraft(
     sessionId: string,
     changes: PokemonDraftChange[],

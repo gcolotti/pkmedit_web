@@ -61,6 +61,8 @@ export function PokemonEditor({
               catalogs={catalogs}
               draft={draft}
               language={language}
+              selectedSlotId={selectedSlotId}
+              sessionId={sessionId}
               showHeldItem={heldItemSupported}
               onFormChange={onFormChange}
               onOpenTypeChart={onOpenTypeChart}

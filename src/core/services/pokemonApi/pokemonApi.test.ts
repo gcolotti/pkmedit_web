@@ -65,6 +65,34 @@ describe('PokemonApi', () => {
     expect(receivedBody).toEqual({ nickname: 'X' })
   })
 
+  it('previewRerollPid POSTs the flags to /api/saves/:id/pokemon/:slotId/preview/reroll-pid', async () => {
+    let receivedMethod = ''
+    let receivedBody: unknown = null
+    server.use(
+      http.post(
+        '*/api/saves/:id/pokemon/:slotId/preview/reroll-pid',
+        async ({ request }) => {
+          receivedMethod = request.method
+          receivedBody = await request.json()
+          return HttpResponse.json({})
+        },
+      ),
+    )
+    await make().previewRerollPid('ses-1', 'slot-7', {
+      preserveGender: true,
+      preserveNature: true,
+      preserveAbility: true,
+      preserveShiny: true,
+    })
+    expect(receivedMethod).toBe('POST')
+    expect(receivedBody).toEqual({
+      preserveGender: true,
+      preserveNature: true,
+      preserveAbility: true,
+      preserveShiny: true,
+    })
+  })
+
   it('checkDraft POSTs { allowIllegalChanges, changes } to /api/saves/:id/legality/check-draft', async () => {
     let receivedBody: unknown = null
     server.use(
