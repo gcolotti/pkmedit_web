@@ -39,7 +39,7 @@ describe('DetailsHome', () => {
     expect(screen.getByLabelText('homeTracker')).toHaveValue(12345)
   })
 
-  it('reports the new homeTracker when the input value changes', async () => {
+  it('reports the new homeTracker when the input value changes', () => {
     const onCosmeticChange = vi.fn()
     render(
       <FieldIssueProvider paths={new Set()}>

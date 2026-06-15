@@ -1,8 +1,8 @@
 import { render, screen } from '@testing-library/react'
 import { describe, expect, it, vi } from 'vitest'
 
-import type { CatalogEntry } from '../../../../core/types/index/index'
 import type { Translator } from '../../../../core/i18n/i18n/i18n'
+import type { CatalogEntry } from '../../../../core/types/index/index'
 import type {
   PokemonCosmetic,
   PokemonMain,

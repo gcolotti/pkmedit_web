@@ -2,8 +2,8 @@ import { render, screen } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import { describe, expect, it, vi } from 'vitest'
 
-import type { CatalogEntry } from '../../../../core/types/index/index'
 import type { Translator } from '../../../../core/i18n/i18n/i18n'
+import type { CatalogEntry } from '../../../../core/types/index/index'
 import type {
   PokemonMain,
   PokemonTrainer,
@@ -78,8 +78,8 @@ describe('DetailsTechnical', () => {
         />
       </FieldIssueProvider>,
     )
-    const select = screen.getByLabelText('htLanguage') as HTMLSelectElement
-    expect(select.value).toBe('0')
+    const select = screen.getByLabelText('htLanguage')
+    expect(select).toHaveValue('0')
     const unsetOption = screen.getByRole('option', { name: 'unset' })
     expect(unsetOption).toBeInTheDocument()
   })
