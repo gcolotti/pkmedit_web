@@ -31,10 +31,7 @@ export function DefaultPage() {
     pocket: DonutPocket
     sessionId: string | null
   } | null>(null)
-
-  // Debounced live legality recheck (staleness mix "C").
-  useLiveLegalityRecheck(state.draft, actions.recheckSelectedLegality)
-
+  useLiveLegalityRecheck(state.legalityInputKey, actions.recheckSelectedLegality)
   const saveGameVersion = state.summary?.gameVersion ?? 0
   const heldItemsSupported = supportsHeldItem(saveGameVersion)
   const databaseBrowser = useDatabaseBrowser({
@@ -43,11 +40,10 @@ export function DefaultPage() {
     saveGameVersion,
     saveGeneration: state.summary?.generation ?? 0,
   })
-  const donutCreatorPocket =
-    donutCreatorState?.sessionId === state.summary?.sessionId &&
-    donutCreatorState
-      ? donutCreatorState.pocket
-      : null
+  const donutCreatorPocket = donutCreatorState?.sessionId ===
+    state.summary?.sessionId && donutCreatorState
+    ? donutCreatorState.pocket
+    : null
 
   return (
     <AppShell>
@@ -94,9 +90,11 @@ export function DefaultPage() {
           sessionId={state.summary?.sessionId ?? null}
           saveView={state.saveView}
           selectedSlotId={state.selectedSlotId}
+          selectedLegality={state.selectedLegality}
           setDraft={actions.setDraft}
           t={state.t}
           onCheck={() => actions.checkSelectedSlot()}
+          onLegalityGenerated={actions.updateSelectedLegality}
           onDatabaseViewChange={actions.setDatabaseView}
           onAddDonut={donuts.onAdd}
           onItemsChange={items.onChange}

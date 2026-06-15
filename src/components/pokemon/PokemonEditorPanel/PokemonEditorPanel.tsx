@@ -14,6 +14,7 @@ export const PokemonEditorPanel = memo(function PokemonEditorPanel({
   draft,
   language,
   onCheck,
+  onLegalityGenerated,
   onActiveTabChange,
   onCopyPokemon,
   onFormChange,
@@ -26,6 +27,7 @@ export const PokemonEditorPanel = memo(function PokemonEditorPanel({
   pokemonClipboard,
   saveGameVersion,
   selectedSlotId,
+  selectedLegality,
   sessionId,
   setDraft,
   t,
@@ -94,10 +96,12 @@ export const PokemonEditorPanel = memo(function PokemonEditorPanel({
         language={language}
         saveGameVersion={saveGameVersion}
         selectedSlotId={selectedSlotId}
+        selectedLegality={selectedLegality}
         sessionId={sessionId}
         setDraft={setDraft}
         t={t}
         onCheck={onCheck}
+        onLegalityGenerated={onLegalityGenerated}
         onFormChange={onFormChange}
         onOpenDetailsAdvanced={onOpenDetailsAdvanced}
         onOpenLegalityAdvanced={onOpenLegalityAdvanced}

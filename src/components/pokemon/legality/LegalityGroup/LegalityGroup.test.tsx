@@ -2,7 +2,11 @@ import { render, screen, waitFor } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import { beforeEach, describe, expect, it, vi } from 'vitest'
 
-import type { LegalGenerateResponse, PokemonDetail } from '../../../../core/types/index/index'
+import type {
+  LegalGenerateResponse,
+  LegalityReport,
+  PokemonDetail,
+} from '../../../../core/types/index/index'
 import { LegalityGroup } from './LegalityGroup'
 
 const previewLegalGenerate = vi.fn<(s: string, id: string, req: unknown) => Promise<LegalGenerateResponse>>()
@@ -26,7 +30,15 @@ vi.mock('../../../../core/state/uiStore/uiStore', () => ({
 import type { Translator } from '../../../../core/i18n/i18n/i18n'
 const t = ((key: string) => key) as Translator
 
-const baseLegal = {
+const legalityState = (report = baseLegal) => ({
+  report,
+  checkedAt: 123,
+  inputKey: 'input-key',
+  status: 'fresh' as const,
+  error: null,
+})
+
+const baseLegal: LegalityReport = {
   slotId: 'a',
   legal: true,
   severity: 'ok',
@@ -34,7 +46,7 @@ const baseLegal = {
   checks: [],
 }
 
-const illegalReport = {
+const illegalReport: LegalityReport = {
   slotId: 'a',
   legal: false,
   severity: 'error',
@@ -97,7 +109,9 @@ describe('LegalityGroup', () => {
     render(
       <LegalityGroup
         draft={makeDraft()}
+        selectedLegality={legalityState()}
         onCheck={onCheck}
+        onLegalityGenerated={() => {}}
         onOpenAdvanced={() => {}}
         saveGameVersion={42}
         selectedSlotId="a"
@@ -113,7 +127,9 @@ describe('LegalityGroup', () => {
     render(
       <LegalityGroup
         draft={makeDraft({ legality: baseLegal })}
+        selectedLegality={legalityState(baseLegal)}
         onCheck={() => Promise.resolve()}
+        onLegalityGenerated={() => {}}
         onOpenAdvanced={() => {}}
         saveGameVersion={42}
         selectedSlotId="a"
@@ -131,7 +147,9 @@ describe('LegalityGroup', () => {
     render(
       <LegalityGroup
         draft={makeDraft({ legality: illegalReport })}
+        selectedLegality={legalityState(illegalReport)}
         onCheck={() => Promise.resolve()}
+        onLegalityGenerated={() => {}}
         onOpenAdvanced={() => {}}
         saveGameVersion={42}
         selectedSlotId="a"
@@ -151,10 +169,13 @@ describe('LegalityGroup', () => {
       warning: null,
     })
     const setDraft = vi.fn()
+    const onLegalityGenerated = vi.fn()
     render(
       <LegalityGroup
         draft={makeDraft({ legality: illegalReport })}
+        selectedLegality={legalityState(illegalReport)}
         onCheck={() => Promise.resolve()}
+        onLegalityGenerated={onLegalityGenerated}
         onOpenAdvanced={() => {}}
         saveGameVersion={42}
         selectedSlotId="a"
@@ -166,6 +187,9 @@ describe('LegalityGroup', () => {
     await userEvent.click(screen.getByRole('button', { name: 'generateLegal' }))
     await waitFor(() => expect(previewLegalGenerate).toHaveBeenCalledTimes(1))
     expect(setDraft).toHaveBeenCalled()
+    expect(onLegalityGenerated).toHaveBeenCalledWith(expect.objectContaining({
+      legality: baseLegal,
+    }))
   })
 
   it('shows a toast when the backend drops the alpha flag', async () => {
@@ -182,7 +206,9 @@ describe('LegalityGroup', () => {
           cosmetic: { ...makeDraft().cosmetic, alpha: true },
           summary: { ...makeDraft().summary, alpha: true },
         })}
+        selectedLegality={legalityState(illegalReport)}
         onCheck={() => Promise.resolve()}
+        onLegalityGenerated={() => {}}
         onOpenAdvanced={() => {}}
         saveGameVersion={42}
         selectedSlotId="a"
@@ -200,7 +226,9 @@ describe('LegalityGroup', () => {
     render(
       <LegalityGroup
         draft={makeDraft()}
+        selectedLegality={legalityState()}
         onCheck={() => Promise.resolve()}
+        onLegalityGenerated={() => {}}
         onOpenAdvanced={onOpenAdvanced}
         saveGameVersion={42}
         selectedSlotId="a"

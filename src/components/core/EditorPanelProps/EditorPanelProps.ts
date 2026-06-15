@@ -1,5 +1,6 @@
 import type { DatabaseBrowserState } from '../../../core/hooks/useDatabaseBrowser/useDatabaseBrowser'
 import type { Translator } from '../../../core/i18n/i18n/i18n'
+import type { SlotLegalityState } from '../../../core/state/draftStoreTypes/draftStoreTypes'
 import type { DonutDraft, DonutPocket } from '../../../core/types/donut/donut'
 import type {
   ArceusResearchStatusResponse,
@@ -34,6 +35,7 @@ export interface EditorPanelProps {
   itemCatalog: CatalogBundle['items']
   languageCatalog: CatalogBundle['languages']
   onCheck: () => Promise<LegalityReport | null>
+  onLegalityGenerated: (detail: PokemonDetail) => void
   onDatabaseViewChange: (view: DatabaseView) => void
   onAddDonut: (draft: DonutDraft) => void
   onItemsChange: (bag: ItemBag) => void
@@ -72,6 +74,7 @@ export interface EditorPanelProps {
   onSpeciesChange: (species: number, speciesName: string) => void
   onTrainerChange: (trainer: TrainerInfo) => void
   selectedSlotId: string | null
+  selectedLegality: SlotLegalityState | null
   sessionId: string | null
   setDraft: React.Dispatch<React.SetStateAction<PokemonDetail | null>>
   saveView: SaveView

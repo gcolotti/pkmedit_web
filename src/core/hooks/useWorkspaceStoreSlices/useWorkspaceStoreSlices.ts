@@ -9,11 +9,13 @@ export function useDraftWorkspaceSlices() {
       baseDetails: s.baseDetails,
       draftViolations: s.draftViolations,
       drafts: s.pokemonDrafts,
+      pokemonLegality: s.pokemonLegality,
       pokedexStatus: s.pokedexStatus,
       resetDrafts: s.resetDrafts,
       setBaseDetails: s.setBaseDetails,
       setDraftViolations: s.setDraftViolations,
       setDrafts: s.setPokemonDrafts,
+      setPokemonLegality: s.setPokemonLegality,
       setPokedexStatus: s.setPokedexStatus,
     })),
   )

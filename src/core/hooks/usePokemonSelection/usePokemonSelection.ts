@@ -2,8 +2,12 @@ import { useShallow } from 'zustand/react/shallow'
 
 import type { ApiClient } from '../../services/api/api'
 import { selectedDetail } from '../../services/draftSelection/draftSelection'
-import { buildPokemonPayload } from '../../services/pokemonPayload/pokemonPayload'
+import {
+  buildPokemonLegalityInputKey,
+  buildPokemonPayload,
+} from '../../services/pokemonPayload/pokemonPayload'
 import { useDraftStore } from '../../state/draftStore/draftStore'
+import type { DraftState } from '../../state/draftStoreTypes/draftStoreTypes'
 import type { PokemonDetail } from '../../types/index/index'
 
 export function usePokemonSelection(
@@ -12,6 +16,7 @@ export function usePokemonSelection(
   selectedSlotId: string | null,
   setSelectedSlotId: (id: string | null) => void,
   setToast: (message: string) => void,
+  setPokemonLegality: DraftState['setPokemonLegality'],
 ) {
   const {
     baseDetails,
@@ -36,12 +41,23 @@ export function usePokemonSelection(
   async function selectSlot(slotId: string) {
     if (!summary) return
     const detail = await api.getPokemon(summary.sessionId, slotId)
+    const inputKey = buildPokemonLegalityInputKey(detail)
     setDatabasePreview(null)
     setSelectedSlotId(slotId)
     setBaseDetails((current) => ({ ...current, [slotId]: detail }))
     setDrafts((current) => ({
       ...current,
       [slotId]: current[slotId] ?? structuredClone(detail),
+    }))
+    setPokemonLegality((current) => ({
+      ...current,
+      [slotId]: current[slotId] ?? {
+        report: detail.legality,
+        checkedAt: Date.now(),
+        inputKey,
+        status: 'fresh',
+        error: null,
+      },
     }))
   }
 
@@ -55,6 +71,7 @@ export function usePokemonSelection(
       const next = typeof value === 'function' ? value(previous) : value
       return next ? { ...current, [selectedSlotId]: next } : current
     })
+    markSelectedLegalityStale(selectedSlotId, setPokemonLegality)
     clearReplacementDraft(selectedSlotId)
     setDraftViolations([])
   }
@@ -71,6 +88,7 @@ export function usePokemonSelection(
     optimistic.summary.form = 0
 
     setDrafts((current) => ({ ...current, [selectedSlotId]: optimistic }))
+    markSelectedLegalityStale(selectedSlotId, setPokemonLegality)
     clearReplacementDraft(selectedSlotId)
     setDraftViolations([])
 
@@ -82,11 +100,20 @@ export function usePokemonSelection(
         selectedSlotId,
         buildPokemonPayload(optimistic),
       )
+      let applied = false
       setDrafts((current) => {
         const latest = current[selectedSlotId]
         if (!latest || latest.summary.species !== species) return current
+        applied = true
         return { ...current, [selectedSlotId]: preview }
       })
+      if (applied)
+        writeSelectedLegality(
+          selectedSlotId,
+          preview,
+          buildPokemonLegalityInputKey(preview),
+          setPokemonLegality,
+        )
     } catch (error) {
       setToast(error instanceof Error ? error.message : String(error))
     }
@@ -102,6 +129,7 @@ export function usePokemonSelection(
     optimistic.summary.form = form
 
     setDrafts((current) => ({ ...current, [selectedSlotId]: optimistic }))
+    markSelectedLegalityStale(selectedSlotId, setPokemonLegality)
     clearReplacementDraft(selectedSlotId)
     setDraftViolations([])
 
@@ -113,11 +141,20 @@ export function usePokemonSelection(
         selectedSlotId,
         buildPokemonPayload(optimistic),
       )
+      let applied = false
       setDrafts((current) => {
         const latest = current[selectedSlotId]
         if (!latest || latest.summary.form !== form) return current
+        applied = true
         return { ...current, [selectedSlotId]: preview }
       })
+      if (applied)
+        writeSelectedLegality(
+          selectedSlotId,
+          preview,
+          buildPokemonLegalityInputKey(preview),
+          setPokemonLegality,
+        )
     } catch (error) {
       setToast(error instanceof Error ? error.message : String(error))
     }
@@ -132,25 +169,36 @@ export function usePokemonSelection(
     if (!selectedSlotId || !summary) return
     const current = drafts[selectedSlotId] ?? baseDetails[selectedSlotId]
     if (!current) return
+    const inputKey = buildPokemonLegalityInputKey(current)
+    setPokemonLegality((legality) => ({
+      ...legality,
+      [selectedSlotId]: {
+        report: legality[selectedSlotId]?.report ?? current.legality,
+        checkedAt: legality[selectedSlotId]?.checkedAt ?? null,
+        inputKey,
+        status: 'checking',
+        error: null,
+      },
+    }))
     try {
       const preview = await api.previewPokemonUpdate(
         summary.sessionId,
         selectedSlotId,
         buildPokemonPayload(current),
       )
+      const latestStore = useDraftStore.getState()
+      const latest =
+        latestStore.pokemonDrafts[selectedSlotId] ??
+        latestStore.baseDetails[selectedSlotId]
+      if (!latest || buildPokemonLegalityInputKey(latest) !== inputKey) return
+
       setDrafts((cur) => {
         const latest = cur[selectedSlotId]
         if (!latest) return cur
-        if (
-          latest.legality.legal === preview.legality.legal &&
-          latest.summary.legalSeverity === preview.summary.legalSeverity
-        )
-          return cur
         return {
           ...cur,
           [selectedSlotId]: {
             ...latest,
-            legality: preview.legality,
             summary: {
               ...latest.summary,
               legal: preview.summary.legal,
@@ -159,9 +207,37 @@ export function usePokemonSelection(
           },
         }
       })
-    } catch {
-      // Background recheck: ignore failures.
+      writeSelectedLegality(
+        selectedSlotId,
+        preview,
+        inputKey,
+        setPokemonLegality,
+      )
+    } catch (error) {
+      setPokemonLegality((legality) => {
+        const previous = legality[selectedSlotId]
+        return {
+          ...legality,
+          [selectedSlotId]: {
+            report: previous?.report ?? current.legality,
+            checkedAt: previous?.checkedAt ?? null,
+            inputKey,
+            status: 'error',
+            error: error instanceof Error ? error.message : String(error),
+          },
+        }
+      })
     }
+  }
+
+  function updateSelectedLegality(detail: PokemonDetail) {
+    if (!selectedSlotId) return
+    writeSelectedLegality(
+      selectedSlotId,
+      detail,
+      buildPokemonLegalityInputKey(detail),
+      setPokemonLegality,
+    )
   }
 
   return {
@@ -170,5 +246,41 @@ export function usePokemonSelection(
     changeDraftSpecies,
     changeDraftForm,
     recheckSelectedLegality,
+    updateSelectedLegality,
   }
+}
+
+function markSelectedLegalityStale(
+  selectedSlotId: string,
+  setPokemonLegality: DraftState['setPokemonLegality'],
+) {
+  setPokemonLegality((legality) => {
+    const previous = legality[selectedSlotId]
+    if (!previous || previous.status === 'stale') return legality
+    return {
+      ...legality,
+      [selectedSlotId]: {
+        ...previous,
+        status: 'stale',
+      },
+    }
+  })
+}
+
+function writeSelectedLegality(
+  selectedSlotId: string,
+  detail: PokemonDetail,
+  inputKey: string,
+  setPokemonLegality: DraftState['setPokemonLegality'],
+) {
+  setPokemonLegality((legality) => ({
+    ...legality,
+    [selectedSlotId]: {
+      report: detail.legality,
+      checkedAt: Date.now(),
+      inputKey,
+      status: 'fresh',
+      error: null,
+    },
+  }))
 }

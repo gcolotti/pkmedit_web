@@ -51,6 +51,7 @@ const makeContext = (
 ) => {
   const setDrafts = vi.fn()
   const setDraftViolations = vi.fn()
+  const setPokemonLegality = vi.fn()
   const setLegalityReports = vi.fn()
   const setToast = vi.fn()
   const api = new ApiClient(
@@ -66,13 +67,21 @@ const makeContext = (
     selectedSlotId: 'a',
     setDrafts,
     setDraftViolations,
+    setPokemonLegality,
     setLegalityReports,
     setToast,
     summary,
     t,
     ...overrides,
   }
-  return { ...ctx, setDrafts, setDraftViolations, setLegalityReports, setToast }
+  return {
+    ...ctx,
+    setDrafts,
+    setDraftViolations,
+    setPokemonLegality,
+    setLegalityReports,
+    setToast,
+  }
 }
 
 describe('checkWorkspaceDraft', () => {
@@ -137,6 +146,7 @@ describe('checkWorkspaceDraft', () => {
     const result = await checkWorkspaceDraft(ctx, true)
     expect(result).toEqual(existingReport)
     expect(ctx.setLegalityReports).toHaveBeenCalled()
+    expect(ctx.setPokemonLegality).toHaveBeenCalled()
     expect(ctx.setToast).toHaveBeenCalled()
   })
 
@@ -187,6 +197,39 @@ describe('checkWorkspaceDraft', () => {
     )
     const result = await checkWorkspaceDraft(makeContext(), true)
     expect(result).toEqual(report)
+  })
+
+  it('caches the full selected report returned by the API', async () => {
+    const report: LegalityReport = {
+      slotId: 'a',
+      legal: false,
+      severity: 'error',
+      report: '',
+      checks: [
+        {
+          identifier: 'PID',
+          severity: 'error',
+          code: '1',
+          valid: false,
+          message: 'PID mismatch',
+        },
+      ],
+    }
+    server.use(
+      http.post('*/api/saves/:id/legality/check-draft', () =>
+        HttpResponse.json({
+          reports: [report],
+          violations: [],
+          blocked: false,
+        }),
+      ),
+    )
+    const ctx = makeContext()
+    await checkWorkspaceDraft(ctx, true)
+    const updater = ctx.setPokemonLegality.mock.calls[0]?.[0] as (
+      prev: Record<string, unknown>,
+    ) => Record<string, { report: LegalityReport }>
+    expect(updater({}).a.report).toEqual(report)
   })
 
   it('emits a blocked toast when the response is blocked', async () => {

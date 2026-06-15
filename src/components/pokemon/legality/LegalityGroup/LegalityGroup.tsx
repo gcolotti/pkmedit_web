@@ -3,6 +3,7 @@ import { type Dispatch, type SetStateAction, useEffect, useRef, useState } from 
 
 import { useWorkspace } from '../../../../core/hooks/workspaceContext/workspaceContext'
 import type { Translator } from '../../../../core/i18n/i18n/i18n'
+import type { SlotLegalityState } from '../../../../core/state/draftStoreTypes/draftStoreTypes'
 import { useUiStore } from '../../../../core/state/uiStore/uiStore'
 import type { PokemonDetail } from '../../../../core/types/index/index'
 import { supportsAlpha as supportsAlphaForVersion } from '../../../../core/utils/gameRules/gameRules'
@@ -18,18 +19,22 @@ const sectionTitleClassName = 'label text-[0.7rem]'
 export function LegalityGroup({
   draft,
   onCheck,
+  onLegalityGenerated,
   onOpenAdvanced,
   saveGameVersion,
   selectedSlotId,
+  selectedLegality,
   sessionId,
   setDraft,
   t,
 }: {
   draft: PokemonDetail
   onCheck: () => Promise<unknown>
+  onLegalityGenerated: (detail: PokemonDetail) => void
   onOpenAdvanced: () => void
   saveGameVersion: number
   selectedSlotId: string | null
+  selectedLegality: SlotLegalityState | null
   sessionId: string | null
   setDraft: Dispatch<SetStateAction<PokemonDetail | null>>
   t: Translator
@@ -42,8 +47,9 @@ export function LegalityGroup({
   const currentAlpha = draft.cosmetic.alpha
   const [targetShiny, setTargetShiny] = useState(currentShiny)
   const [targetAlpha, setTargetAlpha] = useState(currentAlpha)
-  const [checkedAt, setCheckedAt] = useState<number | null>(null)
   const [generating, setGenerating] = useState(false)
+  const legality = selectedLegality?.report ?? draft.legality
+  const checkedAt = selectedLegality?.checkedAt ?? null
 
   // Staleness (B): recheck the slot when the Legality tab opens. Remounts per
   // slot via key, so this runs once per slot selection. A ref keeps onCheck
@@ -53,18 +59,12 @@ export function LegalityGroup({
     onCheckRef.current = onCheck
   }, [onCheck])
   useEffect(() => {
-    let active = true
-    void onCheckRef.current().then(() => {
-      if (active) setCheckedAt(Date.now())
-    })
-    return () => {
-      active = false
-    }
+    void onCheckRef.current()
   }, [])
 
   const objectivesMet =
     targetShiny === currentShiny && targetAlpha === currentAlpha
-  const alreadyLegal = draft.legality.legal && objectivesMet
+  const alreadyLegal = legality.legal && objectivesMet
 
   async function handleGenerate() {
     if (!sessionId || !selectedSlotId) return
@@ -76,7 +76,7 @@ export function LegalityGroup({
         { targetAlpha, targetShiny },
       )
       setDraft(() => response.draft)
-      setCheckedAt(Date.now())
+      onLegalityGenerated(response.draft)
       if (targetAlpha && !response.alphaPreserved) showToast(t('alphaDropped'))
       else if (response.warning) showToast(response.warning)
     } catch {
@@ -90,7 +90,7 @@ export function LegalityGroup({
     <EditorGroup title={t('legality')}>
       <div className={sectionClassName}>
         <div className={sectionTitleClassName}>{t('status')}</div>
-        <LegalityStatus checkedAt={checkedAt} legality={draft.legality} t={t} />
+        <LegalityStatus checkedAt={checkedAt} legality={legality} t={t} />
       </div>
 
       <div className={sectionClassName}>

@@ -49,3 +49,7 @@ export function buildPokemonPayload(draft: PokemonDetail) {
 
   return payload
 }
+
+export function buildPokemonLegalityInputKey(draft: PokemonDetail) {
+  return JSON.stringify(buildPokemonPayload(draft))
+}

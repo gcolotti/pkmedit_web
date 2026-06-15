@@ -16,6 +16,7 @@ export function EditorPanel({
   itemCatalog,
   languageCatalog,
   onCheck,
+  onLegalityGenerated,
   onDatabaseViewChange,
   onAddDonut,
   onItemsChange,
@@ -45,6 +46,7 @@ export function EditorPanel({
   onSpeciesChange,
   onTrainerChange,
   selectedSlotId,
+  selectedLegality,
   sessionId,
   setDraft,
   saveView,
@@ -110,10 +112,12 @@ export function EditorPanel({
         language={language}
         saveGameVersion={saveGameVersion}
         selectedSlotId={selectedSlotId}
+        selectedLegality={selectedLegality}
         sessionId={sessionId}
         setDraft={setDraft}
         t={t}
         onCheck={onCheck}
+        onLegalityGenerated={onLegalityGenerated}
         onCopyPokemon={onCopyPokemon}
         onOpenDetailsAdvanced={onOpenDetailsAdvanced}
         onOpenLegalityAdvanced={onOpenLegalityAdvanced}

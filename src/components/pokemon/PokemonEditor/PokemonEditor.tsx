@@ -23,6 +23,7 @@ export function PokemonEditor({
   draft,
   language,
   onCheck,
+  onLegalityGenerated,
   onFormChange,
   onOpenDetailsAdvanced,
   onOpenLegalityAdvanced,
@@ -31,16 +32,18 @@ export function PokemonEditor({
   onSpeciesChange,
   saveGameVersion,
   selectedSlotId,
+  selectedLegality,
   sessionId,
   setDraft,
   t,
 }: PokemonEditorProps) {
   // Highlight (decision #7): conserved after removing LegalityCheckButton. The
-  // per-slot report (draft.legality) is maintained on load, on Generate legal,
-  // and by the slot recheck — feed it to FieldIssueProvider.
+  // live report lives in the per-slot legality cache; draft.legality remains
+  // the initial fallback from the backend detail.
   const invalidPaths = useMemo(
-    () => getIllegalFieldPaths(draft?.legality ?? null),
-    [draft?.legality],
+    () =>
+      getIllegalFieldPaths(selectedLegality?.report ?? draft?.legality ?? null),
+    [draft?.legality, selectedLegality?.report],
   )
   const heldItemSupported = supportsHeldItem(saveGameVersion)
   const movesLegalOnly = restrictMovesToLegal(saveGameVersion)
@@ -133,10 +136,12 @@ export function PokemonEditor({
             draft={draft}
             saveGameVersion={saveGameVersion}
             selectedSlotId={selectedSlotId}
+            selectedLegality={selectedLegality}
             sessionId={sessionId}
             setDraft={setDraft}
             t={t}
             onCheck={onCheck}
+            onLegalityGenerated={onLegalityGenerated}
             onOpenAdvanced={onOpenLegalityAdvanced}
           />
         )}

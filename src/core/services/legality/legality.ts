@@ -1,6 +1,7 @@
 import type { Dispatch, SetStateAction } from 'react'
 
 import type { Translator } from '../../i18n/i18n/i18n'
+import type { DraftState } from '../../state/draftStoreTypes/draftStoreTypes'
 import type { PokemonDraftChange } from '../../types/database/database'
 import type {
   DraftLegalityViolation,
@@ -10,6 +11,7 @@ import type {
 } from '../../types/index/index'
 import type { ApiClient } from '../api/api'
 import { selectedDetail } from '../draftSelection/draftSelection'
+import { buildPokemonLegalityInputKey } from '../pokemonPayload/pokemonPayload'
 
 type CheckWorkspaceDraftContext = {
   allowIllegalChanges: boolean
@@ -20,6 +22,7 @@ type CheckWorkspaceDraftContext = {
   selectedSlotId: string | null
   setDrafts: Dispatch<SetStateAction<Record<string, PokemonDetail>>>
   setDraftViolations: Dispatch<SetStateAction<DraftLegalityViolation[]>>
+  setPokemonLegality: DraftState['setPokemonLegality']
   setLegalityReports: Dispatch<SetStateAction<LegalityReport[]>>
   setToast: (message: string) => void
   summary: SaveSummary | null
@@ -62,7 +65,7 @@ export async function checkWorkspaceDraft(
       null)
     : null
   if (selectedReport && selectedSlotId)
-    writeSelectedReport(context, selectedReport)
+    writeSelectedReport(context, selectedReport, currentDetail)
   context.setToast(
     response.blocked
       ? t('draftHasIllegalChanges')
@@ -81,6 +84,7 @@ function readExistingReport(
       report,
       ...reports.filter((current) => current.slotId !== context.selectedSlotId),
     ])
+    writeCachedLegality(context, report, currentDetail)
   }
   context.setDraftViolations([])
   context.setToast(context.t('selectedDraftChecked'))
@@ -90,6 +94,7 @@ function readExistingReport(
 function writeSelectedReport(
   context: CheckWorkspaceDraftContext,
   selectedReport: LegalityReport,
+  currentDetail: PokemonDetail | null,
 ) {
   const { baseDetails, selectedSlotId } = context
   context.setDrafts((current) => {
@@ -113,4 +118,24 @@ function writeSelectedReport(
         }
       : current
   })
+  writeCachedLegality(context, selectedReport, currentDetail)
+}
+
+function writeCachedLegality(
+  context: CheckWorkspaceDraftContext,
+  report: LegalityReport,
+  currentDetail: PokemonDetail | null,
+) {
+  const { selectedSlotId } = context
+  if (!selectedSlotId || !currentDetail) return
+  context.setPokemonLegality((current) => ({
+    ...current,
+    [selectedSlotId]: {
+      report,
+      checkedAt: Date.now(),
+      inputKey: buildPokemonLegalityInputKey(currentDetail),
+      status: 'fresh',
+      error: null,
+    },
+  }))
 }

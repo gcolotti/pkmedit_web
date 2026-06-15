@@ -2,7 +2,10 @@ import { describe, expect, it } from 'vitest'
 
 import type { PokemonDetail } from '../../types/index/index'
 import { TERA_TYPE_OVERRIDE_NONE } from '../../utils/typeData/typeData'
-import { buildPokemonPayload } from './pokemonPayload'
+import {
+  buildPokemonLegalityInputKey,
+  buildPokemonPayload,
+} from './pokemonPayload'
 
 const baseDetail = (overrides: Partial<PokemonDetail> = {}): PokemonDetail =>
   ({
@@ -119,5 +122,15 @@ describe('buildPokemonPayload', () => {
     }
     expect(payload.teraTypeOriginal).toBe(0)
     expect(payload.teraTypeOverride).toBe(TERA_TYPE_OVERRIDE_NONE)
+  })
+
+  it('builds an input key from the editable pokemon payload', () => {
+    const first = buildPokemonLegalityInputKey(baseDetail())
+    const second = buildPokemonLegalityInputKey(
+      baseDetail({ summary: { ...baseDetail().summary, level: 6 } }),
+    )
+
+    expect(first).toBe(JSON.stringify(buildPokemonPayload(baseDetail())))
+    expect(second).not.toBe(first)
   })
 })

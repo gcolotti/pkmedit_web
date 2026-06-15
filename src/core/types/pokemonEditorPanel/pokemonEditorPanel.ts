@@ -1,6 +1,7 @@
 import type { Dispatch, SetStateAction } from 'react'
 
 import type { Translator } from '../../i18n/i18n/i18n'
+import type { SlotLegalityState } from '../../state/draftStoreTypes/draftStoreTypes'
 import type {
   CatalogBundle,
   EditorTab,
@@ -15,6 +16,7 @@ export type PokemonEditorPanelProps = {
   draft: PokemonDetail | null
   language: Language
   onCheck: () => Promise<LegalityReport | null>
+  onLegalityGenerated: (detail: PokemonDetail) => void
   onActiveTabChange: (tab: EditorTab) => void
   onCopyPokemon: () => void
   onFormChange: (form: number) => void
@@ -27,6 +29,7 @@ export type PokemonEditorPanelProps = {
   pokemonClipboard: PokemonDetail | null
   saveGameVersion: number
   selectedSlotId: string | null
+  selectedLegality: SlotLegalityState | null
   sessionId: string | null
   setDraft: Dispatch<SetStateAction<PokemonDetail | null>>
   t: Translator

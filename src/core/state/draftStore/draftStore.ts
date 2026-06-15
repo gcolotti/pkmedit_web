@@ -31,6 +31,10 @@ export const useDraftStore = create<DraftState>((set, get, store) => ({
     set((state) => ({
       pokemonDrafts: applyUpdater(state.pokemonDrafts, updater),
     })),
+  setPokemonLegality: (updater) =>
+    set((state) => ({
+      pokemonLegality: applyUpdater(state.pokemonLegality, updater),
+    })),
   setBaseDetails: (updater) =>
     set((state) => ({ baseDetails: applyUpdater(state.baseDetails, updater) })),
   setDraft: (id, updater) =>
@@ -120,6 +124,7 @@ export const useDraftStore = create<DraftState>((set, get, store) => ({
   revertAll: () =>
     set({
       pokemonDrafts: {},
+      pokemonLegality: {},
       draftViolations: [],
       trainerDraft: null,
       itemsDraft: null,

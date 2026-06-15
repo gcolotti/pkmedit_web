@@ -1,6 +1,7 @@
 import type { Dispatch, SetStateAction } from 'react'
 
 import type { Translator } from '../../../core/i18n/i18n/i18n'
+import type { SlotLegalityState } from '../../../core/state/draftStoreTypes/draftStoreTypes'
 import type {
   CatalogBundle,
   EditorTab,
@@ -15,6 +16,7 @@ export type PokemonEditorProps = {
   draft: PokemonDetail | null
   language: Language
   onCheck: () => Promise<LegalityReport | null>
+  onLegalityGenerated: (detail: PokemonDetail) => void
   onFormChange: (form: number) => void
   onOpenDetailsAdvanced: () => void
   onOpenLegalityAdvanced: () => void
@@ -23,6 +25,7 @@ export type PokemonEditorProps = {
   onSpeciesChange: (species: number, speciesName: string) => void
   saveGameVersion: number
   selectedSlotId: string | null
+  selectedLegality: SlotLegalityState | null
   sessionId: string | null
   setDraft: Dispatch<SetStateAction<PokemonDetail | null>>
   t: Translator

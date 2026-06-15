@@ -8,6 +8,8 @@ import {
 } from '../../services/draftChanges/draftChanges'
 import { buildWorkspaceDraftChanges } from '../../services/drafts/drafts'
 import { selectedDetail } from '../../services/draftSelection/draftSelection'
+import { buildPokemonLegalityInputKey } from '../../services/pokemonPayload/pokemonPayload'
+import type { SlotLegalityState } from '../../state/draftStoreTypes/draftStoreTypes'
 import type {
   MysteryGiftDatabasePreview,
   PokemonReplacement,
@@ -44,6 +46,7 @@ type WorkspaceDerivedInput = {
   metDateFixerDraft: MetDateFixerRequest | null
   mysteryGiftDrafts: MysteryGiftDatabasePreview[]
   party: PokemonSummary[] | undefined
+  pokemonLegality: Record<string, SlotLegalityState>
   pokedexDrafts: PokedexActionKey[]
   pokedexStatus: PokedexStatusResponse | null
   raidsDraft: RaidListResponse | null
@@ -60,6 +63,10 @@ export function useWorkspaceDerived(input: WorkspaceDerivedInput) {
     input.drafts,
     input.baseDetails,
   )
+  const selectedLegality = input.selectedSlotId
+    ? (input.pokemonLegality[input.selectedSlotId] ?? null)
+    : null
+  const legalityInputKey = draft ? buildPokemonLegalityInputKey(draft) : null
   const draftRequests = useMemo(
     () =>
       buildDraftRequests(
@@ -127,7 +134,9 @@ export function useWorkspaceDerived(input: WorkspaceDerivedInput) {
     draft,
     draftChanges,
     draftRequests,
+    legalityInputKey,
     patchedBoxes,
     patchedParty,
+    selectedLegality,
   }
 }

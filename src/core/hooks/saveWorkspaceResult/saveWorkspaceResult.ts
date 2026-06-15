@@ -72,6 +72,7 @@ export function buildSaveWorkspaceResult(input: SaveWorkspaceResultInput) {
       setDraft: input.selection.setDraft,
       setDraftForm: input.selection.changeDraftForm,
       setDraftSpecies: input.selection.changeDraftSpecies,
+      updateSelectedLegality: input.selection.updateSelectedLegality,
       setSaveView: input.ui.setSaveView,
       setToast: input.ui.showToast,
       setView: input.commands.changeView,
@@ -101,6 +102,7 @@ export function buildSaveWorkspaceResult(input: SaveWorkspaceResultInput) {
       itemsDraft: input.sections.state.itemsDraft,
       itemsStatus: input.sections.state.itemsStatus,
       legalityReports: input.session.legalityReports,
+      legalityInputKey: input.derived.legalityInputKey,
       metDateFixerDraft: input.metDate.metDateFixerDraft,
       mysteryGiftDrafts,
       party: input.derived.patchedParty,
@@ -111,6 +113,7 @@ export function buildSaveWorkspaceResult(input: SaveWorkspaceResultInput) {
       raidsStatus: input.raids.state.status,
       saveView: input.ui.saveView,
       selectedSlotId: input.ui.selectedSlotId,
+      selectedLegality: input.derived.selectedLegality,
       summary: summary
         ? { ...summary, edited: summary.edited || input.derived.dirty }
         : null,

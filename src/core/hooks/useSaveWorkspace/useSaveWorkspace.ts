@@ -68,6 +68,7 @@ export function useSaveWorkspace(
     ui.selectedSlotId,
     ui.setSelectedSlotId,
     ui.showToast,
+    draftStore.setPokemonLegality,
   )
   const clipboard = useCopyPaste(ui.selectedSlotId)
   const { mysteryGiftDrafts, replacementDrafts } = database.state
@@ -84,6 +85,7 @@ export function useSaveWorkspace(
     metDateFixerDraft: metDate.metDateFixerDraft,
     mysteryGiftDrafts,
     party: session.partyQuery.data?.slots,
+    pokemonLegality: draftStore.pokemonLegality,
     pokedexDrafts: pokedex.pokedexDrafts,
     pokedexStatus: draftStore.pokedexStatus,
     raidsDraft: raids.state.draft,

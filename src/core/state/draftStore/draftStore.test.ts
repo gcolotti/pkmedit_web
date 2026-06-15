@@ -5,6 +5,7 @@ import type { MysteryGiftDatabasePreview } from '../../types/database/database'
 import type { PokemonReplacement } from '../../types/database/database'
 import type { ArceusResearchActionKey } from '../../types/index/index'
 import type { ArceusResearchBulkAction } from '../../types/index/index'
+import type { LegalityReport } from '../../types/index/index'
 import type { PokedexActionKey } from '../../types/index/index'
 import type { PokemonDetail } from '../../types/index/index'
 import { useDraftStore } from './draftStore'
@@ -19,6 +20,7 @@ const mysteryGift = (id: number): MysteryGiftDatabasePreview =>
 
 const initial = () => ({
   pokemonDrafts: {} as Record<string, PokemonDetail>,
+  pokemonLegality: {},
   baseDetails: {} as Record<string, PokemonDetail>,
   draftViolations: [] as never[],
   trainerDraft: null,
@@ -45,6 +47,7 @@ describe('useDraftStore', () => {
   it('starts with empty slices', () => {
     const s = useDraftStore.getState()
     expect(s.pokemonDrafts).toEqual({})
+    expect(s.pokemonLegality).toEqual({})
     expect(s.draftViolations).toEqual([])
     expect(s.trainerDraft).toBeNull()
     expect(s.itemsDraft).toBeNull()
@@ -121,6 +124,40 @@ describe('useDraftStore', () => {
         useDraftStore.getState().setDraftViolations((prev) => [...prev, v2]),
       )
       expect(useDraftStore.getState().draftViolations).toEqual([v1, v2])
+    })
+
+    it('setPokemonLegality replaces and updates the legality cache', () => {
+      const report = {
+        slotId: 'a',
+        legal: false,
+        severity: 'error',
+        report: '',
+        checks: [],
+      } as LegalityReport
+      act(() =>
+        useDraftStore.getState().setPokemonLegality({
+          a: {
+            report,
+            checkedAt: 1,
+            inputKey: 'one',
+            status: 'fresh',
+            error: null,
+          },
+        }),
+      )
+      act(() =>
+        useDraftStore.getState().setPokemonLegality((prev) => ({
+          ...prev,
+          a: { ...prev.a, status: 'stale' },
+        })),
+      )
+      expect(useDraftStore.getState().pokemonLegality.a).toEqual({
+        report,
+        checkedAt: 1,
+        inputKey: 'one',
+        status: 'stale',
+        error: null,
+      })
     })
   })
 
@@ -337,15 +374,28 @@ describe('useDraftStore', () => {
       act(() => useDraftStore.getState().resetDrafts())
       expect(useDraftStore.getState().trainerDraft).toBeNull()
       expect(useDraftStore.getState().pokemonDrafts).toEqual({})
+      expect(useDraftStore.getState().pokemonLegality).toEqual({})
     })
 
     it('revertAll resets the fields it owns and leaves the rest', () => {
       act(() => useDraftStore.getState().setTrainerDraft({ tid: 1 } as never))
+      act(() =>
+        useDraftStore.getState().setPokemonLegality({
+          a: {
+            report: null,
+            checkedAt: 1,
+            inputKey: 'one',
+            status: 'fresh',
+            error: null,
+          },
+        }),
+      )
       act(() => useDraftStore.getState().setDatabasePreview({} as never))
       act(() => useDraftStore.getState().revertAll())
       const s = useDraftStore.getState()
       // revertAll clears trainerDraft, donutDrafts, etc.
       expect(s.trainerDraft).toBeNull()
+      expect(s.pokemonLegality).toEqual({})
       expect(s.donutDrafts).toEqual([])
       expect(s.replacementDrafts).toEqual({})
       // revertAll does not touch databasePreview (intentional — only

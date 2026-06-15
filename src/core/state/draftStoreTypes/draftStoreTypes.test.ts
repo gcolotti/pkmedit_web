@@ -9,6 +9,7 @@ describe('draftStoreTypes', () => {
   it('exports emptyDraftSlices with the documented shape', () => {
     expect(emptyDraftSlices).toEqual({
       pokemonDrafts: {},
+      pokemonLegality: {},
       baseDetails: {},
       draftViolations: [],
       trainerDraft: null,

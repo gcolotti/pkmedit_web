@@ -10,6 +10,7 @@ import type {
   ArceusResearchStatusResponse,
   DraftLegalityViolation,
   ItemBag,
+  LegalityReport,
   PokedexActionKey,
   PokemonDetail,
 } from '../../types/index/index'
@@ -24,8 +25,17 @@ import type { TrainerInfo } from '../../types/trainer/trainer'
 export type Updater<T> = T | ((current: T) => T)
 export type NullableUpdater<T> = T | null | ((current: T | null) => T | null)
 
+export type SlotLegalityState = {
+  report: LegalityReport | null
+  checkedAt: number | null
+  inputKey: string | null
+  status: 'fresh' | 'checking' | 'stale' | 'error'
+  error: string | null
+}
+
 export type DraftState = {
   pokemonDrafts: Record<string, PokemonDetail>
+  pokemonLegality: Record<string, SlotLegalityState>
   baseDetails: Record<string, PokemonDetail>
   draftViolations: DraftLegalityViolation[]
   trainerDraft: TrainerInfo | null
@@ -43,6 +53,9 @@ export type DraftState = {
   metDateFixerDraft: MetDateFixerRequest | null
   databasePreview: EncounterDatabasePreview | MysteryGiftDatabasePreview | null
   setPokemonDrafts: (updater: Updater<Record<string, PokemonDetail>>) => void
+  setPokemonLegality: (
+    updater: Updater<Record<string, SlotLegalityState>>,
+  ) => void
   setBaseDetails: (updater: Updater<Record<string, PokemonDetail>>) => void
   setDraft: (id: string, updater: NullableUpdater<PokemonDetail>) => void
   setBaseDetail: (id: string, detail: PokemonDetail) => void
@@ -81,6 +94,7 @@ export type DraftState = {
 
 export const emptyDraftSlices = {
   pokemonDrafts: {},
+  pokemonLegality: {},
   baseDetails: {},
   draftViolations: [],
   trainerDraft: null,
@@ -100,6 +114,7 @@ export const emptyDraftSlices = {
 } satisfies Pick<
   DraftState,
   | 'pokemonDrafts'
+  | 'pokemonLegality'
   | 'baseDetails'
   | 'draftViolations'
   | 'trainerDraft'

@@ -5,7 +5,13 @@ import type { WorkspaceCommandsInput } from '../workspaceCommandTypes/workspaceC
 
 export function useWorkspaceValidationCommand(input: WorkspaceCommandsInput) {
   const { api, allowIllegalChanges, t } = input
-  const { baseDetails, drafts, setDrafts, setDraftViolations } =
+  const {
+    baseDetails,
+    drafts,
+    setDrafts,
+    setDraftViolations,
+    setPokemonLegality,
+  } =
     input.draftStore
   const { draftRequests } = input.derived
   const { selectedSlotId, showToast } = input.ui
@@ -23,6 +29,7 @@ export function useWorkspaceValidationCommand(input: WorkspaceCommandsInput) {
           selectedSlotId,
           setDrafts,
           setDraftViolations,
+          setPokemonLegality,
           setLegalityReports,
           setToast: showToast,
           summary,
@@ -39,6 +46,7 @@ export function useWorkspaceValidationCommand(input: WorkspaceCommandsInput) {
       selectedSlotId,
       setDrafts,
       setDraftViolations,
+      setPokemonLegality,
       setLegalityReports,
       showToast,
       summary,
