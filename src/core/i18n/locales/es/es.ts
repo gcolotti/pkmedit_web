@@ -387,12 +387,46 @@ export const es = {
   fixes: 'Correcciones',
   applyFix: 'Aplicar corrección',
   applyAllSafeFixes: 'Aplicar todas las correcciones seguras',
+  applyingFix: 'Aplicando...',
+  loadingFixes: 'Cargando correcciones...',
+  applyFixSuccess: 'Corrección de legalidad aplicada.',
+  applyFixError: 'No se pudo aplicar la corrección de legalidad.',
   fixSafetySafe: 'Segura',
   fixSafetyRisky: 'Riesgosa',
   fixSafetyManual: 'Manual',
+  manualFixNotice: 'Requiere revisión manual.',
   noFixesAvailable: 'No hay correcciones disponibles.',
   alreadyLegalNoFixes:
     'El Pokémon ya es legal. No hay correcciones para aplicar.',
+  fixUnknownLabel: 'Corrección desconocida',
+  fixUnknownDescription: 'Esta versión de la web no reconoce esta corrección.',
+  fixRerollPidLabel: 'Regenerar PID compatible',
+  fixRerollPidDescription:
+    'Recalcula el PID preservando género, naturaleza, habilidad y shiny.',
+  fixSyncPidFieldsLabel: 'Sincronizar campos del PID',
+  fixSyncPidFieldsDescription:
+    'Actualiza género, naturaleza, naturaleza de stats y slot de habilidad desde el PID actual.',
+  fixNormalizeMovePpLabel: 'Normalizar PP de movimientos',
+  fixNormalizeMovePpDescription:
+    'Limita PP Ups y PP actuales al máximo legal de cada movimiento.',
+  fixClearHtLanguageLabel: 'Limpiar idioma del HT',
+  fixClearHtLanguageDescription:
+    'Reinicia un idioma de entrenador handler no soportado.',
+  fixClearHomeTrackerLabel: 'Limpiar HOME tracker',
+  fixClearHomeTrackerDescription:
+    'Elimina del borrador un valor imposible de HOME tracker.',
+  fixResetLgpeSpiritMoodLabel: 'Reiniciar spirit/mood de LGPE',
+  fixResetLgpeSpiritMoodDescription:
+    'Restaura stats sociales de LGPE en caja a los valores de reposo esperados por el juego.',
+  fixMatchEncounterOriginLabel: 'Ajustar origen al encuentro',
+  fixMatchEncounterOriginDescription:
+    'Copia datos de captura, ball, versión de combate y obediencia desde el encuentro detectado.',
+  fixReplaceRelearnMovesLabel: 'Reemplazar movimientos relearn',
+  fixReplaceRelearnMovesDescription:
+    'Reemplaza movimientos relearn con los generados desde el encuentro detectado.',
+  fixRegenerateFromEncounterLabel: 'Regenerar desde encuentro',
+  fixRegenerateFromEncounterDescription:
+    'Usá Generar legal para reconstruir el Pokémon desde el encuentro detectado.',
   ribbons: 'Cintas',
   htLanguage: 'Idioma del HT',
   unset: 'Sin definir',

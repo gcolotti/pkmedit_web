@@ -1,15 +1,3 @@
-import type {
-  PokemonCosmetic,
-  PokemonHyperTrain,
-  PokemonMain,
-  PokemonMoves,
-  PokemonOrigin,
-  PokemonPlusMoves,
-  PokemonStats,
-  PokemonSummary,
-  PokemonTrainer,
-} from '../pokemon/pokemon'
-
 export type Language = 'en' | 'es' | 'ja'
 export type Theme = 'light' | 'dark'
 export type View = 'party' | 'boxes' | 'save' | 'database'
@@ -30,21 +18,6 @@ export type EditorTab =
   | 'details'
   | 'legality'
 
-export type PokemonContextCatalogs = {
-  forms: CatalogEntry[]
-  abilities: CatalogEntry[]
-  heldItems: CatalogEntry[]
-  metLocations: CatalogEntry[]
-  eggLocations: CatalogEntry[]
-  languages: CatalogEntry[]
-  battleVersions: CatalogEntry[]
-  balls: CatalogEntry[]
-  legalMoves: number[]
-  moveBasePp?: Array<{ id: number; basePp: number }>
-}
-
-export type PokemonEffortKind = 'ev' | 'av' | 'gv' | 'statExp'
-
 // Legality: "Generate legal" preview (see PreviewLegalGenerate endpoint).
 // targetShiny / targetAlpha are toggle objectives (default = current value).
 export type LegalGenerateRequest = {
@@ -61,45 +34,37 @@ export type LegalGenerateResponse = {
 
 export type LegalFixSafety = 'safe' | 'risky' | 'manual'
 
-// Catalogued legality fix shown in LegalityAdvanced. Apply logic is deferred
-// (Feature B); for now fixes are descriptive stubs.
 export type LegalFix = {
   id: string
-  label: string
-  description: string
   safety: LegalFixSafety
   fields: string[]
 }
 
-export type PokemonDetail = {
-  summary: PokemonSummary
-  main: PokemonMain
-  ivs: PokemonStats
-  evs: PokemonStats
-  baseStats: PokemonStats
-  calculatedStats: PokemonStats
-  moves: PokemonMoves
-  origin: PokemonOrigin
-  trainer: PokemonTrainer
-  cosmetic: PokemonCosmetic
-  contextCatalogs: PokemonContextCatalogs
+export type LegalityFixesResponse = {
+  fixes: LegalFix[]
+}
+
+export type LegalityFixRequest = {
+  pokemon: unknown
+  fixIds: string[]
+}
+
+export type LegalityFixResponse = {
+  draft: PokemonDetail
   legality: LegalityReport
-  effortKind: PokemonEffortKind
-  maxEv: number
-  maxTotalEv: number
-  hyperTrainedIvs: PokemonHyperTrain
-  hyperTrainingAvailable: boolean
-  growthRate: number
-  type1: number
-  type2: number
-  teraType: number
-  teraTypeOriginal: number
-  teraTypeOverride: number
-  plusMoves: PokemonPlusMoves | null
+  fixes: LegalFix[]
+  appliedFixIds: string[]
 }
 
 import type { CatalogBundle, CatalogEntry } from '../catalogs/catalogs'
 export type { CatalogBundle, CatalogEntry }
+
+import type {
+  PokemonContextCatalogs,
+  PokemonDetail,
+  PokemonEffortKind,
+} from '../pokemonDetail/pokemonDetail'
+export type { PokemonContextCatalogs, PokemonDetail, PokemonEffortKind }
 
 import type { InventoryItemEntry, ItemBag, ItemPocket } from '../items/items'
 export type { InventoryItemEntry, ItemBag, ItemPocket }

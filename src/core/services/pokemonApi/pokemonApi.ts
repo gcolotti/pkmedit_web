@@ -4,6 +4,9 @@ import type {
   DraftLegalityResponse,
   LegalGenerateRequest,
   LegalGenerateResponse,
+  LegalityFixesResponse,
+  LegalityFixRequest,
+  LegalityFixResponse,
   PokemonDetail,
 } from '../../types/index/index'
 import type { TrainerInfo } from '../../types/trainer/trainer'
@@ -78,6 +81,34 @@ export class PokemonApi {
   ): Promise<LegalGenerateResponse> {
     return this.requestJson(
       `/api/saves/${sessionId}/pokemon/${slotId}/preview/legal-generate`,
+      {
+        method: 'POST',
+        body: JSON.stringify(request),
+      },
+    )
+  }
+
+  async getLegalityFixes(
+    sessionId: string,
+    slotId: string,
+    pokemon: unknown,
+  ): Promise<LegalityFixesResponse> {
+    return this.requestJson(
+      `/api/saves/${sessionId}/pokemon/${slotId}/preview/legality-fixes`,
+      {
+        method: 'POST',
+        body: JSON.stringify({ pokemon }),
+      },
+    )
+  }
+
+  async applyLegalityFixes(
+    sessionId: string,
+    slotId: string,
+    request: LegalityFixRequest,
+  ): Promise<LegalityFixResponse> {
+    return this.requestJson(
+      `/api/saves/${sessionId}/pokemon/${slotId}/preview/apply-legality-fixes`,
       {
         method: 'POST',
         body: JSON.stringify(request),

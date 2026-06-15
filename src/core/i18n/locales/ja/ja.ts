@@ -379,7 +379,8 @@ export const ja = {
   currentHandler: '現在の管理者',
   friendship: 'なかよし度',
   clear: 'クリア',
-  homeTrackerTooltip: 'この項目の編集は合法性に影響する場合があります。詳細設定を参照。',
+  homeTrackerTooltip:
+    'この項目の編集は合法性に影響する場合があります。詳細設定を参照。',
   internal: '内部',
   markingCircle: '○',
   markingTriangle: '△',
@@ -406,15 +407,51 @@ export const ja = {
   fixes: '修正',
   applyFix: '修正を適用',
   applyAllSafeFixes: '安全な修正をすべて適用',
+  applyingFix: '適用中...',
+  loadingFixes: '修正を読み込み中...',
+  applyFixSuccess: '合法性の修正を適用しました。',
+  applyFixError: '合法性の修正を適用できませんでした。',
   fixSafetySafe: '安全',
   fixSafetyRisky: 'リスクあり',
   fixSafetyManual: '手動',
+  manualFixNotice: '手動確認が必要です。',
   noFixesAvailable: '利用できる修正はありません。',
-  alreadyLegalNoFixes: 'このポケモンはすでに合法です。適用する修正はありません。',
+  alreadyLegalNoFixes:
+    'このポケモンはすでに合法です。適用する修正はありません。',
+  fixUnknownLabel: '不明な修正',
+  fixUnknownDescription: 'このWeb版ではこの修正を認識できません。',
+  fixRerollPidLabel: '互換PIDを再生成',
+  fixRerollPidDescription:
+    '性別、性格、特性、色違い状態を保ったままPIDを振り直します。',
+  fixSyncPidFieldsLabel: 'PID由来フィールドを同期',
+  fixSyncPidFieldsDescription:
+    '現在のPIDから性別、性格、補正性格、特性スロットを更新します。',
+  fixNormalizeMovePpLabel: 'わざPPを正規化',
+  fixNormalizeMovePpDescription:
+    'PP Upsと現在PPを各わざの合法な最大値に収めます。',
+  fixClearHtLanguageLabel: 'HT言語をクリア',
+  fixClearHtLanguageDescription:
+    '非対応のハンドラートレーナー言語値をリセットします。',
+  fixClearHomeTrackerLabel: 'HOMEトラッカーをクリア',
+  fixClearHomeTrackerDescription:
+    '不可能なHOMEトラッカー値をドラフトから削除します。',
+  fixResetLgpeSpiritMoodLabel: 'LGPE spirit/moodをリセット',
+  fixResetLgpeSpiritMoodDescription:
+    'ボックス内LGPEのソーシャル値をゲームが期待する待機値に戻します。',
+  fixMatchEncounterOriginLabel: '出会い情報に合わせる',
+  fixMatchEncounterOriginDescription:
+    '検出された出会いから捕獲情報、ボール、バトルバージョン、従順度をコピーします。',
+  fixReplaceRelearnMovesLabel: '思い出しわざを置換',
+  fixReplaceRelearnMovesDescription:
+    '検出された出会いから生成された思い出しわざに置き換えます。',
+  fixRegenerateFromEncounterLabel: '出会いから再生成',
+  fixRegenerateFromEncounterDescription:
+    '合法を生成を使って、検出された出会いからポケモンを再構築します。',
   ribbons: 'リボン',
   htLanguage: 'HT言語',
   unset: '未設定',
-  encryptionConstantTooltip: '内部使用。変更するとセーブの互換性が壊れる可能性があります。',
+  encryptionConstantTooltip:
+    '内部使用。変更するとセーブの互換性が壊れる可能性があります。',
   ...jaDatabase,
   ...jaInventory,
   ...jaMetDateFixer,

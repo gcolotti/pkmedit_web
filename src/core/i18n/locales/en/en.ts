@@ -383,11 +383,46 @@ export const en = {
   fixes: 'Fixes',
   applyFix: 'Apply fix',
   applyAllSafeFixes: 'Apply all safe fixes',
+  applyingFix: 'Applying...',
+  loadingFixes: 'Loading fixes...',
+  applyFixSuccess: 'Legality fix applied.',
+  applyFixError: 'Could not apply legality fix.',
   fixSafetySafe: 'Safe',
   fixSafetyRisky: 'Risky',
   fixSafetyManual: 'Manual',
+  manualFixNotice: 'Manual review required.',
   noFixesAvailable: 'No fixes available.',
   alreadyLegalNoFixes: 'This Pokemon is already legal. No fixes to apply.',
+  fixUnknownLabel: 'Unknown fix',
+  fixUnknownDescription:
+    'This fix is not recognized by this version of the web app.',
+  fixRerollPidLabel: 'Regenerate compatible PID',
+  fixRerollPidDescription:
+    'Rerolls PID while preserving gender, nature, ability, and shiny state.',
+  fixSyncPidFieldsLabel: 'Sync PID-derived fields',
+  fixSyncPidFieldsDescription:
+    'Updates gender, nature, stat nature, and ability slot from the current PID.',
+  fixNormalizeMovePpLabel: 'Normalize move PP',
+  fixNormalizeMovePpDescription:
+    'Clamps PP Ups and current PP to the legal maximum for each move.',
+  fixClearHtLanguageLabel: 'Clear HT language',
+  fixClearHtLanguageDescription:
+    'Resets an unsupported handling-trainer language value.',
+  fixClearHomeTrackerLabel: 'Clear HOME tracker',
+  fixClearHomeTrackerDescription:
+    'Clears an impossible HOME tracker value from the draft.',
+  fixResetLgpeSpiritMoodLabel: 'Reset LGPE spirit/mood',
+  fixResetLgpeSpiritMoodDescription:
+    'Restores boxed LGPE social stats to the at-rest values expected by the game.',
+  fixMatchEncounterOriginLabel: 'Match encounter origin',
+  fixMatchEncounterOriginDescription:
+    'Copies met data, ball, battle version, and obedience data from the detected encounter.',
+  fixReplaceRelearnMovesLabel: 'Replace relearn moves',
+  fixReplaceRelearnMovesDescription:
+    'Replaces relearn moves with the values generated from the detected encounter.',
+  fixRegenerateFromEncounterLabel: 'Regenerate from encounter',
+  fixRegenerateFromEncounterDescription:
+    'Use Generate legal to rebuild the Pokemon from the detected encounter.',
   ribbons: 'Ribbons',
   htLanguage: 'HT language',
   unset: 'Unset',
