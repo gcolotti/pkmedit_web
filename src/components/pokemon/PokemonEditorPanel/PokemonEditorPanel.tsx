@@ -1,13 +1,8 @@
 import { ClipboardPaste, Copy } from 'lucide-react'
-import { memo, useState } from 'react'
+import { memo } from 'react'
 
-import type { LegalityReport } from '../../../core/types/index/index'
 import type { PokemonEditorPanelProps } from '../../../core/types/pokemonEditorPanel/pokemonEditorPanel'
 import { supportsAlpha } from '../../../core/utils/gameRules/gameRules'
-import {
-  LegalityCheckButton,
-  type LegalityCheckState,
-} from '../../legality/LegalityCheckButton/LegalityCheckButton'
 import { EditorTabs } from '../../ui/EditorTabs/EditorTabs'
 import { PokemonEditor } from '../PokemonEditor/PokemonEditor'
 import { PokemonHeaderIdentity } from '../PokemonHeaderIdentity/PokemonHeaderIdentity'
@@ -22,6 +17,8 @@ export const PokemonEditorPanel = memo(function PokemonEditorPanel({
   onActiveTabChange,
   onCopyPokemon,
   onFormChange,
+  onOpenDetailsAdvanced,
+  onOpenLegalityAdvanced,
   onOpenMovesBrowser,
   onOpenTypeChart,
   onPastePokemon,
@@ -36,40 +33,6 @@ export const PokemonEditorPanel = memo(function PokemonEditorPanel({
   const btnClass =
     'grid h-9 w-9 place-items-center rounded-md border transition disabled:cursor-not-allowed disabled:opacity-50 border-black/15 text-stone-500 hover:bg-black/5 dark:border-white/15 dark:text-stone-400 dark:hover:bg-white/5'
   const alphaSupported = supportsAlpha(saveGameVersion)
-  const [checkResult, setCheckResult] = useState<{
-    report: LegalityReport | null
-    slotId: string | null
-    state: LegalityCheckState
-  }>({ report: null, slotId: null, state: 'unchecked' })
-  const checkedReport =
-    checkResult.slotId === selectedSlotId ? checkResult.report : null
-  const checkState =
-    checkResult.slotId === selectedSlotId
-      ? checkResult.state
-      : draft && !draft.legality.legal
-        ? 'illegal'
-        : 'unchecked'
-
-  async function handleCheck() {
-    setCheckResult({ report: null, slotId: selectedSlotId, state: 'checking' })
-    try {
-      const report = await onCheck()
-      const state: LegalityCheckState = report
-        ? report.legal
-          ? 'legal'
-          : 'illegal'
-        : draft && !draft.legality.legal
-          ? 'illegal'
-          : 'unchecked'
-      setCheckResult({ report, slotId: selectedSlotId, state })
-    } catch {
-      setCheckResult({
-        report: draft?.legality ?? null,
-        slotId: selectedSlotId,
-        state: draft && !draft.legality.legal ? 'illegal' : 'unchecked',
-      })
-    }
-  }
 
   function updateTrait(trait: 'alpha' | 'shiny', value: boolean) {
     setDraft((current) => {
@@ -121,12 +84,6 @@ export const PokemonEditorPanel = memo(function PokemonEditorPanel({
             onAlphaChange={(value) => updateTrait('alpha', value)}
             onShinyChange={(value) => updateTrait('shiny', value)}
           />
-          <LegalityCheckButton
-            disabled={!draft}
-            state={checkState}
-            t={t}
-            onClick={() => void handleCheck()}
-          />
         </div>
       </div>
       <EditorTabs activeTab={activeTab} t={t} onChange={onActiveTabChange} />
@@ -135,13 +92,15 @@ export const PokemonEditorPanel = memo(function PokemonEditorPanel({
         catalogs={catalogs}
         draft={draft}
         language={language}
-        legalityReport={checkedReport}
         saveGameVersion={saveGameVersion}
         selectedSlotId={selectedSlotId}
         sessionId={sessionId}
         setDraft={setDraft}
         t={t}
+        onCheck={onCheck}
         onFormChange={onFormChange}
+        onOpenDetailsAdvanced={onOpenDetailsAdvanced}
+        onOpenLegalityAdvanced={onOpenLegalityAdvanced}
         onOpenMovesBrowser={draft ? onOpenMovesBrowser : undefined}
         onOpenTypeChart={onOpenTypeChart}
         onSpeciesChange={onSpeciesChange}

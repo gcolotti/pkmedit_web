@@ -1,1 +1,7 @@
-export type FocusedEditorId = 'raids' | 'moves' | 'typeChart' | 'arceusResearch'
+export type FocusedEditorId =
+  | 'raids'
+  | 'moves'
+  | 'typeChart'
+  | 'arceusResearch'
+  | 'detailsAdvanced'
+  | 'legalityAdvanced'

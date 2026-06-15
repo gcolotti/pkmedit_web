@@ -32,6 +32,8 @@ export function EditorPanel({
   onSaveViewChange,
   underground,
   onCopyPokemon,
+  onOpenDetailsAdvanced,
+  onOpenLegalityAdvanced,
   onOpenMovesBrowser,
   onOpenTypeChart,
   onPastePokemon,
@@ -113,6 +115,8 @@ export function EditorPanel({
         t={t}
         onCheck={onCheck}
         onCopyPokemon={onCopyPokemon}
+        onOpenDetailsAdvanced={onOpenDetailsAdvanced}
+        onOpenLegalityAdvanced={onOpenLegalityAdvanced}
         onOpenMovesBrowser={onOpenMovesBrowser}
         onOpenTypeChart={onOpenTypeChart}
         onPastePokemon={onPastePokemon}

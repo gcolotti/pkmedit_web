@@ -54,19 +54,19 @@ export function ArceusResearchFocusedEditorPage({
 
   const metrics = status
     ? [
-        {
-          label: t('arceusResearchMetricRank'),
-          value: `${status.currentRank}/${status.maxRank}`,
-        },
-        {
-          label: t('arceusResearchMetricPoints'),
-          value: `${status.totalResearchPoints.toLocaleString()}/${status.maxResearchPoints.toLocaleString()}`,
-        },
-        {
-          label: t('arceusResearchMetricSpecies'),
-          value: status.species.length,
-        },
-      ]
+      {
+        label: t('arceusResearchMetricRank'),
+        value: `${status.currentRank}/${status.maxRank}`,
+      },
+      {
+        label: t('arceusResearchMetricPoints'),
+        value: `${status.totalResearchPoints.toLocaleString()}/${status.maxResearchPoints.toLocaleString()}`,
+      },
+      {
+        label: t('arceusResearchMetricSpecies'),
+        value: status.species.length,
+      },
+    ]
     : undefined
 
   return (

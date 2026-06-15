@@ -6,8 +6,8 @@ const tabs: EditorTab[] = [
   'met',
   'stats',
   'moves',
-  'cosmetic',
-  'otMisc',
+  'details',
+  'legality',
 ]
 
 export function EditorTabs({

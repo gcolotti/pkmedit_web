@@ -123,5 +123,52 @@ export function usePokemonSelection(
     }
   }
 
-  return { selectSlot, setDraft, changeDraftSpecies, changeDraftForm }
+  // Silent, slot-scoped legality recheck for the live debounced check (staleness
+  // mix "C"). previewPokemonUpdate returns the slot's detail with a fresh
+  // legality report without touching the save or toasting. Only the legality +
+  // summary legal flags are merged back, so in-progress edits are preserved and
+  // the party/boxes icon (reads slot.legal) stays in sync.
+  async function recheckSelectedLegality() {
+    if (!selectedSlotId || !summary) return
+    const current = drafts[selectedSlotId] ?? baseDetails[selectedSlotId]
+    if (!current) return
+    try {
+      const preview = await api.previewPokemonUpdate(
+        summary.sessionId,
+        selectedSlotId,
+        buildPokemonPayload(current),
+      )
+      setDrafts((cur) => {
+        const latest = cur[selectedSlotId]
+        if (!latest) return cur
+        if (
+          latest.legality.legal === preview.legality.legal &&
+          latest.summary.legalSeverity === preview.summary.legalSeverity
+        )
+          return cur
+        return {
+          ...cur,
+          [selectedSlotId]: {
+            ...latest,
+            legality: preview.legality,
+            summary: {
+              ...latest.summary,
+              legal: preview.summary.legal,
+              legalSeverity: preview.summary.legalSeverity,
+            },
+          },
+        }
+      })
+    } catch {
+      // Background recheck: ignore failures.
+    }
+  }
+
+  return {
+    selectSlot,
+    setDraft,
+    changeDraftSpecies,
+    changeDraftForm,
+    recheckSelectedLegality,
+  }
 }

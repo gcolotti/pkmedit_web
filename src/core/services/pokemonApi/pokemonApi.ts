@@ -2,6 +2,8 @@ import type { PokemonDraftChange } from '../../types/database/database'
 import type {
   BoxSummary,
   DraftLegalityResponse,
+  LegalGenerateRequest,
+  LegalGenerateResponse,
   PokemonDetail,
 } from '../../types/index/index'
 import type { TrainerInfo } from '../../types/trainer/trainer'
@@ -67,6 +69,20 @@ export class PokemonApi {
       method: 'POST',
       body: JSON.stringify({ allowIllegalChanges, changes }),
     })
+  }
+
+  async previewLegalGenerate(
+    sessionId: string,
+    slotId: string,
+    request: LegalGenerateRequest,
+  ): Promise<LegalGenerateResponse> {
+    return this.requestJson(
+      `/api/saves/${sessionId}/pokemon/${slotId}/preview/legal-generate`,
+      {
+        method: 'POST',
+        body: JSON.stringify(request),
+      },
+    )
   }
 
   async getTrainerInfo(sessionId: string): Promise<TrainerInfo> {

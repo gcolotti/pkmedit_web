@@ -14,8 +14,10 @@ export type PokemonEditorProps = {
   catalogs: CatalogBundle
   draft: PokemonDetail | null
   language: Language
-  legalityReport: LegalityReport | null
+  onCheck: () => Promise<LegalityReport | null>
   onFormChange: (form: number) => void
+  onOpenDetailsAdvanced: () => void
+  onOpenLegalityAdvanced: () => void
   onOpenMovesBrowser?: () => void
   onOpenTypeChart?: (typeId: number) => void
   onSpeciesChange: (species: number, speciesName: string) => void

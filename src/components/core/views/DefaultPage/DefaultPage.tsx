@@ -2,6 +2,7 @@ import { useState } from 'react'
 import { useShallow } from 'zustand/react/shallow'
 
 import { useDatabaseBrowser } from '../../../../core/hooks/useDatabaseBrowser/useDatabaseBrowser'
+import { useLiveLegalityRecheck } from '../../../../core/hooks/useLiveLegalityRecheck/useLiveLegalityRecheck'
 import { useWorkspace } from '../../../../core/hooks/workspaceContext/workspaceContext'
 import { useUiStore } from '../../../../core/state/uiStore/uiStore'
 import type { DonutPocket } from '../../../../core/types/donut/donut'
@@ -30,6 +31,9 @@ export function DefaultPage() {
     pocket: DonutPocket
     sessionId: string | null
   } | null>(null)
+
+  // Debounced live legality recheck (staleness mix "C").
+  useLiveLegalityRecheck(state.draft, actions.recheckSelectedLegality)
 
   const saveGameVersion = state.summary?.gameVersion ?? 0
   const heldItemsSupported = supportsHeldItem(saveGameVersion)
@@ -110,6 +114,8 @@ export function DefaultPage() {
             })
             actions.setView('save')
           }}
+          onOpenDetailsAdvanced={() => setFocusedEditor('detailsAdvanced')}
+          onOpenLegalityAdvanced={() => setFocusedEditor('legalityAdvanced')}
           onOpenMovesBrowser={() => setFocusedEditor('moves')}
           onOpenTypeChart={(typeId) => {
             setTypeChartTypeId(typeId)

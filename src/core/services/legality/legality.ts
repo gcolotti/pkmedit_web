@@ -99,7 +99,17 @@ function writeSelectedReport(
     return previous && selectedSlotId
       ? {
           ...current,
-          [selectedSlotId]: { ...previous, legality: selectedReport },
+          [selectedSlotId]: {
+            ...previous,
+            legality: selectedReport,
+            // Keep the slot summary's legal flag in sync so the party/boxes
+            // legality icon (reads slot.legal) reflects the latest check.
+            summary: {
+              ...previous.summary,
+              legal: selectedReport.legal,
+              legalSeverity: selectedReport.legal ? null : selectedReport.severity,
+            },
+          },
         }
       : current
   })

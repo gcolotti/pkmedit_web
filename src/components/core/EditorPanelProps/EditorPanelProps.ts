@@ -59,6 +59,8 @@ export interface EditorPanelProps {
     onLoad: (sessionId: string) => void
   }
   onCopyPokemon: () => void
+  onOpenDetailsAdvanced: () => void
+  onOpenLegalityAdvanced: () => void
   onOpenMovesBrowser: () => void
   onOpenTypeChart: (typeId: number) => void
   onPastePokemon: () => void

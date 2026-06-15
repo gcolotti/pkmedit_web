@@ -59,6 +59,7 @@ export function buildSaveWorkspaceResult(input: SaveWorkspaceResultInput) {
       previewMetDateFixer: input.metDate.previewMetDateFixer,
       previewMysteryGift: input.database.actions.previewMysteryGift,
       queueMetDateFixerDraft: input.metDate.queueMetDateFixerDraft,
+      recheckSelectedLegality: input.selection.recheckSelectedLegality,
       restoreLastLocalSave: input.session.restoreLastLocalSave,
       revertAll: input.commands.revertAll,
       revertChange: input.commands.revertChange,

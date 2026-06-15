@@ -8,11 +8,11 @@ import {
 import { getIllegalFieldPaths } from '../../../core/utils/legalityFieldIssues/legalityFieldIssues'
 import { EditorGroup } from '../../core/EditorGroup/EditorGroup'
 import { FieldIssueProvider } from '../../core/forms/FieldIssueContext/FieldIssueContext'
-import { CosmeticGroup } from '../cosmetic/CosmeticGroup/CosmeticGroup'
+import { DetailsGroup } from '../details/DetailsGroup/DetailsGroup'
+import { LegalityGroup } from '../legality/LegalityGroup/LegalityGroup'
 import { MainTabFields } from '../main-tab/MainTabFields/MainTabFields'
 import { MetFields } from '../MetFields/MetFields'
 import { MovesGroup } from '../moves/MovesGroup/MovesGroup'
-import { OtMiscGroup } from '../ot-misc/OtMiscGroup/OtMiscGroup'
 import { PokemonEditorEmpty } from '../PokemonEditorEmpty/PokemonEditorEmpty'
 import type { PokemonEditorProps } from '../PokemonEditorProps/PokemonEditorProps'
 import { StatsTab } from '../stats/StatsTab/StatsTab'
@@ -22,8 +22,10 @@ export function PokemonEditor({
   catalogs,
   draft,
   language,
-  legalityReport,
+  onCheck,
   onFormChange,
+  onOpenDetailsAdvanced,
+  onOpenLegalityAdvanced,
   onOpenMovesBrowser,
   onOpenTypeChart,
   onSpeciesChange,
@@ -33,9 +35,12 @@ export function PokemonEditor({
   setDraft,
   t,
 }: PokemonEditorProps) {
+  // Highlight (decision #7): conserved after removing LegalityCheckButton. The
+  // per-slot report (draft.legality) is maintained on load, on Generate legal,
+  // and by the slot recheck — feed it to FieldIssueProvider.
   const invalidPaths = useMemo(
-    () => getIllegalFieldPaths(legalityReport),
-    [legalityReport],
+    () => getIllegalFieldPaths(draft?.legality ?? null),
+    [draft?.legality],
   )
   const heldItemSupported = supportsHeldItem(saveGameVersion)
   const movesLegalOnly = restrictMovesToLegal(saveGameVersion)
@@ -108,29 +113,31 @@ export function PokemonEditor({
             }
           />
         )}
-        {activeTab === 'cosmetic' && (
-          <CosmeticGroup
+        {activeTab === 'details' && (
+          <DetailsGroup
             cosmetic={draft.cosmetic}
-            t={t}
-            onChange={(cosmetic) =>
-              update((copy) => (copy.cosmetic = cosmetic))
-            }
-          />
-        )}
-        {activeTab === 'otMisc' && (
-          <OtMiscGroup
-            cosmetic={draft.cosmetic}
-            languageCatalog={draft.contextCatalogs.languages}
-            main={draft.main}
             t={t}
             trainer={draft.trainer}
             onCosmeticChange={(cosmetic) =>
               update((copy) => (copy.cosmetic = cosmetic))
             }
-            onMainChange={(main) => update((copy) => (copy.main = main))}
+            onOpenAdvanced={onOpenDetailsAdvanced}
             onTrainerChange={(trainer) =>
               update((copy) => (copy.trainer = trainer))
             }
+          />
+        )}
+        {activeTab === 'legality' && (
+          <LegalityGroup
+            key={selectedSlotId ?? 'none'}
+            draft={draft}
+            saveGameVersion={saveGameVersion}
+            selectedSlotId={selectedSlotId}
+            sessionId={sessionId}
+            setDraft={setDraft}
+            t={t}
+            onCheck={onCheck}
+            onOpenAdvanced={onOpenLegalityAdvanced}
           />
         )}
       </div>

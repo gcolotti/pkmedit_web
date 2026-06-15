@@ -27,8 +27,8 @@ export type EditorTab =
   | 'met'
   | 'stats'
   | 'moves'
-  | 'cosmetic'
-  | 'otMisc'
+  | 'details'
+  | 'legality'
 
 export type PokemonContextCatalogs = {
   forms: CatalogEntry[]
@@ -44,6 +44,32 @@ export type PokemonContextCatalogs = {
 }
 
 export type PokemonEffortKind = 'ev' | 'av' | 'gv' | 'statExp'
+
+// Legality: "Generate legal" preview (see PreviewLegalGenerate endpoint).
+// targetShiny / targetAlpha are toggle objectives (default = current value).
+export type LegalGenerateRequest = {
+  targetShiny: boolean
+  targetAlpha: boolean
+}
+
+export type LegalGenerateResponse = {
+  draft: PokemonDetail
+  legality: LegalityReport
+  alphaPreserved: boolean
+  warning: string | null
+}
+
+export type LegalFixSafety = 'safe' | 'risky' | 'manual'
+
+// Catalogued legality fix shown in LegalityAdvanced. Apply logic is deferred
+// (Feature B); for now fixes are descriptive stubs.
+export type LegalFix = {
+  id: string
+  label: string
+  description: string
+  safety: LegalFixSafety
+  fields: string[]
+}
 
 export type PokemonDetail = {
   summary: PokemonSummary
