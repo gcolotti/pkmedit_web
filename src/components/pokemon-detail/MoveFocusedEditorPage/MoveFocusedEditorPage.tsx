@@ -98,7 +98,11 @@ export function MoveFocusedEditorPage(props: MoveFocusedEditorPageProps) {
   }
 
   return (
-    <FocusedEditorShell backLabel={t('backToSaveEditor')} onBack={onBack} title="Advanced Moves">
+    <FocusedEditorShell
+      backLabel={t('backToSaveEditor')}
+      onBack={onBack}
+      title={`${t('moves')} · ${t('advanced')}`}
+    >
       <div className="grid min-h-0 gap-4 p-4 lg:h-full lg:grid-cols-[minmax(21rem,24rem)_minmax(0,1fr)]">
         <aside className="min-h-0 overflow-hidden rounded-md border border-black/10 bg-white/30 p-4 dark:border-white/10 dark:bg-white/[0.03]">
           <MoveSlotGrid
