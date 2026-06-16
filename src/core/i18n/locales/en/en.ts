@@ -417,6 +417,9 @@ export const en = {
   fixMatchEncounterOriginLabel: 'Match encounter origin',
   fixMatchEncounterOriginDescription:
     'Copies met data, ball, battle version, and obedience data from the detected encounter.',
+  fixMatchEncounterAbilityLabel: 'Match encounter ability',
+  fixMatchEncounterAbilityDescription:
+    'Switches to an ability slot the detected encounter allows, keeping the current ability when a regular slot has it.',
   fixReplaceRelearnMovesLabel: 'Replace relearn moves',
   fixReplaceRelearnMovesDescription:
     'Replaces relearn moves with the values generated from the detected encounter.',

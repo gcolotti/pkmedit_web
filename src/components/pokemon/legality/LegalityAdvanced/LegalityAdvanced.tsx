@@ -8,6 +8,7 @@ import { LegalityFixCard } from '../LegalityFixCard/LegalityFixCard'
 import { LegalityReport } from '../LegalityReport/LegalityReport'
 
 export function LegalityAdvanced({
+  applyingAll,
   applyingFixId,
   fixes,
   fixesError,
@@ -18,6 +19,7 @@ export function LegalityAdvanced({
   onBack,
   t,
 }: {
+  applyingAll: boolean
   applyingFixId: string | null
   fixes: LegalFix[]
   fixesError: string | null
@@ -30,7 +32,7 @@ export function LegalityAdvanced({
 }) {
   const activeFixes = legality.legal ? [] : fixes
   const safeFixes = fixes.filter((fix) => fix.safety === 'safe')
-  const applyingAny = applyingFixId !== null
+  const applyingAny = applyingFixId !== null || applyingAll
 
   return (
     <FocusedEditorShell
@@ -77,9 +79,7 @@ export function LegalityAdvanced({
                 type="button"
                 onClick={onApplyAllSafeFixes}
               >
-                {applyingFixId === 'all'
-                  ? t('applyingFix')
-                  : t('applyAllSafeFixes')}
+                {applyingAll ? t('applyingFix') : t('applyAllSafeFixes')}
               </button>
             </div>
           )}

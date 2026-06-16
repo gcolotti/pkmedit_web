@@ -421,6 +421,9 @@ export const es = {
   fixMatchEncounterOriginLabel: 'Ajustar origen al encuentro',
   fixMatchEncounterOriginDescription:
     'Copia datos de captura, ball, versión de combate y obediencia desde el encuentro detectado.',
+  fixMatchEncounterAbilityLabel: 'Ajustar habilidad al encuentro',
+  fixMatchEncounterAbilityDescription:
+    'Cambia a una habilidad que el encuentro detectado permite, conservando la actual si un slot regular la tiene.',
   fixReplaceRelearnMovesLabel: 'Reemplazar movimientos relearn',
   fixReplaceRelearnMovesDescription:
     'Reemplaza movimientos relearn con los generados desde el encuentro detectado.',

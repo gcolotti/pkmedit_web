@@ -32,6 +32,10 @@ const LEGALITY_FIX_COPY: Record<
     label: 'fixMatchEncounterOriginLabel',
     description: 'fixMatchEncounterOriginDescription',
   },
+  'match-encounter-ability': {
+    label: 'fixMatchEncounterAbilityLabel',
+    description: 'fixMatchEncounterAbilityDescription',
+  },
   'replace-relearn-moves': {
     label: 'fixReplaceRelearnMovesLabel',
     description: 'fixReplaceRelearnMovesDescription',

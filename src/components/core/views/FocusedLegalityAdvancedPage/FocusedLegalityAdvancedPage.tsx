@@ -3,7 +3,10 @@ import { useEffect, useState } from 'react'
 import { useShallow } from 'zustand/react/shallow'
 
 import { useWorkspace } from '../../../../core/hooks/workspaceContext/workspaceContext'
-import { buildPokemonPayload } from '../../../../core/services/pokemonPayload/pokemonPayload'
+import {
+  buildPokemonLegalityInputKey,
+  buildPokemonPayload,
+} from '../../../../core/services/pokemonPayload/pokemonPayload'
 import { useUiStore } from '../../../../core/state/uiStore/uiStore'
 import type { LegalityFixesResponse } from '../../../../core/types/index/index'
 import { LegalityAdvanced } from '../../../pokemon/legality/LegalityAdvanced/LegalityAdvanced'
@@ -17,6 +20,7 @@ export function FocusedLegalityAdvancedPage() {
   const { actions, api, state } = useWorkspace()
   const queryClient = useQueryClient()
   const [applyingFixId, setApplyingFixId] = useState<string | null>(null)
+  const [applyingAll, setApplyingAll] = useState(false)
   const { setFocusedEditor, setPokemonEditorTab } = useUiStore(
     useShallow((s) => ({
       setFocusedEditor: s.setFocusedEditor,
@@ -53,9 +57,8 @@ export function FocusedLegalityAdvancedPage() {
   if (!draft) return null
   if (!legality) return null
 
-  async function applyFixes(fixIds: string[], applyingId: string) {
+  async function applyFixes(fixIds: string[]) {
     if (!draft || !sessionId || !selectedSlotId) return
-    setApplyingFixId(applyingId)
     try {
       const response = await api.pokemon.applyLegalityFixes(
         sessionId,
@@ -67,14 +70,39 @@ export function FocusedLegalityAdvancedPage() {
       )
       actions.setDraft(response.draft)
       actions.updateSelectedLegality(response.draft)
-      queryClient.setQueryData<LegalityFixesResponse>(fixesQueryKey, {
-        fixes: response.fixes,
-      })
+      // setDraft changes legalityInputKey, so the live query will read a new key. Seed that
+      // key with the fixes the apply call already returned, instead of writing to the stale
+      // key and forcing a redundant getLegalityFixes refetch.
+      queryClient.setQueryData<LegalityFixesResponse>(
+        [
+          'pokemon-legality-fixes',
+          sessionId,
+          selectedSlotId,
+          buildPokemonLegalityInputKey(response.draft),
+        ],
+        { fixes: response.fixes },
+      )
       actions.setToast(state.t('applyFixSuccess'))
-    } catch {
-      actions.setToast(state.t('applyFixError'))
+    } catch (error) {
+      actions.setToast(toErrorMessage(error))
+    }
+  }
+
+  async function applyFix(fixId: string) {
+    setApplyingFixId(fixId)
+    try {
+      await applyFixes([fixId])
     } finally {
       setApplyingFixId(null)
+    }
+  }
+
+  async function applyAllSafeFixes(fixIds: string[]) {
+    setApplyingAll(true)
+    try {
+      await applyFixes(fixIds)
+    } finally {
+      setApplyingAll(false)
     }
   }
 
@@ -87,14 +115,15 @@ export function FocusedLegalityAdvancedPage() {
   return (
     <FocusedViewLayout savesPanel={<ConnectedSavesPanel />}>
       <LegalityAdvanced
+        applyingAll={applyingAll}
         applyingFixId={applyingFixId}
         fixes={fixes}
         fixesError={fixesError}
         fixesLoading={fixesQuery.isFetching}
         legality={legality}
         t={state.t}
-        onApplyAllSafeFixes={() => void applyFixes(safeFixIds, 'all')}
-        onApplyFix={(fixId) => void applyFixes([fixId], fixId)}
+        onApplyAllSafeFixes={() => void applyAllSafeFixes(safeFixIds)}
+        onApplyFix={(fixId) => void applyFix(fixId)}
         onBack={() => {
           setPokemonEditorTab('legality')
           setFocusedEditor(null)

@@ -48,6 +48,7 @@ function renderAdvanced(
 ) {
   return render(
     <LegalityAdvanced
+      applyingAll={false}
       applyingFixId={null}
       fixes={fixes}
       fixesError={null}

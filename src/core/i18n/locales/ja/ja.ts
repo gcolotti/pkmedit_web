@@ -441,6 +441,9 @@ export const ja = {
   fixMatchEncounterOriginLabel: '出会い情報に合わせる',
   fixMatchEncounterOriginDescription:
     '検出された出会いから捕獲情報、ボール、バトルバージョン、従順度をコピーします。',
+  fixMatchEncounterAbilityLabel: '特性を出会いに合わせる',
+  fixMatchEncounterAbilityDescription:
+    '検出された出会いが許可する特性スロットに変更します。通常スロットに同じ特性があれば維持します。',
   fixReplaceRelearnMovesLabel: '思い出しわざを置換',
   fixReplaceRelearnMovesDescription:
     '検出された出会いから生成された思い出しわざに置き換えます。',
