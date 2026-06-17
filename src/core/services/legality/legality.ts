@@ -25,6 +25,7 @@ type CheckWorkspaceDraftContext = {
   setPokemonLegality: DraftState['setPokemonLegality']
   setLegalityReports: Dispatch<SetStateAction<LegalityReport[]>>
   setToast: (message: string) => void
+  saveTrainerLanguage?: number | null
   summary: SaveSummary | null
   t: Translator
 }
@@ -112,7 +113,9 @@ function writeSelectedReport(
             summary: {
               ...previous.summary,
               legal: selectedReport.legal,
-              legalSeverity: selectedReport.legal ? null : selectedReport.severity,
+              legalSeverity: selectedReport.legal
+                ? null
+                : selectedReport.severity,
             },
           },
         }
@@ -133,7 +136,10 @@ function writeCachedLegality(
     [selectedSlotId]: {
       report,
       checkedAt: Date.now(),
-      inputKey: buildPokemonLegalityInputKey(currentDetail),
+      inputKey: buildPokemonLegalityInputKey(
+        currentDetail,
+        context.saveTrainerLanguage,
+      ),
       status: 'fresh',
       error: null,
     },

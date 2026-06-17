@@ -9,6 +9,7 @@ import type {
   LegalityReport,
   PokemonDetail,
 } from '../index/index'
+import type { TrainerInfo } from '../trainer/trainer'
 
 export type PokemonEditorPanelProps = {
   activeTab: EditorTab
@@ -28,6 +29,7 @@ export type PokemonEditorPanelProps = {
   onSpeciesChange: (species: number, speciesName: string) => void
   pokemonClipboard: PokemonDetail | null
   saveGameVersion: number
+  saveTrainer: TrainerInfo | null
   selectedSlotId: string | null
   selectedLegality: SlotLegalityState | null
   sessionId: string | null

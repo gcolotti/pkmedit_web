@@ -31,6 +31,7 @@ export function PokemonEditor({
   onOpenTypeChart,
   onSpeciesChange,
   saveGameVersion,
+  saveTrainer,
   selectedSlotId,
   selectedLegality,
   sessionId,
@@ -119,6 +120,8 @@ export function PokemonEditor({
         {activeTab === 'details' && (
           <DetailsGroup
             cosmetic={draft.cosmetic}
+            languageCatalog={draft.contextCatalogs.languages}
+            saveTrainerLanguage={saveTrainer?.language ?? null}
             t={t}
             trainer={draft.trainer}
             onCosmeticChange={(cosmetic) =>

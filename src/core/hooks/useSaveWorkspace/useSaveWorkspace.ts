@@ -40,6 +40,9 @@ export function useSaveWorkspace(
   const sessionId = summary?.sessionId
 
   const sections = useSectionDrafts(api, sessionId, t)
+  const currentTrainer =
+    sections.state.trainerDraft ?? sections.state.trainerBase
+  const saveTrainerLanguage = currentTrainer?.language ?? null
   const raids = useSaveWorkspaceRaids(api, sessionId)
   const database = useSaveWorkspaceDatabases({
     api,
@@ -69,6 +72,7 @@ export function useSaveWorkspace(
     ui.setSelectedSlotId,
     ui.showToast,
     draftStore.setPokemonLegality,
+    saveTrainerLanguage,
   )
   const clipboard = useCopyPaste(ui.selectedSlotId)
   const { mysteryGiftDrafts, replacementDrafts } = database.state
@@ -92,6 +96,7 @@ export function useSaveWorkspace(
     replacementDrafts,
     selectedSlotId: ui.selectedSlotId,
     t,
+    trainerBase: sections.state.trainerBase,
     trainerDraft: sections.state.trainerDraft,
     undergroundDraft: sections.state.undergroundDraft,
   })

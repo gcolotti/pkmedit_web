@@ -106,7 +106,7 @@ export type PokemonTrainer = {
   handlingTrainerGender: number
   handlingTrainerFriendship: number
   handlingTrainerLanguage: number
-  currentHandler: string
+  currentHandler: 0 | 1
 }
 
 export type PokemonFlag = {

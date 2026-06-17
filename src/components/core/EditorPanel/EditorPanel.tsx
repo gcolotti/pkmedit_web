@@ -43,6 +43,7 @@ export function EditorPanel({
   pokemonEditorTab,
   pokemonClipboard,
   saveGameVersion,
+  saveTrainer,
   onSpeciesChange,
   onTrainerChange,
   selectedSlotId,
@@ -111,6 +112,7 @@ export function EditorPanel({
         draft={draft}
         language={language}
         saveGameVersion={saveGameVersion}
+        saveTrainer={saveTrainer}
         selectedSlotId={selectedSlotId}
         selectedLegality={selectedLegality}
         sessionId={sessionId}

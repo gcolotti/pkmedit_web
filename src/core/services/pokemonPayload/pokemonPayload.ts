@@ -1,6 +1,10 @@
 import type { PokemonDetail } from '../../types/index/index'
+import { syncHandlingTrainerLanguage } from '../handlingTrainerLanguage/handlingTrainerLanguage'
 
-export function buildPokemonPayload(draft: PokemonDetail) {
+export function buildPokemonPayload(
+  draft: PokemonDetail,
+  saveTrainerLanguage?: number | null,
+) {
   const {
     cosmetic,
     evs,
@@ -13,6 +17,9 @@ export function buildPokemonPayload(draft: PokemonDetail) {
     summary,
     trainer,
   } = draft
+  const syncedTrainer = trainer
+    ? syncHandlingTrainerLanguage(trainer, saveTrainerLanguage)
+    : trainer
   const payload = {
     ability: summary.ability,
     abilityNumber: summary.abilityNumber,
@@ -31,7 +38,7 @@ export function buildPokemonPayload(draft: PokemonDetail) {
     plusMoves,
     shiny: summary.shiny,
     species: summary.species,
-    trainer,
+    trainer: syncedTrainer,
   }
 
   if (
@@ -50,6 +57,9 @@ export function buildPokemonPayload(draft: PokemonDetail) {
   return payload
 }
 
-export function buildPokemonLegalityInputKey(draft: PokemonDetail) {
-  return JSON.stringify(buildPokemonPayload(draft))
+export function buildPokemonLegalityInputKey(
+  draft: PokemonDetail,
+  saveTrainerLanguage?: number | null,
+) {
+  return JSON.stringify(buildPokemonPayload(draft, saveTrainerLanguage))
 }

@@ -11,9 +11,11 @@ export function useWorkspaceValidationCommand(input: WorkspaceCommandsInput) {
     setDrafts,
     setDraftViolations,
     setPokemonLegality,
-  } =
-    input.draftStore
+  } = input.draftStore
   const { draftRequests } = input.derived
+  const saveTrainerLanguage =
+    (input.sections.state.trainerDraft ?? input.sections.state.trainerBase)
+      ?.language ?? null
   const { selectedSlotId, showToast } = input.ui
   const { setLegalityReports, summary } = input.session
 
@@ -32,6 +34,7 @@ export function useWorkspaceValidationCommand(input: WorkspaceCommandsInput) {
           setPokemonLegality,
           setLegalityReports,
           setToast: showToast,
+          saveTrainerLanguage,
           summary,
           t,
         },
@@ -48,6 +51,7 @@ export function useWorkspaceValidationCommand(input: WorkspaceCommandsInput) {
       setDraftViolations,
       setPokemonLegality,
       setLegalityReports,
+      saveTrainerLanguage,
       showToast,
       summary,
       t,

@@ -31,6 +31,8 @@ export function FocusedLegalityAdvancedPage() {
   const legality = state.selectedLegality?.report ?? draft?.legality ?? null
   const sessionId = state.summary?.sessionId ?? null
   const selectedSlotId = state.selectedSlotId
+  const saveTrainerLanguage =
+    (state.trainerDraft ?? state.trainerBase)?.language ?? null
   const fixesQueryKey = [
     'pokemon-legality-fixes',
     sessionId,
@@ -46,7 +48,7 @@ export function FocusedLegalityAdvancedPage() {
       api.pokemon.getLegalityFixes(
         sessionId!,
         selectedSlotId!,
-        buildPokemonPayload(draft!),
+        buildPokemonPayload(draft!, saveTrainerLanguage),
       ),
   })
 
@@ -65,7 +67,7 @@ export function FocusedLegalityAdvancedPage() {
         selectedSlotId,
         {
           fixIds,
-          pokemon: buildPokemonPayload(draft),
+          pokemon: buildPokemonPayload(draft, saveTrainerLanguage),
         },
       )
       actions.setDraft(response.draft)
@@ -78,7 +80,7 @@ export function FocusedLegalityAdvancedPage() {
           'pokemon-legality-fixes',
           sessionId,
           selectedSlotId,
-          buildPokemonLegalityInputKey(response.draft),
+          buildPokemonLegalityInputKey(response.draft, saveTrainerLanguage),
         ],
         { fixes: response.fixes },
       )

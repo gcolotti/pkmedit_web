@@ -26,6 +26,7 @@ export const PokemonEditorPanel = memo(function PokemonEditorPanel({
   onSpeciesChange,
   pokemonClipboard,
   saveGameVersion,
+  saveTrainer,
   selectedSlotId,
   selectedLegality,
   sessionId,
@@ -95,6 +96,7 @@ export const PokemonEditorPanel = memo(function PokemonEditorPanel({
         draft={draft}
         language={language}
         saveGameVersion={saveGameVersion}
+        saveTrainer={saveTrainer}
         selectedSlotId={selectedSlotId}
         selectedLegality={selectedLegality}
         sessionId={sessionId}

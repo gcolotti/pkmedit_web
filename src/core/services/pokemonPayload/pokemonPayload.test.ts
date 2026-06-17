@@ -124,6 +124,34 @@ describe('buildPokemonPayload', () => {
     expect(payload.teraTypeOverride).toBe(TERA_TYPE_OVERRIDE_NONE)
   })
 
+  it('syncs current HT language from the save trainer language', () => {
+    const detail = baseDetail({
+      trainer: {
+        handlingTrainerName: 'Misty',
+        handlingTrainerLanguage: 2,
+        currentHandler: 1,
+      } as never,
+    })
+    const payload = buildPokemonPayload(detail, 1) as unknown as {
+      trainer: { handlingTrainerLanguage: number }
+    }
+    expect(payload.trainer.handlingTrainerLanguage).toBe(1)
+  })
+
+  it('preserves historical HT language when OT is current', () => {
+    const detail = baseDetail({
+      trainer: {
+        handlingTrainerName: 'Misty',
+        handlingTrainerLanguage: 2,
+        currentHandler: 0,
+      } as never,
+    })
+    const payload = buildPokemonPayload(detail, 1) as unknown as {
+      trainer: { handlingTrainerLanguage: number }
+    }
+    expect(payload.trainer.handlingTrainerLanguage).toBe(2)
+  })
+
   it('builds an input key from the editable pokemon payload', () => {
     const first = buildPokemonLegalityInputKey(baseDetail())
     const second = buildPokemonLegalityInputKey(

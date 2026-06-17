@@ -1,6 +1,5 @@
 import { useMemo } from 'react'
 
-import type { Translator } from '../../i18n/i18n/i18n'
 import {
   buildDraftChangeList,
   buildDraftRequests,
@@ -9,55 +8,12 @@ import {
 import { buildWorkspaceDraftChanges } from '../../services/drafts/drafts'
 import { selectedDetail } from '../../services/draftSelection/draftSelection'
 import { buildPokemonLegalityInputKey } from '../../services/pokemonPayload/pokemonPayload'
-import type { SlotLegalityState } from '../../state/draftStoreTypes/draftStoreTypes'
-import type {
-  MysteryGiftDatabasePreview,
-  PokemonReplacement,
-} from '../../types/database/database'
-import type { DonutDraft } from '../../types/donut/donut'
-import type {
-  ArceusResearchActionKey,
-  ArceusResearchBulkAction,
-  ArceusResearchStatusResponse,
-  BoxSummary,
-  DraftChange,
-  ItemBag,
-  PokedexActionKey,
-  PokedexStatusResponse,
-  PokemonDetail,
-} from '../../types/index/index'
-import type { MetDateFixerRequest } from '../../types/metDateFixer/metDateFixer'
-import type { PokemonSummary } from '../../types/pokemon/pokemon'
-import type {
-  RaidListResponse,
-  UndergroundItemsResponse,
-} from '../../types/saveFeature/saveFeature'
-import type { TrainerInfo } from '../../types/trainer/trainer'
-
-type WorkspaceDerivedInput = {
-  arceusResearchBulkDrafts: ArceusResearchBulkAction[]
-  arceusResearchDrafts: ArceusResearchActionKey[]
-  arceusResearchStatus: ArceusResearchStatusResponse | null
-  baseDetails: Record<string, PokemonDetail>
-  boxes: BoxSummary[] | undefined
-  donuts: DonutDraft[]
-  drafts: Record<string, PokemonDetail>
-  itemsDraft: ItemBag | null
-  metDateFixerDraft: MetDateFixerRequest | null
-  mysteryGiftDrafts: MysteryGiftDatabasePreview[]
-  party: PokemonSummary[] | undefined
-  pokemonLegality: Record<string, SlotLegalityState>
-  pokedexDrafts: PokedexActionKey[]
-  pokedexStatus: PokedexStatusResponse | null
-  raidsDraft: RaidListResponse | null
-  replacementDrafts: Record<string, PokemonReplacement>
-  selectedSlotId: string | null
-  t: Translator
-  trainerDraft: TrainerInfo | null
-  undergroundDraft: UndergroundItemsResponse | null
-}
+import type { DraftChange } from '../../types/index/index'
+import type { WorkspaceDerivedInput } from './useWorkspaceDerivedTypes'
 
 export function useWorkspaceDerived(input: WorkspaceDerivedInput) {
+  const saveTrainerLanguage =
+    (input.trainerDraft ?? input.trainerBase)?.language ?? null
   const draft = selectedDetail(
     input.selectedSlotId,
     input.drafts,
@@ -66,19 +22,33 @@ export function useWorkspaceDerived(input: WorkspaceDerivedInput) {
   const selectedLegality = input.selectedSlotId
     ? (input.pokemonLegality[input.selectedSlotId] ?? null)
     : null
-  const legalityInputKey = draft ? buildPokemonLegalityInputKey(draft) : null
+  const legalityInputKey = draft
+    ? buildPokemonLegalityInputKey(draft, saveTrainerLanguage)
+    : null
   const draftRequests = useMemo(
     () =>
       buildDraftRequests(
         input.baseDetails,
         input.drafts,
         input.replacementDrafts,
+        saveTrainerLanguage,
       ),
-    [input.baseDetails, input.drafts, input.replacementDrafts],
+    [
+      input.baseDetails,
+      input.drafts,
+      input.replacementDrafts,
+      saveTrainerLanguage,
+    ],
   )
   const pokemonDraftChanges = useMemo(
-    () => buildDraftChangeList(input.baseDetails, input.drafts, input.t),
-    [input.baseDetails, input.drafts, input.t],
+    () =>
+      buildDraftChangeList(
+        input.baseDetails,
+        input.drafts,
+        input.t,
+        saveTrainerLanguage,
+      ),
+    [input.baseDetails, input.drafts, input.t, saveTrainerLanguage],
   )
   const draftChanges = useMemo<DraftChange[]>(
     () =>

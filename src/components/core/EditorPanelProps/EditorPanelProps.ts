@@ -71,6 +71,7 @@ export interface EditorPanelProps {
   pokemonEditorTab: EditorTab
   pokemonClipboard: PokemonDetail | null
   saveGameVersion: number
+  saveTrainer: TrainerInfo | null
   onSpeciesChange: (species: number, speciesName: string) => void
   onTrainerChange: (trainer: TrainerInfo) => void
   selectedSlotId: string | null

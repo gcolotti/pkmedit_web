@@ -17,6 +17,7 @@ export async function previewAndApplyDraft(input: {
   api: ApiClient
   isCurrent: (latest: PokemonDetail) => boolean
   optimistic: PokemonDetail
+  saveTrainerLanguage?: number | null
   selectedSlotId: string
   setDrafts: DraftState['setPokemonDrafts']
   setPokemonLegality: DraftState['setPokemonLegality']
@@ -28,7 +29,7 @@ export async function previewAndApplyDraft(input: {
     const preview = await input.api.previewPokemonUpdate(
       input.summary.sessionId,
       input.selectedSlotId,
-      buildPokemonPayload(input.optimistic),
+      buildPokemonPayload(input.optimistic, input.saveTrainerLanguage),
     )
     let applied = false
     input.setDrafts((current) => {
@@ -41,7 +42,7 @@ export async function previewAndApplyDraft(input: {
       writeSelectedLegality(
         input.selectedSlotId,
         preview,
-        buildPokemonLegalityInputKey(preview),
+        buildPokemonLegalityInputKey(preview, input.saveTrainerLanguage),
         input.setPokemonLegality,
       )
   } catch (error) {
@@ -53,6 +54,7 @@ export async function recheckSelectedLegality(input: {
   api: ApiClient
   baseDetails: Record<string, PokemonDetail>
   drafts: Record<string, PokemonDetail>
+  saveTrainerLanguage?: number | null
   selectedSlotId: string | null
   setDrafts: DraftState['setPokemonDrafts']
   setPokemonLegality: DraftState['setPokemonLegality']
@@ -60,10 +62,14 @@ export async function recheckSelectedLegality(input: {
 }) {
   if (!input.selectedSlotId || !input.summary) return
   const current =
-    input.drafts[input.selectedSlotId] ?? input.baseDetails[input.selectedSlotId]
+    input.drafts[input.selectedSlotId] ??
+    input.baseDetails[input.selectedSlotId]
   if (!current) return
 
-  const inputKey = buildPokemonLegalityInputKey(current)
+  const inputKey = buildPokemonLegalityInputKey(
+    current,
+    input.saveTrainerLanguage,
+  )
   input.setPokemonLegality((legality) => ({
     ...legality,
     [input.selectedSlotId!]: {
@@ -79,9 +85,12 @@ export async function recheckSelectedLegality(input: {
     const preview = await input.api.previewPokemonUpdate(
       input.summary.sessionId,
       input.selectedSlotId,
-      buildPokemonPayload(current),
+      buildPokemonPayload(current, input.saveTrainerLanguage),
     )
-    if (!isLatestInput(input.selectedSlotId, inputKey)) return
+    if (
+      !isLatestInput(input.selectedSlotId, inputKey, input.saveTrainerLanguage)
+    )
+      return
     input.setDrafts((cur) =>
       mergePreviewSummary(cur, input.selectedSlotId!, preview),
     )
@@ -102,12 +111,19 @@ export async function recheckSelectedLegality(input: {
   }
 }
 
-function isLatestInput(selectedSlotId: string, inputKey: string) {
+function isLatestInput(
+  selectedSlotId: string,
+  inputKey: string,
+  saveTrainerLanguage?: number | null,
+) {
   const latestStore = useDraftStore.getState()
   const latest =
     latestStore.pokemonDrafts[selectedSlotId] ??
     latestStore.baseDetails[selectedSlotId]
-  return !!latest && buildPokemonLegalityInputKey(latest) === inputKey
+  return (
+    !!latest &&
+    buildPokemonLegalityInputKey(latest, saveTrainerLanguage) === inputKey
+  )
 }
 
 function mergePreviewSummary(

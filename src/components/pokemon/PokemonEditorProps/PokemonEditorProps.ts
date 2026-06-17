@@ -9,6 +9,7 @@ import type {
   LegalityReport,
   PokemonDetail,
 } from '../../../core/types/index/index'
+import type { TrainerInfo } from '../../../core/types/trainer/trainer'
 
 export type PokemonEditorProps = {
   activeTab: EditorTab
@@ -24,6 +25,7 @@ export type PokemonEditorProps = {
   onOpenTypeChart?: (typeId: number) => void
   onSpeciesChange: (species: number, speciesName: string) => void
   saveGameVersion: number
+  saveTrainer: TrainerInfo | null
   selectedSlotId: string | null
   selectedLegality: SlotLegalityState | null
   sessionId: string | null

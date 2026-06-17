@@ -1,5 +1,4 @@
 import type { Translator } from '../../../../core/i18n/i18n/i18n'
-import type { CatalogEntry } from '../../../../core/types/index/index'
 import type {
   PokemonCosmetic,
   PokemonMain,
@@ -11,6 +10,7 @@ import { FocusedEditorShell } from '../../../core/focused/FocusedEditorShell/Foc
 import { CompactNumberField } from '../../../ui/CompactNumberField/CompactNumberField'
 import { RibbonGrid } from '../../ribbon/RibbonGrid/RibbonGrid'
 import { DetailsTechnical } from '../DetailsTechnical/DetailsTechnical'
+import { DetailsTrainerIds } from '../DetailsTrainerIds/DetailsTrainerIds'
 
 const sectionTitle = 'label text-[0.7rem]'
 const card =
@@ -19,7 +19,6 @@ const contestKeys = ['hp', 'atk', 'def', 'spa', 'spd', 'spe'] as const
 
 export function DetailsAdvanced({
   cosmetic,
-  languageCatalog,
   main,
   onBack,
   onCosmeticChange,
@@ -28,7 +27,6 @@ export function DetailsAdvanced({
   trainer,
 }: {
   cosmetic: PokemonCosmetic
-  languageCatalog: CatalogEntry[]
   main: PokemonMain
   onBack: () => void
   onCosmeticChange: (cosmetic: PokemonCosmetic) => void
@@ -37,22 +35,57 @@ export function DetailsAdvanced({
   trainer: PokemonTrainer
 }) {
   const formFields = [
-    { aria: t('formArgument'), label: t('argShort'), max: UINT32_MAX, path: 'cosmetic.formArgument', value: cosmetic.formArgument, patch: (v: number) => ({ formArgument: v }) },
-    { aria: t('formArgumentRemain'), label: t('remainShort'), max: 255, path: 'cosmetic.formArgumentRemain', value: cosmetic.formArgumentRemain, patch: (v: number) => ({ formArgumentRemain: v }) },
-    { aria: t('formArgumentElapsed'), label: t('elapsedShort'), max: 255, path: 'cosmetic.formArgumentElapsed', value: cosmetic.formArgumentElapsed, patch: (v: number) => ({ formArgumentElapsed: v }) },
-    { aria: t('formArgumentMaximum'), label: t('maxShort'), max: 255, path: 'cosmetic.formArgumentMaximum', value: cosmetic.formArgumentMaximum, patch: (v: number) => ({ formArgumentMaximum: v }) },
+    {
+      aria: t('formArgument'),
+      label: t('argShort'),
+      max: UINT32_MAX,
+      path: 'cosmetic.formArgument',
+      value: cosmetic.formArgument,
+      patch: (v: number) => ({ formArgument: v }),
+    },
+    {
+      aria: t('formArgumentRemain'),
+      label: t('remainShort'),
+      max: 255,
+      path: 'cosmetic.formArgumentRemain',
+      value: cosmetic.formArgumentRemain,
+      patch: (v: number) => ({ formArgumentRemain: v }),
+    },
+    {
+      aria: t('formArgumentElapsed'),
+      label: t('elapsedShort'),
+      max: 255,
+      path: 'cosmetic.formArgumentElapsed',
+      value: cosmetic.formArgumentElapsed,
+      patch: (v: number) => ({ formArgumentElapsed: v }),
+    },
+    {
+      aria: t('formArgumentMaximum'),
+      label: t('maxShort'),
+      max: 255,
+      path: 'cosmetic.formArgumentMaximum',
+      value: cosmetic.formArgumentMaximum,
+      patch: (v: number) => ({ formArgumentMaximum: v }),
+    },
   ]
 
   return (
-    <FocusedEditorShell backLabel={t('backToDetails')} onBack={onBack} title={`${t('details')} · ${t('advanced')}`}>
+    <FocusedEditorShell
+      backLabel={t('backToDetails')}
+      onBack={onBack}
+      title={`${t('details')} · ${t('advanced')}`}
+    >
       <div className="grid h-full min-h-0 gap-4 overflow-y-auto p-4">
-        <DetailsTechnical
-          languageCatalog={languageCatalog}
-          main={main}
-          t={t}
-          trainer={trainer}
-          onTrainerChange={onTrainerChange}
-        />
+        <section className={card}>
+          <div className={sectionTitle}>{t('trainerIds')}</div>
+          <DetailsTrainerIds
+            trainer={trainer}
+            t={t}
+            onTrainerChange={onTrainerChange}
+          />
+        </section>
+
+        <DetailsTechnical main={main} t={t} />
 
         <section className={card}>
           <div className={sectionTitle}>{t('ribbons')}</div>

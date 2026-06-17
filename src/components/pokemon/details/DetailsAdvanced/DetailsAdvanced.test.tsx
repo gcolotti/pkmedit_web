@@ -2,7 +2,6 @@ import { render, screen } from '@testing-library/react'
 import { describe, expect, it, vi } from 'vitest'
 
 import type { Translator } from '../../../../core/i18n/i18n/i18n'
-import type { CatalogEntry } from '../../../../core/types/index/index'
 import type {
   PokemonCosmetic,
   PokemonMain,
@@ -11,11 +10,6 @@ import type {
 import { DetailsAdvanced } from './DetailsAdvanced'
 
 const t = ((key: string) => key) as Translator
-
-const languageCatalog: CatalogEntry[] = [
-  { id: 1, name: 'JPN' },
-  { id: 2, name: 'ENG' },
-]
 
 const baseTrainer: PokemonTrainer = {
   originalTrainerName: 'Ash',
@@ -29,7 +23,7 @@ const baseTrainer: PokemonTrainer = {
   handlingTrainerGender: 0,
   handlingTrainerFriendship: 70,
   handlingTrainerLanguage: 0,
-  currentHandler: 'OT',
+  currentHandler: 0,
 }
 
 const baseMain: PokemonMain = {
@@ -68,7 +62,6 @@ describe('DetailsAdvanced', () => {
     render(
       <DetailsAdvanced
         cosmetic={baseCosmetic}
-        languageCatalog={languageCatalog}
         main={baseMain}
         t={t}
         trainer={baseTrainer}
@@ -77,6 +70,7 @@ describe('DetailsAdvanced', () => {
         onTrainerChange={() => {}}
       />,
     )
+    expect(screen.getByText('trainerIds')).toBeInTheDocument()
     expect(screen.getByText('ribbons')).toBeInTheDocument()
     expect(screen.getByText('contestStats')).toBeInTheDocument()
     expect(screen.getByText('formCounters')).toBeInTheDocument()
@@ -88,7 +82,6 @@ describe('DetailsAdvanced', () => {
     render(
       <DetailsAdvanced
         cosmetic={baseCosmetic}
-        languageCatalog={languageCatalog}
         main={baseMain}
         t={t}
         trainer={baseTrainer}

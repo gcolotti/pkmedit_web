@@ -6,8 +6,9 @@ export function initializeSelectedLegality(
   slotId: string,
   detail: PokemonDetail,
   setPokemonLegality: DraftState['setPokemonLegality'],
+  saveTrainerLanguage?: number | null,
 ) {
-  const inputKey = buildPokemonLegalityInputKey(detail)
+  const inputKey = buildPokemonLegalityInputKey(detail, saveTrainerLanguage)
   setPokemonLegality((current) => ({
     ...current,
     [slotId]: current[slotId] ?? {

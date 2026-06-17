@@ -19,7 +19,7 @@ const baseTrainer: PokemonTrainer = {
   handlingTrainerGender: 0,
   handlingTrainerFriendship: 70,
   handlingTrainerLanguage: 2,
-  currentHandler: 'OT',
+  currentHandler: 0,
 }
 
 describe('DetailsTrainerIds', () => {

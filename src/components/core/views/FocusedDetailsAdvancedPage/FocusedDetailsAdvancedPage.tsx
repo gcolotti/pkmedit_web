@@ -27,7 +27,6 @@ export function FocusedDetailsAdvancedPage() {
     <FocusedViewLayout savesPanel={<ConnectedSavesPanel />}>
       <DetailsAdvanced
         cosmetic={draft.cosmetic}
-        languageCatalog={draft.contextCatalogs.languages}
         main={draft.main}
         t={state.t}
         trainer={draft.trainer}

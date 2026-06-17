@@ -17,21 +17,24 @@ export function buildDraftRequests(
   baseDetails: Record<string, PokemonDetail>,
   drafts: Record<string, PokemonDetail>,
   replacements: Record<string, PokemonReplacement> = {},
+  saveTrainerLanguage?: number | null,
 ): PokemonDraftChange[] {
   // A slot with a replacement (applied database encounter) sends the raw
   // bytes AND the field payload: the backend builds the mon from the bytes,
   // then applies the payload on top, so manual edits made after "Apply to
   // draft" survive the export (replacement alone silently dropped them).
   return Object.entries(drafts)
-    .filter(([slotId, draft]) => hasPokemonChanged(baseDetails[slotId], draft))
+    .filter(([slotId, draft]) =>
+      hasPokemonChanged(baseDetails[slotId], draft, saveTrainerLanguage),
+    )
     .map(([slotId, draft]) =>
       replacements[slotId]
         ? {
             slotId,
-            pokemon: buildPokemonPayload(draft),
+            pokemon: buildPokemonPayload(draft, saveTrainerLanguage),
             replacement: replacements[slotId],
           }
-        : { slotId, pokemon: buildPokemonPayload(draft) },
+        : { slotId, pokemon: buildPokemonPayload(draft, saveTrainerLanguage) },
     )
 }
 
@@ -39,12 +42,13 @@ export function buildDraftChangeList(
   baseDetails: Record<string, PokemonDetail>,
   drafts: Record<string, PokemonDetail>,
   t: Translator,
+  saveTrainerLanguage?: number | null,
 ): DraftChange[] {
   return Object.entries(drafts).flatMap(([slotId, draft]) => {
     const base = baseDetails[slotId]
     if (!base) return []
-    const basePayloadSource = buildPokemonPayload(base)
-    const draftPayloadSource = buildPokemonPayload(draft)
+    const basePayloadSource = buildPokemonPayload(base, saveTrainerLanguage)
+    const draftPayloadSource = buildPokemonPayload(draft, saveTrainerLanguage)
     if (areStructurallyEqual(basePayloadSource, draftPayloadSource)) return []
     const basePayload = flatten(basePayloadSource)
     const draftPayload = flatten(draftPayloadSource)
@@ -63,11 +67,12 @@ export function buildDraftChangeList(
 export function hasPokemonChanged(
   base: PokemonDetail | undefined,
   draft: PokemonDetail | undefined,
+  saveTrainerLanguage?: number | null,
 ) {
   if (!base || !draft) return false
   return !areStructurallyEqual(
-    buildPokemonPayload(base),
-    buildPokemonPayload(draft),
+    buildPokemonPayload(base, saveTrainerLanguage),
+    buildPokemonPayload(draft, saveTrainerLanguage),
   )
 }
 

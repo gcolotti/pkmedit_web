@@ -1,20 +1,18 @@
 import { useShallow } from 'zustand/react/shallow'
 
 import type { ApiClient } from '../../services/api/api'
-import { selectedDetail } from '../../services/draftSelection/draftSelection'
+import { syncPokemonHandlingTrainerLanguage } from '../../services/handlingTrainerLanguage/handlingTrainerLanguage'
 import { buildPokemonLegalityInputKey } from '../../services/pokemonPayload/pokemonPayload'
 import { useDraftStore } from '../../state/draftStore/draftStore'
 import type { DraftState } from '../../state/draftStoreTypes/draftStoreTypes'
 import type { PokemonDetail } from '../../types/index/index'
-import {
-  previewAndApplyDraft,
-  recheckSelectedLegality as recheckSelectedLegalityForSlot,
-} from './pokemonSelectionLegality'
+import { recheckSelectedLegality as recheckSelectedLegalityForSlot } from './pokemonSelectionLegality'
 import {
   initializeSelectedLegality,
   markSelectedLegalityStale,
   writeSelectedLegality,
 } from './pokemonSelectionLegalityCache'
+import { previewSummaryEdit } from './pokemonSelectionSummaryEdit'
 
 export function usePokemonSelection(
   api: ApiClient,
@@ -23,6 +21,7 @@ export function usePokemonSelection(
   setSelectedSlotId: (id: string | null) => void,
   setToast: (message: string) => void,
   setPokemonLegality: DraftState['setPokemonLegality'],
+  saveTrainerLanguage?: number | null,
 ) {
   const {
     baseDetails,
@@ -47,14 +46,23 @@ export function usePokemonSelection(
   async function selectSlot(slotId: string) {
     if (!summary) return
     const detail = await api.getPokemon(summary.sessionId, slotId)
+    const initialDraft = syncPokemonHandlingTrainerLanguage(
+      detail,
+      saveTrainerLanguage,
+    )
     setDatabasePreview(null)
     setSelectedSlotId(slotId)
     setBaseDetails((current) => ({ ...current, [slotId]: detail }))
     setDrafts((current) => ({
       ...current,
-      [slotId]: current[slotId] ?? structuredClone(detail),
+      [slotId]: current[slotId] ?? structuredClone(initialDraft),
     }))
-    initializeSelectedLegality(slotId, detail, setPokemonLegality)
+    initializeSelectedLegality(
+      slotId,
+      detail,
+      setPokemonLegality,
+      saveTrainerLanguage,
+    )
   }
 
   const setDraft: React.Dispatch<React.SetStateAction<PokemonDetail | null>> = (
@@ -72,70 +80,48 @@ export function usePokemonSelection(
     setDraftViolations([])
   }
 
+  const summaryEditBase = () => ({
+    api,
+    baseDetails,
+    clearReplacementDraft,
+    drafts,
+    saveTrainerLanguage,
+    selectedSlotId,
+    setDrafts,
+    setDraftViolations,
+    setPokemonLegality,
+    setToast,
+    summary,
+  })
+
   async function changeDraftSpecies(species: number, speciesName: string) {
-    if (!selectedSlotId) return
-
-    const currentDraft = selectedDetail(selectedSlotId, drafts, baseDetails)
-    if (!currentDraft) return
-
-    const optimistic = structuredClone(currentDraft)
-    optimistic.summary.species = species
-    optimistic.summary.speciesName = speciesName || species.toString()
-    optimistic.summary.form = 0
-
-    setDrafts((current) => ({ ...current, [selectedSlotId]: optimistic }))
-    markSelectedLegalityStale(selectedSlotId, setPokemonLegality)
-    clearReplacementDraft(selectedSlotId)
-    setDraftViolations([])
-
-    await previewAndApplyDraft({
-      api,
+    await previewSummaryEdit({
+      ...summaryEditBase(),
       isCurrent: (latest) => latest.summary.species === species,
-      optimistic,
-      selectedSlotId,
-      setDrafts,
-      setPokemonLegality,
-      setToast,
-      summary,
+      mutate: (optimistic) => {
+        optimistic.summary.species = species
+        optimistic.summary.speciesName = speciesName || species.toString()
+        optimistic.summary.form = 0
+      },
     })
   }
 
   async function changeDraftForm(form: number) {
-    if (!selectedSlotId) return
-
-    const currentDraft = selectedDetail(selectedSlotId, drafts, baseDetails)
-    if (!currentDraft) return
-
-    const optimistic = structuredClone(currentDraft)
-    optimistic.summary.form = form
-
-    setDrafts((current) => ({ ...current, [selectedSlotId]: optimistic }))
-    markSelectedLegalityStale(selectedSlotId, setPokemonLegality)
-    clearReplacementDraft(selectedSlotId)
-    setDraftViolations([])
-
-    await previewAndApplyDraft({
-      api,
+    await previewSummaryEdit({
+      ...summaryEditBase(),
       isCurrent: (latest) => latest.summary.form === form,
-      optimistic,
-      selectedSlotId,
-      setDrafts,
-      setPokemonLegality,
-      setToast,
-      summary,
+      mutate: (optimistic) => {
+        optimistic.summary.form = form
+      },
     })
   }
 
-  // Silent, slot-scoped legality recheck for the live debounced check (staleness
-  // mix "C"). previewPokemonUpdate returns the slot's detail with a fresh
-  // legality report without touching the save or toasting. Only the legality +
-  // summary legal flags are merged back, so in-progress edits are preserved and
-  // the party/boxes icon (reads slot.legal) stays in sync.
   async function recheckSelectedLegality() {
     await recheckSelectedLegalityForSlot({
       api,
       baseDetails,
       drafts,
+      saveTrainerLanguage,
       selectedSlotId,
       setDrafts,
       setPokemonLegality,
@@ -148,7 +134,7 @@ export function usePokemonSelection(
     writeSelectedLegality(
       selectedSlotId,
       detail,
-      buildPokemonLegalityInputKey(detail),
+      buildPokemonLegalityInputKey(detail, saveTrainerLanguage),
       setPokemonLegality,
     )
   }
