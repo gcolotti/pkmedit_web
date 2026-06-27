@@ -2,6 +2,7 @@ import type {
   PokemonHyperTrain,
   PokemonStats,
 } from '../../../../core/types/pokemon/pokemon'
+import { publicAssetUrl } from '../../../../core/utils/publicAssetUrl/publicAssetUrl'
 
 export function HyperTrainAllButton({
   ivs,
@@ -33,7 +34,7 @@ export function HyperTrainAllButton({
         alt=""
         className="h-6 w-6 object-contain"
         draggable={false}
-        src="/gold-bottle-cap.png"
+        src={publicAssetUrl('/gold-bottle-cap.png')}
       />
     </button>
   )

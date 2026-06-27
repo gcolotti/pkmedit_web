@@ -1,5 +1,6 @@
 import type { Translator } from '../../i18n/i18n/i18n'
 import type { CatalogEntry } from '../../types/catalogs/catalogs'
+import { publicAssetUrl } from '../publicAssetUrl/publicAssetUrl'
 
 export const TERA_TYPE_OVERRIDE_NONE = 19
 export const TERA_TYPE_STELLAR = 99
@@ -70,14 +71,14 @@ export function getTypeColor(typeId: number | undefined): string | undefined {
 }
 
 export function getTypeIconUrl(typeId: number | undefined): string | undefined {
-  if (typeId === TERA_TYPE_STELLAR) return '/assets/stellar/stellar_icon.png'
+  if (typeId === TERA_TYPE_STELLAR)
+    return publicAssetUrl('/assets/stellar/stellar_icon.png')
   if (typeId === undefined || typeId < 0 || typeId >= TYPE_ICON_FILES.length)
     return undefined
-  return `/types/${TYPE_ICON_FILES[typeId]}`
+  return publicAssetUrl(`/types/${TYPE_ICON_FILES[typeId]}`)
 }
 
-export const STELLAR_GRADIENT =
-  "url('/assets/stellar/stellar_bg.png') center / 100% 100% no-repeat"
+export const STELLAR_GRADIENT = `url('${publicAssetUrl('/assets/stellar/stellar_bg.png')}') center / 100% 100% no-repeat`
 
 export function getTypeBackground(typeId: number | undefined): string {
   if (typeId === TERA_TYPE_STELLAR) return STELLAR_GRADIENT

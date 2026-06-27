@@ -3,6 +3,8 @@
 // ball/item ID space, identical to GameInfo.GetStrings(lang).balllist/itemlist.
 // Ball icons are 20x20 PNGs. Item icons are normalized 28x28 RGBA PNGs.
 
+import { publicAssetUrl } from '../publicAssetUrl/publicAssetUrl'
+
 export const TYPE_CHART_MULTIPLIER_IMAGE_URLS: Record<number, string> = {
   0: 'https://images.wikidexcdn.net/mwuploads/wikidex/c/c3/latest/20241210173511/X0.svg',
   0.25: 'https://images.wikidexcdn.net/mwuploads/wikidex/e/ec/latest/20260416145918/1-4.svg',
@@ -1173,9 +1175,11 @@ export const HELD_ITEM_IMAGE_URLS: Record<number, string> = {
 }
 
 export function getBallImageUrl(id: number): string | undefined {
-  return BALL_IMAGE_URLS[id]
+  const url = BALL_IMAGE_URLS[id]
+  return url ? publicAssetUrl(url) : undefined
 }
 
 export function getHeldItemImageUrl(id: number): string | undefined {
-  return HELD_ITEM_IMAGE_URLS[id]
+  const url = HELD_ITEM_IMAGE_URLS[id]
+  return url ? publicAssetUrl(url) : undefined
 }

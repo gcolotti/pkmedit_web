@@ -28,6 +28,11 @@ The API base URL is resolved in this order, first match wins:
 3. `VITE_API_BASE` env var (compiled in at build time)
 4. `http://localhost:8080`
 
+For GitHub Pages, the app is built by `.github/workflows/deploy-pages.yml`.
+The Vite base path is inferred from `GITHUB_REPOSITORY` during Actions builds,
+so `gcolotti/pkmedit_web` is published under `/pkmedit_web/`. If you need a
+custom base path, set `VITE_BASE_PATH` before running `npm run build`.
+
 ## Scripts
 
 | Command                     | What it does                                                  |

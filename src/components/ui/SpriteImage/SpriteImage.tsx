@@ -1,5 +1,7 @@
 import { useState } from 'react'
 
+import { publicAssetUrl } from '../../../core/utils/publicAssetUrl/publicAssetUrl'
+
 export function SpriteImage({
   alt,
   candidates,
@@ -10,7 +12,7 @@ export function SpriteImage({
   className?: string
 }) {
   const [index, setIndex] = useState(0)
-  const src = candidates[index]
+  const src = candidates[index] ? publicAssetUrl(candidates[index]) : undefined
 
   if (!src) {
     return (

@@ -1,5 +1,6 @@
 import { localizedText } from '../../i18n/i18n/i18n'
 import type { Language, MoveDetail } from '../../types/index/index'
+import { publicAssetUrl } from '../publicAssetUrl/publicAssetUrl'
 
 export type GenerationEffectChange = {
   generation: number
@@ -12,9 +13,15 @@ export type CatKey =
   | 'moveCategorySpecial'
 
 export const CAT_ICONS: Record<number, [string, CatKey]> = {
-  0: ['/assets/moves_category/state.png', 'moveCategoryStatus'],
-  1: ['/assets/moves_category/physical.png', 'moveCategoryPhysical'],
-  2: ['/assets/moves_category/special.png', 'moveCategorySpecial'],
+  0: [publicAssetUrl('/assets/moves_category/state.png'), 'moveCategoryStatus'],
+  1: [
+    publicAssetUrl('/assets/moves_category/physical.png'),
+    'moveCategoryPhysical',
+  ],
+  2: [
+    publicAssetUrl('/assets/moves_category/special.png'),
+    'moveCategorySpecial',
+  ],
 }
 
 export function getMaxGeneration(detail: MoveDetail | null | undefined) {
