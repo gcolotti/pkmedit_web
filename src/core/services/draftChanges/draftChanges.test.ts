@@ -121,6 +121,63 @@ describe('buildDraftChangeList', () => {
     expect(nicknameChange?.label).toContain(' -')
   })
 
+  it('names the ribbon when a ribbon flag or count changes', () => {
+    const ribbons = [
+      { id: 0, name: 'Kalos Champion', value: false },
+      { id: 94, name: 'Cool', value: false, count: 0, maxCount: 4 },
+    ]
+    const b = base({ cosmetic: { alpha: false, ribbons } as never })
+    const d = base({
+      cosmetic: {
+        alpha: false,
+        ribbons: [
+          { ...ribbons[0], value: true },
+          { ...ribbons[1], value: true, count: 3 },
+        ],
+      } as never,
+    })
+    const labels = buildDraftChangeList({ a: b }, { a: d }, t).map(
+      (change) => change.label.split(' - ')[1],
+    )
+    expect(labels).toEqual([
+      'ribbons: Kalos Champion',
+      'ribbons: Cool',
+      'ribbons: Cool',
+    ])
+  })
+
+  it('compares ribbons by id when the backend rebuilds a shorter list', () => {
+    // Unchecking an illegal ribbon drops it from the list the preview returns.
+    const kalos = { id: 0, name: 'Kalos Champion', value: true }
+    const g3 = {
+      id: 1,
+      name: 'Champion (Gen3)',
+      value: true,
+      obtainable: false,
+    }
+    const smile = { id: 50, name: 'Smile', value: true }
+    const b = base({ cosmetic: { ribbons: [kalos, g3, smile] } as never })
+    const d = base({ cosmetic: { ribbons: [kalos, smile] } as never })
+
+    const changes = buildDraftChangeList({ a: b }, { a: d }, t)
+
+    expect(changes).toEqual([
+      expect.objectContaining({
+        path: 'cosmetic.ribbons.1.value',
+        label: 'undefined - ribbons: Champion (Gen3)',
+        before: 'yes',
+        after: 'no',
+      }),
+    ])
+    expect(hasPokemonChanged(b, d)).toBe(true)
+    expect(
+      hasPokemonChanged(
+        b,
+        base({ cosmetic: { ribbons: [smile, kalos, g3] } as never }),
+      ),
+    ).toBe(false)
+  })
+
   it('skips drafts whose slot has no base detail', () => {
     const d = base()
     expect(buildDraftChangeList({}, { a: d }, t)).toEqual([])

@@ -91,6 +91,9 @@ export function DetailsAdvanced({
           <div className={sectionTitle}>{t('ribbons')}</div>
           <div className="grid sm:grid-cols-2">
             <RibbonGrid
+              emptyLabel={t('noRibbons')}
+              notObtainableLabel={t('ribbonNotObtainable')}
+              unverifiedLabel={t('ribbonsUnverified')}
               ribbons={cosmetic.ribbons}
               onChange={(ribbons) => onCosmeticChange({ ...cosmetic, ribbons })}
             />

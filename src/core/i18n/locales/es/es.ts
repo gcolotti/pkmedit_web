@@ -431,6 +431,10 @@ export const es = {
   fixRegenerateFromEncounterDescription:
     'Usá Generar legal para reconstruir el Pokémon desde el encuentro detectado.',
   ribbons: 'Cintas',
+  noRibbons: 'Este Pokémon no puede conseguir cintas.',
+  ribbonNotObtainable: 'No se puede obtener legalmente',
+  ribbonsUnverified:
+    'PKHeX no pudo identificar el encuentro de este Pokémon, así que se muestran todas las cintas de su formato sin verificar la legalidad.',
   htLanguage: 'Idioma del HT',
   unset: 'Sin definir',
   encryptionConstantTooltip:

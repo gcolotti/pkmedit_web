@@ -427,6 +427,10 @@ export const en = {
   fixRegenerateFromEncounterDescription:
     'Use Generate legal to rebuild the Pokemon from the detected encounter.',
   ribbons: 'Ribbons',
+  noRibbons: "This Pokémon can't get any ribbons.",
+  ribbonNotObtainable: 'Not obtainable legally',
+  ribbonsUnverified:
+    "PKHeX couldn't identify this Pokémon's encounter, so every ribbon of its format is listed without checking legality.",
   htLanguage: 'HT language',
   unset: 'Unset',
   encryptionConstantTooltip:

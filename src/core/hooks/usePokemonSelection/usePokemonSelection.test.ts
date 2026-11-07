@@ -148,6 +148,25 @@ describe('usePokemonSelection legality recheck', () => {
     expect(useDraftStore.getState().pokemonDrafts.a.legality).toEqual(oldReport)
   })
 
+  it('refreshes the ribbon list from the recheck without marking the input stale', async () => {
+    const ribbons = [
+      { id: 2, name: 'Sinnoh Champion', value: false, obtainable: true },
+      { id: 3, name: 'Best Friends', value: false, obtainable: true },
+    ]
+    const preview = makeDetail()
+    preview.cosmetic = { ...preview.cosmetic, ribbons }
+    const api = { previewPokemonUpdate: vi.fn().mockResolvedValue(preview) }
+    const { result } = renderSelection(api)
+
+    await act(async () => {
+      await result.current.recheckSelectedLegality()
+    })
+
+    const state = useDraftStore.getState()
+    expect(state.pokemonDrafts.a.cosmetic.ribbons).toEqual(ribbons)
+    expect(state.pokemonLegality.a.status).not.toBe('stale')
+  })
+
   it('ignores an in-flight recheck response when the draft input changes', async () => {
     let resolvePreview: (detail: PokemonDetail) => void = () => {}
     const api = {

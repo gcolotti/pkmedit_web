@@ -92,7 +92,7 @@ export async function recheckSelectedLegality(input: {
     )
       return
     input.setDrafts((cur) =>
-      mergePreviewSummary(cur, input.selectedSlotId!, preview),
+      mergePreviewLegality(cur, input.selectedSlotId!, preview),
     )
     writeSelectedLegality(
       input.selectedSlotId,
@@ -126,7 +126,10 @@ function isLatestInput(
   )
 }
 
-function mergePreviewSummary(
+// Takes the legality verdict and the ribbon list from the preview: which ribbons
+// are obtainable depends on the same encounter analysis. The preview was built
+// from this exact input (isLatestInput), so the held ribbons are unchanged.
+function mergePreviewLegality(
   current: Record<string, PokemonDetail>,
   selectedSlotId: string,
   preview: PokemonDetail,
@@ -142,6 +145,7 @@ function mergePreviewSummary(
         legal: preview.summary.legal,
         legalSeverity: preview.summary.legalSeverity,
       },
+      cosmetic: { ...latest.cosmetic, ribbons: preview.cosmetic.ribbons },
     },
   }
 }

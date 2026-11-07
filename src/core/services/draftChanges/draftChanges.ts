@@ -10,7 +10,14 @@ import {
   formatValue,
   labelPath,
 } from '../draftPathUtils/draftPathUtils'
-import { buildPokemonPayload } from '../pokemonPayload/pokemonPayload'
+import {
+  getRibbonIdFromPath,
+  readComparableValue,
+} from '../draftRibbons/draftRibbons'
+import {
+  buildComparablePokemonPayload,
+  buildPokemonPayload,
+} from '../pokemonPayload/pokemonPayload'
 import { areStructurallyEqual } from '../structuralEquality/structuralEquality'
 
 export function buildDraftRequests(
@@ -47,21 +54,52 @@ export function buildDraftChangeList(
   return Object.entries(drafts).flatMap(([slotId, draft]) => {
     const base = baseDetails[slotId]
     if (!base) return []
-    const basePayloadSource = buildPokemonPayload(base, saveTrainerLanguage)
-    const draftPayloadSource = buildPokemonPayload(draft, saveTrainerLanguage)
+    const basePayloadSource = buildComparablePokemonPayload(
+      base,
+      saveTrainerLanguage,
+    )
+    const draftPayloadSource = buildComparablePokemonPayload(
+      draft,
+      saveTrainerLanguage,
+    )
     if (areStructurallyEqual(basePayloadSource, draftPayloadSource)) return []
     const basePayload = flatten(basePayloadSource)
     const draftPayload = flatten(draftPayloadSource)
-    return Object.entries(draftPayload)
-      .filter(([path, value]) => !Object.is(basePayload[path], value))
-      .map(([path, value]) => ({
+    // Union of paths: a ribbon dropped from the draft only exists in the base.
+    const paths = new Set([
+      ...Object.keys(draftPayload),
+      ...Object.keys(basePayload),
+    ])
+    return [...paths].flatMap((path) => {
+      const before = readComparableValue(basePayload, path)
+      const after = readComparableValue(draftPayload, path)
+      if (Object.is(before, after)) return []
+      return {
         slotId,
         path,
-        label: `${draft.summary.speciesName} - ${labelPath(path, t)}`,
-        before: formatValue(basePayload[path], t, path),
-        after: formatValue(value, t, path),
-      }))
+        label: `${draft.summary.speciesName} - ${changeLabel(path, base, draft, t)}`,
+        before: formatValue(before, t, path),
+        after: formatValue(after, t, path),
+      }
+    })
   })
+}
+
+// Ribbon paths end in a generic "value"/"count", so name the ribbon instead.
+function changeLabel(
+  path: string,
+  base: PokemonDetail,
+  draft: PokemonDetail,
+  t: Translator,
+) {
+  const id = getRibbonIdFromPath(path)
+  const ribbon =
+    id === undefined
+      ? undefined
+      : [...draft.cosmetic.ribbons, ...base.cosmetic.ribbons].find(
+          (item) => item.id === id,
+        )
+  return ribbon ? `${t('ribbons')}: ${ribbon.name}` : labelPath(path, t)
 }
 
 export function hasPokemonChanged(
@@ -71,8 +109,8 @@ export function hasPokemonChanged(
 ) {
   if (!base || !draft) return false
   return !areStructurallyEqual(
-    buildPokemonPayload(base, saveTrainerLanguage),
-    buildPokemonPayload(draft, saveTrainerLanguage),
+    buildComparablePokemonPayload(base, saveTrainerLanguage),
+    buildComparablePokemonPayload(draft, saveTrainerLanguage),
   )
 }
 

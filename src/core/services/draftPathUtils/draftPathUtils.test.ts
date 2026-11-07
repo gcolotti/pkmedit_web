@@ -121,6 +121,15 @@ describe('writePath (via revertDraftPath)', () => {
       ...overrides,
     }) as unknown as PokemonDetail
 
+  it('reverts a ribbon by id even when the lists differ', () => {
+    const g3 = { id: 1, name: 'Champion (Gen3)', value: true }
+    const smile = { id: 50, name: 'Smile', value: true }
+    const base = makeDetail({ cosmetic: { ribbons: [g3, smile] } as never })
+    const draft = makeDetail({ cosmetic: { ribbons: [smile] } as never })
+    const result = revertDraftPath(base, draft, 'cosmetic.ribbons.1.value')
+    expect(result.cosmetic.ribbons).toEqual([smile, g3])
+  })
+
   it('reverts a summary field (species) to the base value', () => {
     const base = makeDetail({
       summary: { ...makeDetail().summary, species: 25 },

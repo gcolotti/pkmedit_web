@@ -4,6 +4,7 @@ import {
   getTypeName,
   TERA_TYPE_OVERRIDE_NONE,
 } from '../../utils/typeData/typeData'
+import { getRibbonIdFromPath, revertRibbon } from '../draftRibbons/draftRibbons'
 import { buildPokemonPayload } from '../pokemonPayload/pokemonPayload'
 
 const summaryPathMap: Record<string, string> = {
@@ -150,6 +151,8 @@ export function revertDraftPath(
   path: string,
 ) {
   const copy = structuredClone(draft)
+  const ribbonId = getRibbonIdFromPath(path)
+  if (ribbonId !== undefined) return revertRibbon(base, copy, ribbonId)
   const basePayload = flatten(buildPokemonPayload(base))
   const value = basePayload[path]
   writePath(copy, path, value)

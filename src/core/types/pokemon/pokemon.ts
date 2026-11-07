@@ -109,10 +109,18 @@ export type PokemonTrainer = {
   currentHandler: 0 | 1
 }
 
-export type PokemonFlag = {
+// id matches the ribbons catalog. The list holds the ribbons the Pokémon can
+// legally get plus any it holds illegally (obtainable: false). When PKHeX
+// matches no encounter it holds every ribbon of the format, unverified
+// (obtainable: null). count/maxCount only come with count ribbons (Gen 3
+// contest ranks, memory ribbons).
+export type PokemonRibbon = {
   id: number
   name: string
   value: boolean
+  count?: number | null
+  maxCount?: number | null
+  obtainable?: boolean | null
 }
 
 export type PokemonExtraByte = {
@@ -127,7 +135,7 @@ export type PokemonCosmetic = {
   scale: number
   contest: PokemonStats
   markings: number[]
-  ribbons: PokemonFlag[]
+  ribbons: PokemonRibbon[]
   homeTracker: number
   formArgument: number
   formArgumentRemain: number

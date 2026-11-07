@@ -1,4 +1,5 @@
 import type { PokemonDetail } from '../../types/index/index'
+import { toComparableRibbons } from '../draftRibbons/draftRibbons'
 import { syncHandlingTrainerLanguage } from '../handlingTrainerLanguage/handlingTrainerLanguage'
 
 export function buildPokemonPayload(
@@ -57,9 +58,28 @@ export function buildPokemonPayload(
   return payload
 }
 
+// Shape used to compare a draft against its base: ribbons keyed by id, held ones only.
+export function buildComparablePokemonPayload(
+  draft: PokemonDetail,
+  saveTrainerLanguage?: number | null,
+) {
+  const payload = buildPokemonPayload(draft, saveTrainerLanguage)
+  return {
+    ...payload,
+    cosmetic: {
+      ...payload.cosmetic,
+      ribbons: toComparableRibbons(payload.cosmetic.ribbons),
+    },
+  }
+}
+
+// Built from the comparable payload so refreshing the ribbon list from a
+// legality preview (names, limits, obtainable flags) does not count as new input.
 export function buildPokemonLegalityInputKey(
   draft: PokemonDetail,
   saveTrainerLanguage?: number | null,
 ) {
-  return JSON.stringify(buildPokemonPayload(draft, saveTrainerLanguage))
+  return JSON.stringify(
+    buildComparablePokemonPayload(draft, saveTrainerLanguage),
+  )
 }

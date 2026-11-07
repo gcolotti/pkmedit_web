@@ -451,6 +451,10 @@ export const ja = {
   fixRegenerateFromEncounterDescription:
     '合法を生成を使って、検出された出会いからポケモンを再構築します。',
   ribbons: 'リボン',
+  noRibbons: 'このポケモンはリボンを入手できません。',
+  ribbonNotObtainable: '正規には入手できません',
+  ribbonsUnverified:
+    'PKHeXがこのポケモンの出会い方を特定できなかったため、形式上のすべてのリボンを正規性の確認なしで表示しています。',
   htLanguage: 'HT言語',
   unset: '未設定',
   encryptionConstantTooltip:

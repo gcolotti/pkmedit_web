@@ -3,6 +3,7 @@ import { describe, expect, it } from 'vitest'
 import type { PokemonDetail } from '../../types/index/index'
 import { TERA_TYPE_OVERRIDE_NONE } from '../../utils/typeData/typeData'
 import {
+  buildComparablePokemonPayload,
   buildPokemonLegalityInputKey,
   buildPokemonPayload,
 } from './pokemonPayload'
@@ -158,7 +159,24 @@ describe('buildPokemonPayload', () => {
       baseDetail({ summary: { ...baseDetail().summary, level: 6 } }),
     )
 
-    expect(first).toBe(JSON.stringify(buildPokemonPayload(baseDetail())))
+    expect(first).toBe(
+      JSON.stringify(buildComparablePokemonPayload(baseDetail())),
+    )
     expect(second).not.toBe(first)
+  })
+
+  it('keys ribbons by what the pokemon holds, not by list metadata', () => {
+    const withRibbons = (ribbons: unknown[]) =>
+      buildPokemonLegalityInputKey(
+        baseDetail({ cosmetic: { alpha: false, ribbons } as never }),
+      )
+    const held = { id: 2, name: 'Sinnoh Champion', value: true }
+    const legal = { id: 3, name: 'Best Friends', value: false }
+
+    const unverified = withRibbons([{ ...held, obtainable: null }])
+    const verified = withRibbons([legal, { ...held, obtainable: true }])
+
+    expect(verified).toBe(unverified)
+    expect(withRibbons([{ ...held, value: false }])).not.toBe(unverified)
   })
 })
