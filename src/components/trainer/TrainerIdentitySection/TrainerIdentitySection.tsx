@@ -2,7 +2,10 @@ import type { Translator } from '../../../core/i18n/i18n/i18n'
 import type { CatalogEntry } from '../../../core/types/index/index'
 import type { TrainerInfo } from '../../../core/types/trainer/trainer'
 import { parseClampedNumberInput } from '../../../core/utils/numberInput/numberInput'
+import { NumberMaxInputGroup } from '../../ui/NumberMaxInputGroup/NumberMaxInputGroup'
 import { TrainerSection } from '../TrainerSection/TrainerSection'
+
+const defaultMaxMoney = 9_999_999
 
 export function TrainerIdentitySection({
   catalogs,
@@ -98,25 +101,17 @@ export function TrainerIdentitySection({
           />
         </label>
         {trainer.canEditMoney && (
-          <label className="grid min-w-0 gap-1.5">
+          <div className="grid min-w-0 gap-1.5">
             <span className="label text-[0.65rem]">{t('money')}</span>
-            <input
-              className="field"
-              max={9999999}
-              min={0}
-              type="number"
+            <NumberMaxInputGroup
+              label={t('money')}
+              max={trainer.maxMoney ?? defaultMaxMoney}
+              maxLabel={`${t('maxShort')} ${t('money')}`}
+              maxText={t('maxShort')}
               value={trainer.money}
-              onChange={(event) =>
-                onChange(
-                  'money',
-                  parseClampedNumberInput(event.target.value, {
-                    max: 9999999,
-                    min: 0,
-                  }),
-                )
-              }
+              onValueChange={(value) => onChange('money', value)}
             />
-          </label>
+          </div>
         )}
       </div>
     </TrainerSection>

@@ -2,11 +2,11 @@ import { fireEvent, render, screen } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import { describe, expect, it, vi } from 'vitest'
 
-import { ItemCountInputGroup } from './ItemCountInputGroup'
+import { NumberMaxInputGroup } from './NumberMaxInputGroup'
 
 function renderGroup(onValueChange = vi.fn()) {
   render(
-    <ItemCountInputGroup
+    <NumberMaxInputGroup
       label="Count: Potion"
       max={99}
       maxLabel="Max Count: Potion"
@@ -18,7 +18,7 @@ function renderGroup(onValueChange = vi.fn()) {
   return onValueChange
 }
 
-describe('ItemCountInputGroup', () => {
+describe('NumberMaxInputGroup', () => {
   it('sets the pocket maximum from the MAX button', async () => {
     const onValueChange = renderGroup()
 

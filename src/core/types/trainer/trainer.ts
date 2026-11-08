@@ -11,6 +11,8 @@ export type TrainerInfo = {
   lastSaved: string | null
   canEditPlayTime: boolean
   canEditMoney: boolean
+  // Per-game cap (PKHeX MaxMoney); optional for older backends.
+  maxMoney?: number
   saveKind: string
   gameFields: TrainerGameField[]
   gameActions: TrainerGameAction[]

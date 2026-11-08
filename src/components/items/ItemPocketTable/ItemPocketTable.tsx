@@ -6,7 +6,7 @@ import type {
   InventoryItemEntry,
   ItemPocket,
 } from '../../../core/types/index/index'
-import { ItemCountInputGroup } from '../ItemCountInputGroup/ItemCountInputGroup'
+import { NumberMaxInputGroup } from '../../ui/NumberMaxInputGroup/NumberMaxInputGroup'
 import { getItemMaxCount } from '../itemHelpers/itemHelpers'
 
 export function ItemPocketTable({
@@ -72,7 +72,8 @@ export function ItemPocketTable({
                     <option value={item.itemId}>{itemName}</option>
                   )}
                 </select>
-                <ItemCountInputGroup
+                <NumberMaxInputGroup
+                  inputClassName="text-center text-sm"
                   label={`${t('count')}: ${itemName}`}
                   max={getItemMaxCount(pocket, item.itemId)}
                   maxLabel={`${t('maxShort')} ${t('count')}: ${itemName}`}
