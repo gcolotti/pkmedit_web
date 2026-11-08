@@ -1,14 +1,20 @@
 import { CheckCircle2, XCircle } from 'lucide-react'
 
 import type { Translator } from '../../../../core/i18n/i18n/i18n'
-import type { LegalityReport as LegalityReportData } from '../../../../core/types/index/index'
+import type {
+  CatalogEntry,
+  LegalityReport as LegalityReportData,
+} from '../../../../core/types/index/index'
 import { LegalityCheckGroup } from '../LegalityCheckGroup/LegalityCheckGroup'
+import { buildMoveLegalityRows } from '../legalityMoveRows/legalityMoveRows'
 
 export function LegalityReport({
   legality,
+  moveCatalog,
   t,
 }: {
   legality: LegalityReportData | null
+  moveCatalog: CatalogEntry[]
   t: Translator
 }) {
   if (!legality) {
@@ -27,6 +33,25 @@ export function LegalityReport({
     list.push(check)
     groups.set(key, list)
   }
+
+  // Move legality never shows up in checks, so it gets its own groups; listed
+  // first, matching PKHeX's report order.
+  const moveGroups = [
+    {
+      title: t('moves'),
+      rows: buildMoveLegalityRows(legality.moves, moveCatalog, 'move', t),
+    },
+    {
+      title: t('legalityRelearnMoves'),
+      rows: buildMoveLegalityRows(
+        legality.relearnMoves,
+        moveCatalog,
+        'relearn',
+        t,
+      ),
+    },
+  ].filter((group) => group.rows.length > 0)
+  const hasDetail = moveGroups.length > 0 || groups.size > 0
 
   return (
     <div className="grid gap-3">
@@ -49,8 +74,15 @@ export function LegalityReport({
         </span>
       </div>
 
-      {groups.size > 0 ? (
+      {hasDetail ? (
         <div className="grid gap-2">
+          {moveGroups.map((group) => (
+            <LegalityCheckGroup
+              key={group.title}
+              checks={group.rows}
+              title={group.title}
+            />
+          ))}
           {[...groups.entries()].map(([title, checks]) => (
             <LegalityCheckGroup key={title} checks={checks} title={title} />
           ))}

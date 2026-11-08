@@ -54,6 +54,7 @@ function renderAdvanced(
       fixesError={null}
       fixesLoading={false}
       legality={legality}
+      moveCatalog={[]}
       t={t}
       onApplyAllSafeFixes={vi.fn()}
       onApplyFix={vi.fn()}

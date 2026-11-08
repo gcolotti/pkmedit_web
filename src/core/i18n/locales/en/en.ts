@@ -375,6 +375,11 @@ export const en = {
   reviewAndFix: 'Review & fix',
   alphaDropped: 'Alpha was lost in this encounter.',
   generateLegalError: 'Could not generate a legal Pokemon.',
+  legalityRelearnMoves: 'Relearn moves',
+  legalityEmptyMove: 'Empty',
+  legalityMoveRow: '{slot}: {move} — {detail}',
+  legalityMoveRowExpected: '{slot}: {move} — should be {expected}',
+  legalityMoveRowExpectedEmpty: '{slot}: {move} — should be empty',
   legalityReportTitle: 'Legality report',
   backToLegality: 'Back to Legality',
   backToDetails: 'Back to Details',
@@ -420,6 +425,9 @@ export const en = {
   fixMatchEncounterAbilityLabel: 'Match encounter ability',
   fixMatchEncounterAbilityDescription:
     'Switches to an ability slot the detected encounter allows, keeping the current ability when a regular slot has it.',
+  fixReplaceCurrentMovesLabel: 'Replace current moves',
+  fixReplaceCurrentMovesDescription:
+    'Replaces the current moves with a legal set PKHeX suggests for the current level.',
   fixReplaceRelearnMovesLabel: 'Replace relearn moves',
   fixReplaceRelearnMovesDescription:
     'Replaces relearn moves with the values generated from the detected encounter.',

@@ -1,5 +1,6 @@
 import type { Translator } from '../../../../core/i18n/i18n/i18n'
 import type {
+  CatalogEntry,
   LegalFix,
   LegalityReport as LegalityReportData,
 } from '../../../../core/types/index/index'
@@ -14,6 +15,7 @@ export function LegalityAdvanced({
   fixesError,
   fixesLoading,
   legality,
+  moveCatalog,
   onApplyAllSafeFixes,
   onApplyFix,
   onBack,
@@ -25,6 +27,7 @@ export function LegalityAdvanced({
   fixesError: string | null
   fixesLoading: boolean
   legality: LegalityReportData
+  moveCatalog: CatalogEntry[]
   onApplyAllSafeFixes: () => void
   onApplyFix: (fixId: string) => void
   onBack: () => void
@@ -41,7 +44,7 @@ export function LegalityAdvanced({
       title={`${t('legality')} · ${t('advanced')}`}
     >
       <div className="grid h-full min-h-0 gap-4 overflow-y-auto p-4">
-        <LegalityReport legality={legality} t={t} />
+        <LegalityReport legality={legality} moveCatalog={moveCatalog} t={t} />
 
         <section className="grid gap-2">
           <div className="label text-[0.7rem]">{t('fixes')}</div>

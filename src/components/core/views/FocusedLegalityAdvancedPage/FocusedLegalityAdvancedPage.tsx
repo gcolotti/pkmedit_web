@@ -123,6 +123,7 @@ export function FocusedLegalityAdvancedPage() {
         fixesError={fixesError}
         fixesLoading={fixesQuery.isFetching}
         legality={legality}
+        moveCatalog={state.catalogs.moves}
         t={state.t}
         onApplyAllSafeFixes={() => void applyAllSafeFixes(safeFixIds)}
         onApplyFix={(fixId) => void applyFix(fixId)}

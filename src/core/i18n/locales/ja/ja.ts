@@ -399,6 +399,11 @@ export const ja = {
   reviewAndFix: '確認して修正',
   alphaDropped: 'この出会いではアルファが失われました。',
   generateLegalError: '合法なポケモンを生成できませんでした。',
+  legalityRelearnMoves: '思い出しわざ',
+  legalityEmptyMove: 'なし',
+  legalityMoveRow: '{slot}: {move} — {detail}',
+  legalityMoveRowExpected: '{slot}: {move} — 正しくは {expected}',
+  legalityMoveRowExpectedEmpty: '{slot}: {move} — 空であるべき',
   legalityReportTitle: '合法性レポート',
   backToLegality: '合法性に戻る',
   backToDetails: '詳細に戻る',
@@ -444,6 +449,9 @@ export const ja = {
   fixMatchEncounterAbilityLabel: '特性を出会いに合わせる',
   fixMatchEncounterAbilityDescription:
     '検出された出会いが許可する特性スロットに変更します。通常スロットに同じ特性があれば維持します。',
+  fixReplaceCurrentMovesLabel: '現在のわざを置換',
+  fixReplaceCurrentMovesDescription:
+    'PKHeXが現在のレベルに合わせて提案する合法なわざに置き換えます。',
   fixReplaceRelearnMovesLabel: '思い出しわざを置換',
   fixReplaceRelearnMovesDescription:
     '検出された出会いから生成された思い出しわざに置き換えます。',

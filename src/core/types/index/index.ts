@@ -74,12 +74,14 @@ import type {
   DraftLegalityResponse,
   DraftLegalityViolation,
   LegalityReport,
+  MoveLegality,
 } from '../legality/legality'
 export type {
   DraftChange,
   DraftLegalityResponse,
   DraftLegalityViolation,
   LegalityReport,
+  MoveLegality,
 }
 
 import type { AbilityDetail } from '../abilityDetail/abilityDetail'

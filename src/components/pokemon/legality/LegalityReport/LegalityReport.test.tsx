@@ -9,7 +9,7 @@ const t = ((key: string) => key) as Translator
 
 describe('LegalityReport', () => {
   it('shows the unchecked message when legality is null', () => {
-    render(<LegalityReportComponent legality={null} t={t} />)
+    render(<LegalityReportComponent legality={null} moveCatalog={[]} t={t} />)
     expect(screen.getByText('legalityUnchecked')).toBeInTheDocument()
   })
 
@@ -21,7 +21,7 @@ describe('LegalityReport', () => {
       report: 'all good',
       checks: [],
     }
-    render(<LegalityReportComponent legality={report} t={t} />)
+    render(<LegalityReportComponent legality={report} moveCatalog={[]} t={t} />)
     expect(screen.getByText('legalityLegal')).toBeInTheDocument()
   })
 
@@ -37,7 +37,7 @@ describe('LegalityReport', () => {
         { identifier: 'PID', severity: 'error', code: '0', valid: true, message: 'pid ok' },
       ],
     }
-    render(<LegalityReportComponent legality={report} t={t} />)
+    render(<LegalityReportComponent legality={report} moveCatalog={[]} t={t} />)
 
     expect(screen.getByText('PID')).toBeInTheDocument()
     expect(screen.getByText('Encounter')).toBeInTheDocument()
@@ -56,9 +56,43 @@ describe('LegalityReport', () => {
         { identifier: '', severity: 'error', code: '0', valid: false, message: 'orphan' },
       ],
     }
-    render(<LegalityReportComponent legality={report} t={t} />)
+    render(<LegalityReportComponent legality={report} moveCatalog={[]} t={t} />)
     expect(screen.getByText('checks')).toBeInTheDocument()
     expect(screen.getByText('orphan')).toBeInTheDocument()
+  })
+
+  it('shows illegal moves even when every check passes', () => {
+    const report: LegalityReportType = {
+      slotId: 'a',
+      legal: false,
+      severity: 'Valid',
+      report: '',
+      checks: [
+        { identifier: 'Ball', severity: 'Valid', code: '0', valid: true, message: 'ball ok' },
+      ],
+      moves: [
+        {
+          slot: 0,
+          moveId: 606,
+          valid: false,
+          method: 'Unobtainable',
+          expectedMoveId: null,
+          message: 'Invalid Move.',
+        },
+      ],
+      relearnMoves: [],
+    }
+    render(
+      <LegalityReportComponent
+        legality={report}
+        moveCatalog={[{ id: 606, name: 'V-create' }]}
+        t={t}
+      />,
+    )
+
+    expect(screen.getByText('moves')).toBeInTheDocument()
+    expect(screen.getByText('legalityMoveRow')).toBeInTheDocument()
+    expect(screen.queryByText('legalityRelearnMoves')).not.toBeInTheDocument()
   })
 
   it('falls back to the report text when there are no checks', () => {
@@ -69,7 +103,7 @@ describe('LegalityReport', () => {
       report: 'no detail available',
       checks: [],
     }
-    render(<LegalityReportComponent legality={report} t={t} />)
+    render(<LegalityReportComponent legality={report} moveCatalog={[]} t={t} />)
     expect(screen.getByText('no detail available')).toBeInTheDocument()
   })
 })

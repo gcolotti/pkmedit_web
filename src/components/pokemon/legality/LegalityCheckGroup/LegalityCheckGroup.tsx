@@ -1,12 +1,12 @@
 import { CheckCircle2, XCircle } from 'lucide-react'
 
-import type { LegalityReport as LegalityReportData } from '../../../../core/types/index/index'
+import type { LegalityRow } from '../legalityMoveRows/legalityMoveRows'
 
 export function LegalityCheckGroup({
   checks,
   title,
 }: {
-  checks: LegalityReportData['checks']
+  checks: LegalityRow[]
   title: string
 }) {
   return (

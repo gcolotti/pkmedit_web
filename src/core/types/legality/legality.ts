@@ -1,3 +1,14 @@
+// Per-slot result of PKHeX's move parse. expectedMoveId is set when PKHeX knows
+// which move belongs in the slot (e.g. egg move order, Gen 1/2 learn order).
+export type MoveLegality = {
+  slot: number
+  moveId: number
+  valid: boolean
+  method: string
+  expectedMoveId: number | null
+  message: string
+}
+
 export type LegalityReport = {
   slotId: string
   legal: boolean
@@ -10,6 +21,9 @@ export type LegalityReport = {
     valid: boolean
     message: string
   }>
+  // Optional: reports persisted before the backend exposed them lack these.
+  moves?: MoveLegality[]
+  relearnMoves?: MoveLegality[]
 }
 
 export type DraftChange = {

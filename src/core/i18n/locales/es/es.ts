@@ -379,6 +379,11 @@ export const es = {
   reviewAndFix: 'Revisar y corregir',
   alphaDropped: 'Se perdió el Alfa en este encuentro.',
   generateLegalError: 'No se pudo generar un Pokémon legal.',
+  legalityRelearnMoves: 'Movimientos de reaprendizaje',
+  legalityEmptyMove: 'Vacío',
+  legalityMoveRow: '{slot}: {move} — {detail}',
+  legalityMoveRowExpected: '{slot}: {move} — debería ser {expected}',
+  legalityMoveRowExpectedEmpty: '{slot}: {move} — debería estar vacío',
   legalityReportTitle: 'Reporte de legalidad',
   backToLegality: 'Volver a Legalidad',
   backToDetails: 'Volver a Detalles',
@@ -424,6 +429,9 @@ export const es = {
   fixMatchEncounterAbilityLabel: 'Ajustar habilidad al encuentro',
   fixMatchEncounterAbilityDescription:
     'Cambia a una habilidad que el encuentro detectado permite, conservando la actual si un slot regular la tiene.',
+  fixReplaceCurrentMovesLabel: 'Reemplazar movimientos actuales',
+  fixReplaceCurrentMovesDescription:
+    'Reemplaza los movimientos actuales por un set legal que PKHeX sugiere para el nivel actual.',
   fixReplaceRelearnMovesLabel: 'Reemplazar movimientos relearn',
   fixReplaceRelearnMovesDescription:
     'Reemplaza movimientos relearn con los generados desde el encuentro detectado.',
