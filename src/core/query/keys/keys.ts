@@ -21,6 +21,8 @@ export const qk = {
     ['pokemon', sessionId, slotId] as const,
   trainerBase: (sessionId: string) => ['trainerBase', sessionId] as const,
   itemsBase: (sessionId: string) => ['itemsBase', sessionId] as const,
+  saveItemCatalog: (sessionId: string, language: Language) =>
+    ['saveItemCatalog', sessionId, language] as const,
   undergroundBase: (sessionId: string) =>
     ['undergroundBase', sessionId] as const,
   raidsBase: (sessionId: string) => ['raidsBase', sessionId] as const,

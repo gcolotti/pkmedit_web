@@ -5,7 +5,6 @@ import { useShallow } from 'zustand/react/shallow'
 import { useTranslator } from '../../i18n/useTranslator/useTranslator'
 import { qk } from '../../query/keys/keys'
 import { useApiStatus } from '../../query/useApiStatus/useApiStatus'
-import { useCatalogs } from '../../query/useCatalogs/useCatalogs'
 import { useSavesList } from '../../query/useSavesList/useSavesList'
 import { ApiClient } from '../../services/api/api'
 import {
@@ -13,8 +12,8 @@ import {
   readApiRegistration,
 } from '../../services/storage/storage'
 import { useShellStore } from '../../state/shellStore/shellStore'
-import { defaultCatalogs } from '../../utils/defaultCatalogs/defaultCatalogs'
 import { useSaveWorkspace } from '../useSaveWorkspace/useSaveWorkspace'
+import { useWorkspaceCatalogs } from '../useWorkspaceCatalogs/useWorkspaceCatalogs'
 import { buildWorkspaceSubBlocks } from '../workspaceSubBlocks/workspaceSubBlocks'
 
 const toErrorMessage = (error: unknown) =>
@@ -57,7 +56,6 @@ export function useWorkspaceController() {
   )
   const queryClient = useQueryClient()
   const apiStatusQuery = useApiStatus(api, apiBase)
-  const catalogsQuery = useCatalogs(api, apiBase, language)
   const savesListQuery = useSavesList(api, apiBase)
   const effectiveSelectedSave =
     selectedSave || savesListQuery.data?.[0]?.relativePath || ''
@@ -67,6 +65,12 @@ export function useWorkspaceController() {
   )
   const workspace = useSaveWorkspace(api, t, allowIllegalChanges, refreshSaves)
   const workspaceActionsRef = useRef(workspace.actions)
+  const catalogs = useWorkspaceCatalogs(
+    api,
+    apiBase,
+    language,
+    workspace.state.summary?.sessionId,
+  )
 
   useEffect(() => {
     workspaceActionsRef.current = workspace.actions
@@ -136,7 +140,7 @@ export function useWorkspaceController() {
       apiBase,
       apiRegistration,
       apiStatus,
-      catalogs: catalogsQuery.data ?? defaultCatalogs,
+      catalogs,
       language,
       saves: savesListQuery.data ?? [],
       selectedSave: effectiveSelectedSave,

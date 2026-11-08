@@ -60,6 +60,7 @@ export class ApiClient {
   ) => this.pokemon.checkDraft(s, c, a)
   getTrainerInfo = (s: string) => this.pokemon.getTrainerInfo(s)
   getCatalogs = () => this.catalog.getCatalogs()
+  getSaveItemCatalog = (s: string) => this.catalog.getSaveItemCatalog(s)
   getItemBag = (s: string) => this.item.getItemBag(s)
   getDonuts = (s: string) => this.item.getDonuts(s)
   previewDonut = (s: string, b: number[], n: number) =>

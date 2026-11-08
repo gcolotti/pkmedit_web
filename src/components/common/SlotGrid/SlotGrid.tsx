@@ -1,10 +1,10 @@
 import { CircleAlert, Sparkles } from 'lucide-react'
-import { memo } from 'react'
+import { memo, useMemo } from 'react'
 
 import type { Translator } from '../../../core/i18n/i18n/i18n'
 import type { CatalogEntry } from '../../../core/types/index/index'
 import type { PokemonSummary } from '../../../core/types/pokemon/pokemon'
-import { getHeldItemImageUrl } from '../../../core/utils/wikiDexAssets/wikiDexAssets'
+import { createItemImageResolver } from '../../../core/utils/wikiDexAssets/wikiDexAssets'
 import { AlphaIcon } from '../../ui/AlphaIcon/AlphaIcon'
 import { PokemonSprite } from '../../ui/PokemonSprite/PokemonSprite'
 
@@ -43,6 +43,10 @@ export const SlotGrid = memo(function SlotGrid({
   t: Translator
 }) {
   const denseColumnCount = getDenseSlotGridColumnCount(slots.length)
+  const getItemImageUrl = useMemo(
+    () => createItemImageResolver(itemCatalog),
+    [itemCatalog],
+  )
   const grid = dense ? '' : 'grid-cols-2 sm:grid-cols-3'
   const gridStyle = dense
     ? { gridTemplateColumns: `repeat(${denseColumnCount}, minmax(0, 1fr))` }
@@ -58,6 +62,7 @@ export const SlotGrid = memo(function SlotGrid({
         const showItemIcon = hasItem && (showHeldItems || !dense)
         const dim = heldItemsSupported && showHeldItems && hasItem
         const heldItemName = getCatalogName(itemCatalog, slot.heldItem)
+        const heldItemImageUrl = getItemImageUrl(slot.heldItem)
         const heldItemLabel = heldItemName
           ? `${t('heldItem')}: ${heldItemName}`
           : undefined
@@ -100,14 +105,14 @@ export const SlotGrid = memo(function SlotGrid({
                 aria-label={heldItemLabel}
                 className="group/item absolute bottom-1 right-1 flex h-6 w-6 items-center justify-center"
               >
-                {getHeldItemImageUrl(slot.heldItem) && (
+                {heldItemImageUrl && (
                   <img
                     alt=""
                     aria-hidden="true"
                     className="h-full w-full object-contain"
                     decoding="async"
                     loading="lazy"
-                    src={getHeldItemImageUrl(slot.heldItem)}
+                    src={heldItemImageUrl}
                   />
                 )}
                 {heldItemLabel && (

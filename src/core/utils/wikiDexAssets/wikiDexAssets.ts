@@ -3,6 +3,7 @@
 // ball/item ID space, identical to GameInfo.GetStrings(lang).balllist/itemlist.
 // Ball icons are 20x20 PNGs. Item icons are normalized 28x28 RGBA PNGs.
 
+import type { CatalogEntry } from '../../types/index/index'
 import { publicAssetUrl } from '../publicAssetUrl/publicAssetUrl'
 
 export const TYPE_CHART_MULTIPLIER_IMAGE_URLS: Record<number, string> = {
@@ -1182,4 +1183,18 @@ export function getBallImageUrl(id: number): string | undefined {
 export function getHeldItemImageUrl(id: number): string | undefined {
   const url = HELD_ITEM_IMAGE_URLS[id]
   return url ? publicAssetUrl(url) : undefined
+}
+
+// Save-scoped item catalogs map Gen 1-3 item IDs to their Gen 4+ sprite ID;
+// entries without spriteId are already in the Gen 4+ space.
+export function createItemImageResolver(
+  catalog: CatalogEntry[],
+): (id: number) => string | undefined {
+  const spriteIds = new Map<number, number | null | undefined>()
+  for (const entry of catalog) spriteIds.set(entry.id, entry.spriteId)
+  return (id) => {
+    const spriteId = spriteIds.get(id)
+    if (spriteId === null) return undefined
+    return getHeldItemImageUrl(spriteId ?? id)
+  }
 }

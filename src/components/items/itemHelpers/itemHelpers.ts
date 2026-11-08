@@ -1,5 +1,16 @@
 import type { CatalogEntry, ItemPocket } from '../../../core/types/index/index'
 
+export function getItemMaxCount(pocket: ItemPocket, itemId: number): number {
+  return (
+    pocket.itemMaxCounts?.find((entry) => entry.itemId === itemId)?.maxCount ??
+    pocket.maxCount
+  )
+}
+
+function clampCount(pocket: ItemPocket, itemId: number, count: number) {
+  return Math.max(0, Math.min(count, getItemMaxCount(pocket, itemId)))
+}
+
 export function setItemField(
   pocket: ItemPocket,
   itemIndex: number,
@@ -8,17 +19,12 @@ export function setItemField(
 ): ItemPocket {
   return {
     ...pocket,
-    items: pocket.items.map((item, i) =>
-      i === itemIndex
-        ? {
-            ...item,
-            [field]:
-              field === 'count'
-                ? Math.max(0, Math.min(value, pocket.maxCount))
-                : value,
-          }
-        : item,
-    ),
+    items: pocket.items.map((item, i) => {
+      if (i !== itemIndex) return item
+      return field === 'count'
+        ? { ...item, count: clampCount(pocket, item.itemId, value) }
+        : { itemId: value, count: clampCount(pocket, value, item.count) }
+    }),
   }
 }
 
@@ -49,9 +55,8 @@ export function addItem(
 }
 
 export function giveAllItems(pocket: ItemPocket, count: number): ItemPocket {
-  const maxCount = Math.min(count, pocket.maxCount)
   const items = pocket.legalItemIds
     .slice(0, pocket.maxSlots)
-    .map((itemId) => ({ itemId, count: maxCount }))
+    .map((itemId) => ({ itemId, count: clampCount(pocket, itemId, count) }))
   return { ...pocket, items }
 }

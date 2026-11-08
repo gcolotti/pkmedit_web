@@ -1,9 +1,11 @@
 import { ArrowUp, Crown } from 'lucide-react'
 
-const controlBase =
-  'flex h-9 min-h-9 w-full flex-col items-center justify-center rounded border leading-none transition'
-const controlNeutral =
-  'border-black/10 bg-white/80 text-stone-400 hover:border-stone-400 hover:text-stone-600 dark:border-white/10 dark:bg-white/10 dark:text-stone-500 dark:hover:text-stone-300'
+import {
+  inputGroupControlClassName,
+  inputGroupControlNeutralClassName as controlNeutral,
+} from '../../../ui/InputGroupButton/InputGroupButton'
+
+const controlBase = `${inputGroupControlClassName} h-9 min-h-9`
 const controlActive =
   'border-lagoon/60 bg-lagoon/20 text-lagoon dark:bg-lagoon/20'
 

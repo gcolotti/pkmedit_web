@@ -1,6 +1,7 @@
 import type {
   AbilityDetail,
   CatalogBundle,
+  CatalogEntry,
   Language,
   MoveDetail,
 } from '../../types/index/index'
@@ -31,6 +32,15 @@ export class CatalogApi {
     )
     setTypeCatalog(bundle.types)
     return bundle
+  }
+
+  // Bag/held-item names in the open save's own item ID space (Gen 1-3 differ
+  // from the global Gen 4+ list returned by getCatalogs).
+  async getSaveItemCatalog(sessionId: string): Promise<CatalogEntry[]> {
+    const response: { entries: CatalogEntry[] } = await this.requestJson(
+      `/api/saves/${sessionId}/catalogs/items?lang=${this.getLanguage()}`,
+    )
+    return response.entries ?? []
   }
 
   async getMoveDetails(

@@ -1,21 +1,6 @@
 import { parseClampedNumberInput } from '../../../../core/utils/numberInput/numberInput'
+import { InputGroupStackedButton } from '../../../ui/InputGroupButton/InputGroupButton'
 import { inputClassName } from '../StatsGroupControls/StatsGroupControls'
-
-const controlBase =
-  'flex h-9 min-h-9 w-full flex-col items-center justify-center rounded border leading-none transition'
-const controlNeutral =
-  'border-black/10 bg-white/80 text-stone-400 hover:border-stone-400 hover:text-stone-600 dark:border-white/10 dark:bg-white/10 dark:text-stone-500 dark:hover:text-stone-300'
-
-function StackedLabel({ label }: { label: string }) {
-  return Array.from(label.toUpperCase()).map((letter, index) => (
-    <span
-      key={`${letter}-${index}`}
-      className="text-[0.4rem] font-bold leading-tight"
-    >
-      {letter}
-    </span>
-  ))
-}
 
 export function EffortInputGroup({
   fieldClassName,
@@ -42,14 +27,13 @@ export function EffortInputGroup({
 }) {
   return (
     <div className="col-span-3 grid h-9 grid-cols-[1.25rem_minmax(2.25rem,3.75rem)_1.25rem] items-stretch">
-      <button
-        aria-label={minLabel}
-        className={`${controlBase} ${controlNeutral} !rounded-r-none`}
-        type="button"
+      <InputGroupStackedButton
+        className="h-9 min-h-9"
+        label={minLabel}
+        side="start"
+        text={minText}
         onClick={() => onValueChange(0)}
-      >
-        <StackedLabel label={minText} />
-      </button>
+      />
       <input
         aria-invalid={invalid || undefined}
         aria-label={label}
@@ -64,14 +48,13 @@ export function EffortInputGroup({
           )
         }
       />
-      <button
-        aria-label={maxLabel}
-        className={`${controlBase} ${controlNeutral} !rounded-l-none border-l-0`}
-        type="button"
+      <InputGroupStackedButton
+        className="h-9 min-h-9"
+        label={maxLabel}
+        side="end"
+        text={maxText}
         onClick={() => onValueChange(max)}
-      >
-        <StackedLabel label={maxText} />
-      </button>
+      />
     </div>
   )
 }

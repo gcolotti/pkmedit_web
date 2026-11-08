@@ -50,6 +50,22 @@ describe('CatalogApi', () => {
     })
   })
 
+  it('getSaveItemCatalog fetches the save-scoped item names', async () => {
+    let url = ''
+    server.use(
+      http.get('*/api/saves/:id/catalogs/items', ({ request }) => {
+        url = request.url
+        return HttpResponse.json({
+          language: 'en',
+          entries: [{ id: 5, name: 'Poké Ball', spriteId: 4 }],
+        })
+      }),
+    )
+    const result = await make().getSaveItemCatalog('ses-1')
+    expect(url).toMatch(/\/api\/saves\/ses-1\/catalogs\/items\?lang=en$/)
+    expect(result).toEqual([{ id: 5, name: 'Poké Ball', spriteId: 4 }])
+  })
+
   it('getMoveDetails omits ?ids when none provided', async () => {
     let url = ''
     server.use(

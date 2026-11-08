@@ -1,9 +1,11 @@
+import { useMemo } from 'react'
+
 import type { Translator } from '../../../../core/i18n/i18n/i18n'
 import type {
   CatalogBundle,
   PokemonDetail,
 } from '../../../../core/types/index/index'
-import { getHeldItemImageUrl } from '../../../../core/utils/wikiDexAssets/wikiDexAssets'
+import { createItemImageResolver } from '../../../../core/utils/wikiDexAssets/wikiDexAssets'
 import { CatalogSearchCombobox } from '../../../ui/catalog-select/CatalogSearchCombobox/CatalogSearchCombobox'
 
 export function MainTabHeldItemSelect({
@@ -17,13 +19,17 @@ export function MainTabHeldItemSelect({
   t: Translator
   update: (mutate: (copy: PokemonDetail) => void) => void
 }) {
+  const getImageUrl = useMemo(
+    () => createItemImageResolver(catalogs.items),
+    [catalogs.items],
+  )
   return (
     <CatalogSearchCombobox
       id="item"
       clearValue={0}
       emptyLabel={t('none')}
       entries={draft.contextCatalogs.heldItems}
-      getImageUrl={getHeldItemImageUrl}
+      getImageUrl={getImageUrl}
       label={t('heldItem')}
       selectedEntry={catalogs.items.find(
         (entry) => entry.id === draft.summary.heldItem,

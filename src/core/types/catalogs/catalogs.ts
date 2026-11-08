@@ -13,6 +13,9 @@ export type CatalogEntry = {
   upStat?: number | null
   downStat?: number | null
   color?: number | null
+  // Save-scoped items only: Gen 4+ item ID for the icon (Gen 1-3 bags use
+  // their own ID space). null = no icon; undefined = id is already Gen 4+.
+  spriteId?: number | null
 }
 
 export type CatalogBundle = {
