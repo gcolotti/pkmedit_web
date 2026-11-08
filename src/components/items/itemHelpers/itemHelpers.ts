@@ -1,4 +1,4 @@
-import type { CatalogEntry, ItemPocket } from '../../../core/types/index/index'
+import type { ItemPocket } from '../../../core/types/index/index'
 
 export function getItemMaxCount(pocket: ItemPocket, itemId: number): number {
   return (
@@ -28,6 +28,20 @@ export function setItemField(
   }
 }
 
+// Bag order is saved as-is, so reordering changes the in-game list order.
+export function moveItem(
+  pocket: ItemPocket,
+  itemIndex: number,
+  offset: -1 | 1,
+): ItemPocket {
+  const target = itemIndex + offset
+  if (target < 0 || target >= pocket.items.length) return pocket
+  const items = [...pocket.items]
+  const [moved] = items.splice(itemIndex, 1)
+  items.splice(target, 0, moved)
+  return { ...pocket, items }
+}
+
 export function removeItem(pocket: ItemPocket, itemIndex: number): ItemPocket {
   return {
     ...pocket,
@@ -35,22 +49,18 @@ export function removeItem(pocket: ItemPocket, itemIndex: number): ItemPocket {
   }
 }
 
-export function addItem(
-  pocket: ItemPocket,
-  pocketCatalog: CatalogEntry[],
-): ItemPocket {
-  const unused = pocketCatalog.find(
-    (entry) => !pocket.items.some((item) => item.itemId === entry.id),
-  )
+// Picked from the add field: new items enter at their max; an item already in
+// the pocket is topped up to its max instead of duplicated.
+export function addItemAtMax(pocket: ItemPocket, itemId: number): ItemPocket {
+  const count = getItemMaxCount(pocket, itemId)
+  const exists = pocket.items.some((item) => item.itemId === itemId)
   return {
     ...pocket,
-    items: [
-      ...pocket.items,
-      {
-        itemId: unused?.id ?? pocketCatalog[0]?.id ?? 1,
-        count: 1,
-      },
-    ],
+    items: exists
+      ? pocket.items.map((item) =>
+          item.itemId === itemId ? { ...item, count } : item,
+        )
+      : [...pocket.items, { itemId, count }],
   }
 }
 

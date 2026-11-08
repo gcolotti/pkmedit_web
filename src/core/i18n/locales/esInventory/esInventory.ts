@@ -3,6 +3,7 @@ import { esTrainerSave } from '../esTrainerSave/esTrainerSave'
 
 export const esInventory = {
   addItem: 'Agregar objeto',
+  addItemSearch: 'Buscá un objeto para agregar…',
   collectAllColorfulScrews: 'Recolectar todos los Tornillos Coloridos',
   collectAllTechnicalMachines: 'Recolectar todas las Máquinas Técnicas',
   count: 'Cantidad',
@@ -11,6 +12,8 @@ export const esInventory = {
   hyperspaceSurveyPoints: 'P.E. Hiperespacio',
   images: 'Imágenes',
   infinite: 'Infinito',
+  moveItemDown: 'Bajar',
+  moveItemUp: 'Subir',
   item: 'Objeto',
   itemBag: 'Bolsa de objetos',
   items: 'Objetos',

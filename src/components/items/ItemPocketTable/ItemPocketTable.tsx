@@ -7,6 +7,7 @@ import type {
   ItemPocket,
 } from '../../../core/types/index/index'
 import { NumberMaxInputGroup } from '../../ui/NumberMaxInputGroup/NumberMaxInputGroup'
+import { ReorderButtons } from '../../ui/ReorderButtons/ReorderButtons'
 import { getItemMaxCount } from '../itemHelpers/itemHelpers'
 
 export function ItemPocketTable({
@@ -16,6 +17,7 @@ export function ItemPocketTable({
   pocket,
   t,
   onExpandedItemIndexChange,
+  onMoveItem,
   onRemoveItem,
   onSetItemField,
 }: {
@@ -25,6 +27,7 @@ export function ItemPocketTable({
   pocket: ItemPocket
   t: Translator
   onExpandedItemIndexChange: (index: number | null) => void
+  onMoveItem: (index: number, offset: -1 | 1) => void
   onRemoveItem: (index: number) => void
   onSetItemField: (
     index: number,
@@ -34,7 +37,8 @@ export function ItemPocketTable({
 }) {
   return (
     <div className="grid gap-0 overflow-hidden rounded-md border border-black/10 dark:border-white/10">
-      <div className="grid grid-cols-[minmax(0,1fr)_6.5rem_2rem] gap-2 border-b border-black/10 bg-black/5 px-3 py-2 text-xs font-bold dark:border-white/10 dark:bg-white/5">
+      <div className="grid grid-cols-[1.25rem_minmax(0,1fr)_6.5rem_2rem] gap-2 border-b border-black/10 bg-black/5 px-3 py-2 text-xs font-bold dark:border-white/10 dark:bg-white/5">
+        <span />
         <span>{t('item')}</span>
         <span className="text-center">{t('count')}</span>
         <span />
@@ -50,8 +54,16 @@ export function ItemPocketTable({
             return (
               <div
                 key={index}
-                className="grid grid-cols-[minmax(0,1fr)_6.5rem_2rem] items-center gap-2 border-b border-black/5 px-3 py-1.5 last:border-0 dark:border-white/5"
+                className="grid grid-cols-[1.25rem_minmax(0,1fr)_6.5rem_2rem] items-center gap-2 border-b border-black/5 px-3 py-1.5 last:border-0 dark:border-white/5"
               >
+                <ReorderButtons
+                  canMoveDown={index < pocket.items.length - 1}
+                  canMoveUp={index > 0}
+                  moveDownLabel={`${t('moveItemDown')}: ${itemName}`}
+                  moveUpLabel={`${t('moveItemUp')}: ${itemName}`}
+                  onMoveDown={() => onMoveItem(index, 1)}
+                  onMoveUp={() => onMoveItem(index, -1)}
+                />
                 <select
                   className="field h-8 py-0 text-sm"
                   value={item.itemId}

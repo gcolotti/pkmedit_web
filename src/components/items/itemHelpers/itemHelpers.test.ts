@@ -1,7 +1,13 @@
 import { describe, expect, it } from 'vitest'
 
 import type { ItemPocket } from '../../../core/types/index/index'
-import { getItemMaxCount, giveAllItems, setItemField } from './itemHelpers'
+import {
+  addItemAtMax,
+  getItemMaxCount,
+  giveAllItems,
+  moveItem,
+  setItemField,
+} from './itemHelpers'
 
 const TM01 = 191
 const HM01 = 243
@@ -57,5 +63,45 @@ describe('giveAllItems', () => {
       { itemId: TM01, count: 99 },
       { itemId: HM01, count: 1 },
     ])
+  })
+})
+
+describe('addItemAtMax', () => {
+  it('adds a new item at its own max', () => {
+    expect(addItemAtMax(tmhmPocket(), HM01).items).toEqual([
+      { itemId: TM01, count: 5 },
+      { itemId: HM01, count: 1 },
+    ])
+  })
+
+  it('tops up an item already in the pocket instead of duplicating it', () => {
+    expect(addItemAtMax(tmhmPocket(), TM01).items).toEqual([
+      { itemId: TM01, count: 99 },
+    ])
+  })
+})
+
+describe('moveItem', () => {
+  const pocket = tmhmPocket({
+    items: [
+      { itemId: TM01, count: 5 },
+      { itemId: HM01, count: 1 },
+    ],
+  })
+
+  it('swaps a row with its neighbour', () => {
+    expect(moveItem(pocket, 1, -1).items.map((item) => item.itemId)).toEqual([
+      HM01,
+      TM01,
+    ])
+    expect(moveItem(pocket, 0, 1).items.map((item) => item.itemId)).toEqual([
+      HM01,
+      TM01,
+    ])
+  })
+
+  it('leaves the pocket untouched at the edges', () => {
+    expect(moveItem(pocket, 0, -1)).toBe(pocket)
+    expect(moveItem(pocket, 1, 1)).toBe(pocket)
   })
 })

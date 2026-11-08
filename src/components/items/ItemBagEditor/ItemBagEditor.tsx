@@ -7,10 +7,12 @@ import type {
   ItemPocket,
   SaveSectionStatus,
 } from '../../../core/types/index/index'
+import { createItemImageResolver } from '../../../core/utils/wikiDexAssets/wikiDexAssets'
 import { ItemBagActions } from '../ItemBagActions/ItemBagActions'
 import {
-  addItem as addToPocket,
+  addItemAtMax,
   giveAllItems,
+  moveItem as moveInPocket,
   removeItem as removeFromPocket,
   setItemField as setInPocket,
 } from '../itemHelpers/itemHelpers'
@@ -41,6 +43,10 @@ export function ItemBagEditor({
     for (const entry of itemCatalog) map.set(entry.id, entry.name)
     return map
   }, [itemCatalog])
+  const getItemImageUrl = useMemo(
+    () => createItemImageResolver(itemCatalog),
+    [itemCatalog],
+  )
 
   if (!current) {
     return (
@@ -68,10 +74,7 @@ export function ItemBagEditor({
   const pocketItemCatalog = itemCatalog.filter((entry) =>
     legalItemIds.has(entry.id),
   )
-  const hasUnusedLegalItem = pocketItemCatalog.some(
-    (entry) => !pocket.items.some((item) => item.itemId === entry.id),
-  )
-  const canAdd = pocket.items.length < pocket.maxSlots && hasUnusedLegalItem
+  const canAdd = pocket.items.length < pocket.maxSlots
   const canGiveAll = pocket.legalItemIds.length > 0
   const itemOptions = pocketItemCatalog.map((entry) => (
     <option key={entry.id} value={entry.id}>
@@ -96,12 +99,16 @@ export function ItemBagEditor({
     updatePocket((p) => setInPocket(p, itemIndex, field, value))
   }
 
+  function moveItem(itemIndex: number, offset: -1 | 1) {
+    updatePocket((p) => moveInPocket(p, itemIndex, offset))
+  }
+
   function removeItem(itemIndex: number) {
     updatePocket((p) => removeFromPocket(p, itemIndex))
   }
 
-  function addItem() {
-    updatePocket((p) => addToPocket(p, pocketItemCatalog))
+  function addItem(itemId: number) {
+    updatePocket((p) => addItemAtMax(p, itemId))
   }
 
   function giveAll() {
@@ -122,11 +129,14 @@ export function ItemBagEditor({
         pocket={pocket}
         t={t}
         onExpandedItemIndexChange={setExpandedItemIndex}
+        onMoveItem={moveItem}
         onRemoveItem={removeItem}
         onSetItemField={setItemField}
       />
       <ItemBagActions
+        addEntries={pocketItemCatalog}
         canAdd={canAdd}
+        getItemImageUrl={getItemImageUrl}
         canGiveAll={canGiveAll}
         giveAllCount={giveAllCount}
         maxCount={pocket.maxCount}

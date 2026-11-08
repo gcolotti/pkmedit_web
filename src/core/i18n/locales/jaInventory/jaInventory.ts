@@ -3,6 +3,7 @@ import { jaTrainerSave } from '../jaTrainerSave/jaTrainerSave'
 
 export const jaInventory = {
   addItem: '\u30a2\u30a4\u30c6\u30e0\u8ffd\u52a0',
+  addItemSearch: '追加するアイテムを検索…',
   collectAllColorfulScrews:
     '\u30ab\u30e9\u30d5\u30eb\u30b9\u30af\u30ea\u30e5\u30fc\u3092\u3059\u3079\u3066\u56de\u53ce',
   collectAllTechnicalMachines:
@@ -14,6 +15,8 @@ export const jaInventory = {
     '\u30cf\u30a4\u30d1\u30fc\u30b9\u30da\u30fc\u30b9\u8abf\u67fb\u30dd\u30a4\u30f3\u30c8',
   images: '\u753b\u50cf',
   infinite: '\u7121\u9650',
+  moveItemDown: '下へ移動',
+  moveItemUp: '上へ移動',
   item: '\u30a2\u30a4\u30c6\u30e0',
   itemBag: '\u30a2\u30a4\u30c6\u30e0\u30d0\u30c3\u30b0',
   items: '\u30a2\u30a4\u30c6\u30e0',

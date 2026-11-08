@@ -15,6 +15,9 @@ type Props = {
   entries: CatalogEntry[]
   t: Translator
   clearValue?: number
+  disabled?: boolean
+  // Keeps the label for screen readers only (compact inline pickers).
+  hideLabel?: boolean
   emptyLabel?: string
   getImageUrl?: (id: number) => string | undefined
   selectedEntry?: CatalogEntry
@@ -32,9 +35,11 @@ function compareCatalogEntries(a: CatalogEntry | null, b: CatalogEntry | null) {
 
 export function CatalogSearchCombobox({
   clearValue,
+  disabled = false,
   emptyLabel,
   entries,
   getImageUrl,
+  hideLabel = false,
   id,
   label,
   onChange,
@@ -83,12 +88,15 @@ export function CatalogSearchCombobox({
 
   return (
     <label className="grid gap-1.5" htmlFor={id}>
-      <span className={`label${issue.labelClassName} text-[0.65rem]`}>
+      <span
+        className={`label${issue.labelClassName} text-[0.65rem] ${hideLabel ? 'sr-only' : ''}`}
+      >
         {label}
       </span>
       <Combobox
         immediate
         by={compareCatalogEntries}
+        disabled={disabled}
         invalid={issue.invalid}
         value={selectedEntry}
         onChange={handleChange}

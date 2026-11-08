@@ -2,6 +2,7 @@ import { enTrainerSave } from '../enTrainerSave/enTrainerSave'
 
 export const enInventory = {
   addItem: 'Add item',
+  addItemSearch: 'Search an item to add…',
   collectAllColorfulScrews: 'Collect All Colorful Screws',
   collectAllTechnicalMachines: 'Collect All Technical Machines',
   count: 'Count',
@@ -10,6 +11,8 @@ export const enInventory = {
   hyperspaceSurveyPoints: 'Hyperspace S.P.',
   images: 'Images',
   infinite: 'Infinite',
+  moveItemDown: 'Move down',
+  moveItemUp: 'Move up',
   item: 'Item',
   itemBag: 'Item bag',
   items: 'Items',
