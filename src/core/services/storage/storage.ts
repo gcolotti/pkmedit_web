@@ -6,6 +6,7 @@ const allowIllegalChangesKey = 'pkmedit_allow_illegal_changes'
 const apiBaseKey = 'pkmedit_api_base'
 const clientInstanceIdKey = 'pkmedit_client_instance_id'
 const apiRegistrationPrefix = 'pkmedit_api_registration:'
+const saveLanguagesKey = 'pkmedit_save_languages'
 const defaultApiBase =
   import.meta.env.VITE_API_BASE?.trim() || 'http://localhost:8080'
 
@@ -121,7 +122,10 @@ export function writeApiRegistration(
   apiBase: string,
   registration: ApiRegistration,
 ) {
-  localStorage.setItem(apiRegistrationKey(apiBase), JSON.stringify(registration))
+  localStorage.setItem(
+    apiRegistrationKey(apiBase),
+    JSON.stringify(registration),
+  )
   window.dispatchEvent(new Event('pkmedit-api-registration-changed'))
 }
 
@@ -132,4 +136,31 @@ export function clearApiRegistration(apiBase: string) {
 
 function apiRegistrationKey(apiBase: string) {
   return `${apiRegistrationPrefix}${encodeURIComponent(apiBase)}`
+}
+
+// Gen 1-3 saves don't store their language: remember the user's pick per file
+// name and send it when the file is opened again.
+function readSaveLanguages(): Record<string, number> {
+  try {
+    const parsed: unknown = JSON.parse(
+      localStorage.getItem(saveLanguagesKey) ?? '{}',
+    )
+    return parsed && typeof parsed === 'object'
+      ? (parsed as Record<string, number>)
+      : {}
+  } catch {
+    return {}
+  }
+}
+
+export function readSaveLanguage(fileName: string): number | undefined {
+  const value = readSaveLanguages()[fileName]
+  return typeof value === 'number' ? value : undefined
+}
+
+export function writeSaveLanguage(fileName: string, language: number) {
+  localStorage.setItem(
+    saveLanguagesKey,
+    JSON.stringify({ ...readSaveLanguages(), [fileName]: language }),
+  )
 }

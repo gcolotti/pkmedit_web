@@ -80,6 +80,8 @@ export const en = {
   game: 'Game',
   gender: 'Gender',
   reroll: 'Reroll',
+  saveLanguageInferredHint:
+    "Gen 1-3 saves don't store their language. pkmedit detects it and remembers your choice for this file; a change applies when you reopen or export it.",
   shuffle: 'Shuffle',
   generation: 'Gen {generation}',
   heldItem: 'Held item',

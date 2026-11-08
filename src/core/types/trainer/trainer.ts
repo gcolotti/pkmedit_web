@@ -13,6 +13,8 @@ export type TrainerInfo = {
   canEditMoney: boolean
   // Per-game cap (PKHeX MaxMoney); optional for older backends.
   maxMoney?: number
+  // Gen 1-3: language was detected (not stored in the save); optional for older backends.
+  languageInferred?: boolean
   saveKind: string
   gameFields: TrainerGameField[]
   gameActions: TrainerGameAction[]

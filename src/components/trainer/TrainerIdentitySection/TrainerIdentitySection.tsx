@@ -59,6 +59,11 @@ export function TrainerIdentitySection({
           </select>
         </label>
       </div>
+      {trainer.languageInferred && (
+        <p className="text-xs text-stone-500 dark:text-stone-400">
+          {t('saveLanguageInferredHint')}
+        </p>
+      )}
       <div
         className={`grid gap-2 ${trainer.canEditMoney ? 'grid-cols-3' : 'grid-cols-2'}`}
       >

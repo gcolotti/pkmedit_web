@@ -8,6 +8,7 @@ import { useMetDateFixer } from '../useMetDateFixer/useMetDateFixer'
 import { usePokedexDrafts } from '../usePokedexDrafts/usePokedexDrafts'
 import { usePokedexStatus } from '../usePokedexStatus/usePokedexStatus'
 import { usePokemonSelection } from '../usePokemonSelection/usePokemonSelection'
+import { useRememberSaveLanguage } from '../useRememberSaveLanguage/useRememberSaveLanguage'
 import { useSaveWorkspaceDatabases } from '../useSaveWorkspaceDatabases/useSaveWorkspaceDatabases'
 import { useSaveWorkspaceRaids } from '../useSaveWorkspaceRaids/useSaveWorkspaceRaids'
 import { useSectionDrafts } from '../useSectionDrafts/useSectionDrafts'
@@ -40,6 +41,11 @@ export function useSaveWorkspace(
   const sessionId = summary?.sessionId
 
   const sections = useSectionDrafts(api, sessionId, t)
+  useRememberSaveLanguage(
+    summary?.fileName,
+    sections.state.trainerBase,
+    sections.state.trainerDraft,
+  )
   const currentTrainer =
     sections.state.trainerDraft ?? sections.state.trainerBase
   const saveTrainerLanguage = currentTrainer?.language ?? null

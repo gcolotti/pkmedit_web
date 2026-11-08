@@ -81,6 +81,8 @@ export const es = {
   game: 'Juego',
   gender: 'Género',
   reroll: 'Reroll',
+  saveLanguageInferredHint:
+    'Las partidas de Gen 1-3 no guardan el idioma. pkmedit lo detecta y recuerda lo que elijas para este archivo; el cambio se aplica al reabrirla o exportarla.',
   shuffle: 'Aleatorio',
   generation: 'Gen {generation}',
   heldItem: 'Objeto',

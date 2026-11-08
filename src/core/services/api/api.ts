@@ -45,8 +45,10 @@ export class ApiClient {
   rotateApiKey = () => rotateApiRegistration(this.getBaseUrl())
 
   listSaves = () => this.save.listSaves()
-  openSave = (path: string) => this.save.openSave(path)
-  uploadAndOpenSave = (file: File) => this.save.uploadAndOpenSave(file)
+  openSave = (path: string, language?: number) =>
+    this.save.openSave(path, language)
+  uploadAndOpenSave = (file: File, language?: number) =>
+    this.save.uploadAndOpenSave(file, language)
   getSummary = (s: string) => this.save.getSummary(s)
   getParty = (s: string) => this.pokemon.getParty(s)
   getBoxes = (s: string) => this.pokemon.getBoxes(s)

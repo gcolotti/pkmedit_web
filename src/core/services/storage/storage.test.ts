@@ -4,10 +4,12 @@ import {
   readAllowIllegalChanges,
   readApiBase,
   readLanguage,
+  readSaveLanguage,
   readTheme,
   writeAllowIllegalChanges,
   writeApiBase,
   writeLanguage,
+  writeSaveLanguage,
   writeTheme,
 } from './storage'
 
@@ -219,6 +221,23 @@ describe('storage', () => {
           value: originalLocation,
         })
       }
+    })
+  })
+
+  describe('save language', () => {
+    it('remembers the language picked for each save file', () => {
+      writeSaveLanguage('Cristal.dat', 7)
+      writeSaveLanguage('Rojo.sav', 2)
+
+      expect(readSaveLanguage('Cristal.dat')).toBe(7)
+      expect(readSaveLanguage('Rojo.sav')).toBe(2)
+      expect(readSaveLanguage('Other.sav')).toBeUndefined()
+    })
+
+    it('ignores corrupt stored data', () => {
+      localStorage.setItem('pkmedit_save_languages', '{nope')
+
+      expect(readSaveLanguage('Cristal.dat')).toBeUndefined()
     })
   })
 })

@@ -88,6 +88,8 @@ export const ja = {
   game: '\u30b2\u30fc\u30e0',
   gender: 'Gender',
   reroll: 'Reroll',
+  saveLanguageInferredHint:
+    '第1〜3世代のセーブには言語が保存されません。pkmeditが推定し、このファイルで選んだ言語を記憶します。変更は再度開くかエクスポートした時に適用されます。',
   shuffle: 'Shuffle',
   generation: '\u7b2c{generation}\u4e16\u4ee3',
   heldItem: '\u6301\u3061\u7269',

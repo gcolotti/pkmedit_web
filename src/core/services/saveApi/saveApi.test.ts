@@ -56,6 +56,25 @@ describe('SaveApi', () => {
     expect(result.sessionId).toBe('s2')
   })
 
+  it('sends the remembered Gen 1-3 language when opening', async () => {
+    let openBody: unknown = null
+    let uploadBody = ''
+    server.use(
+      http.post('*/api/saves/open', async ({ request }) => {
+        openBody = await request.json()
+        return HttpResponse.json({ sessionId: 's1', summary: {} })
+      }),
+      http.post('*/api/saves/upload-open', async ({ request }) => {
+        uploadBody = await request.text()
+        return HttpResponse.json({ sessionId: 's2', summary: {} })
+      }),
+    )
+    await make().openSave('/Cristal.dat', 7)
+    await make().uploadAndOpenSave(new File(['x'], 'Cristal.dat'), 7)
+    expect(openBody).toEqual({ path: '/Cristal.dat', language: 7 })
+    expect(uploadBody).toMatch(/name="language"\r\n\r\n7\r\n/)
+  })
+
   it('getSummary fetches /api/saves/:id/summary', async () => {
     let url = ''
     server.use(

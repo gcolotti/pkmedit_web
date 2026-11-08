@@ -76,3 +76,17 @@ describe('TrainerIdentitySection money', () => {
     expect(onChange).toHaveBeenCalledWith('money', 9_999_999)
   })
 })
+
+describe('TrainerIdentitySection language', () => {
+  it('explains that Gen 1-3 languages are detected, not stored', () => {
+    renderSection(makeTrainer({ languageInferred: true }))
+
+    expect(screen.getByText('saveLanguageInferredHint')).toBeInTheDocument()
+  })
+
+  it('shows no hint for saves that store their language', () => {
+    renderSection(makeTrainer({ languageInferred: false }))
+
+    expect(screen.queryByText('saveLanguageInferredHint')).toBeNull()
+  })
+})
